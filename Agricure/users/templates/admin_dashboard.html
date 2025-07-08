@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Admin Dashboard - Agricure{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<p>Welcome, {{ user.username }}! You are logged in as admin.rdtfyuiop[dgfhjklcvbnm</p>
+
+<form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="background:none;border:none;color:#007bff;text-decoration:underline;cursor:pointer;">Logout</button>
+</form>
+{% endblock %}
