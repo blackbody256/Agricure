@@ -4,6 +4,16 @@
 
 {% block content %}
 <h2>Sign Up</h2>
+{% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div>{{ field.label }}: {{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

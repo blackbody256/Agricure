@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from .forms import SignUpForm
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, get_backends
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
@@ -25,6 +25,9 @@ class SignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
+        # print("User authenticated after signup:", self.request.user.is_authenticated)
+        # print("User is_active:", user.is_active)
+        # print("User role:", user.role)
         if user.role == 'ADMIN':
             return HttpResponseRedirect('/admin-dashboard/')
         return super().form_valid(form)
