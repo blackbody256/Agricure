@@ -1,0 +1,574 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Agricure - AI Crop Health{% endblock %}
+
+{% block content %}
+<style>
+    /* Hero Section */
+    .hero {
+        position: relative;
+        width: 100vw;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        min-height: 80vh;
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    
+    .hero-bg-wrapper {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 0;
+    }
+    
+    .hero-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7) saturate(1.2);
+        z-index: 0;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        
+        z-index: 1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        color: #e8f5e9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 800;
+        color: #dcedc8;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.3s;
+    }
+    
+    .hero-content .highlight {
+        color: #f8f8f4;
+    }
+    
+    .hero-content .tagline {
+        font-size: 1.5rem;
+        color: #fffde7;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.6s;
+    }
+    
+    .hero-content .description {
+        font-size: 1.1rem;
+        color: #f1f8e9;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.9s;
+    }
+    
+    .hero-content .button {
+        background: #388e3c;
+        color: #fff;
+        padding: 0.9rem 2.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(46,125,50,0.15);
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 1.2s;
+    }
+    
+    .hero-content .button:hover {
+        background: #2e7d32;
+    }
+    
+    /* Sections */
+    section {
+        padding: 4rem 2rem;
+    }
+    
+    h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #555;
+    }
+    
+    /* Features */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1100px;
+        margin: auto;
+    }
+    
+    .feature-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .feature-card.animate-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+        background-color: #2e7d32;
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        margin: 0 auto 1rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .feature-icon svg {
+        height: 28px;
+        width: 28px;
+        fill: white;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1b1b1b;
+    }
+    
+    .feature-card p {
+        font-size: 0.95rem;
+        color: #5f5f5f;
+        line-height: 1.5;
+    }
+    
+    /* How It Works */
+    .how-it-works {
+        background-color: #f4f3ee;
+    }
+    
+    .how-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .how-grid.animate-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .how-step {
+        text-align: center;
+        max-width: 200px;
+    }
+    
+    .circle {
+        width: 50px;
+        height: 50px;
+        background-color: #2e7d32;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+        border-radius: 50%;
+        margin: 0 auto 1rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* User Types */
+    .user-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        max-width: 1100px;
+        margin: 2rem auto;
+    }
+    
+    .user-card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .user-card.animate-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .user-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-icon {
+        background-color: #c9b7a3;
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        margin: 0 auto 1rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .user-icon svg {
+        height: 28px;
+        width: 28px;
+        fill: white;
+    }
+    
+    .user-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1b1b1b;
+        margin-bottom: 0.5rem;
+    }
+    
+    .user-card p {
+        font-size: 0.95rem;
+        color: #5f5f5f;
+        line-height: 1.5;
+    }
+    
+    /* CTA Section */
+    .cta {
+        background: linear-gradient(90deg, #2e7d32, #66bb6a);
+        color: white;
+        text-align: center;
+        padding: 4rem 2rem;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    .cta.animate-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .cta-buttons {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .cta .button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    
+    .cta .button.white {
+        background: #fff;
+        color: #2e7d32;
+    }
+    
+    .cta .button.outline {
+        border: 2px solid #fff;
+        color: #fff;
+        background: transparent;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero-content .tagline {
+            font-size: 1.2rem;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .cta .button {
+            width: 200px;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg-wrapper">
+        {% load static %}
+        <img src="{% static 'images/rice2.png' %}" alt="Agricultural field" class="hero-bg" />
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        <h1><span class="highlight">Welcome to Agricure</span></h1>
+        <p class="tagline">Empowering Farmers with AI-driven Crop Diagnosis</p>
+        <p class="description">
+            Transform your agricultural practices with cutting-edge AI technology that provides instant crop health analysis, disease detection, and personalized recommendations.
+        </p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'users:signup' %}" class="button">Get Started</a>
+        {% else %}
+            <a href="{% url 'users:dashboard' %}" class="button">Go to Dashboard</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <h2>Powerful Features for Modern Agriculture</h2>
+    <p class="subtitle">Our AI-powered platform provides comprehensive tools to monitor, diagnose, and improve your crop health.</p>
+    
+    <div class="feature-grid">
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2Z" />
+                </svg>
+            </div>
+            <h3>Image Upload & Analysis</h3>
+            <p>Upload crop images for instant AI-powered analysis and disease detection</p>
+        </div>
+        
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M20 2h-4v2h4v4h2V4c0-1.1-.9-2-2-2ZM4 4h4V2H4c-1.1 0-2 .9-2 2v4h2V4Zm0 16v-4H2v4c0 1.1.9 2 2 2h4v-2H4Zm16 0h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4Zm-6-9h-4v2h4v3h-6V8H6v10h12V13h-4z"/>
+                </svg>
+            </div>
+            <h3>Instant Diagnosis</h3>
+            <p>Get immediate crop health assessments using advanced machine learning</p>
+        </div>
+        
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M9 21h6v-1H9v1Zm7.2-3c-.2-1.3-.8-2.4-1.6-3.3C13.2 13.9 13 13 13 12V9c0-1.7-1.3-3-3-3S7 7.3 7 9v3c0 1-.2 1.9-.6 2.7-.8.9-1.4 2-1.6 3.3h11.4Z"/>
+                </svg>
+            </div>
+            <h3>Smart Recommendations</h3>
+            <p>Receive personalized treatment and care recommendations for your crops</p>
+        </div>
+        
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M3 3v18h18V3H3Zm2 2h14v14H5V5Zm3 2v2h8V7H8Zm0 4v2h5v-2H8Zm0 4v2h6v-2H8Z"/>
+                </svg>
+            </div>
+            <h3>Crop Health Tracking</h3>
+            <p>Monitor crop health trends over time with detailed analytics</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <h2>How It Works</h2>
+    <p class="subtitle">Get started with Agricure in four simple steps and transform your crop management.</p>
+    <div class="how-grid animate-on-scroll">
+        <div class="how-step">
+            <div class="circle">1</div>
+            <h3>Upload Image</h3>
+            <p>Take a photo of your crop and upload it to our platform</p>
+        </div>
+        <div class="how-step">
+            <div class="circle">2</div>
+            <h3>AI Analysis</h3>
+            <p>Our AI analyzes the image for diseases, pests, and health indicators</p>
+        </div>
+        <div class="how-step">
+            <div class="circle">3</div>
+            <h3>Get Diagnosis</h3>
+            <p>Receive instant results with confidence scores and explanations</p>
+        </div>
+        <div class="how-step">
+            <div class="circle">4</div>
+            <h3>Take Action</h3>
+            <p>Follow personalized recommendations to improve crop health</p>
+        </div>
+    </div>
+</section>
+
+<!-- User Types Section -->
+<section class="user-types">
+    <h2>Built for Agricultural Professionals</h2>
+    <p class="subtitle">Agricure serves the entire agricultural ecosystem with specialized tools for every role.</p>
+    <div class="user-grid">
+        <!-- Farmer Card -->
+        <div class="user-card animate-on-scroll">
+            <div class="user-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2C9 2 6 4 6 7c0 2.3 2 4.5 6 6.3 4-1.8 6-4 6-6.3 0-3-3-5-6-5Zm-1 15H7v5h4v-5Zm3 0v5h4v-5h-4Zm-9 0H3v5h2v-5Zm14 0v5h2v-5h-2Z"/>
+                </svg>
+            </div>
+            <h3>Farmers</h3>
+            <p>Optimize crop yields with real-time health monitoring and early disease detection</p>
+        </div>
+        
+        <!-- Agronomist Card -->
+        <div class="user-card animate-on-scroll">
+            <div class="user-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 1.4.6 2.6 1.6 3.5C6.5 11.6 4 13.8 4 17h2c0-2.2 2.5-4 6-4s6 1.8 6 4h2c0-3.2-2.5-5.4-4.6-6.5A5 5 0 0 0 12 2Z"/>
+                </svg>
+            </div>
+            <h3>Agronomists</h3>
+            <p>Enhance advisory services with data-driven insights and diagnostic tools</p>
+        </div>
+        
+        <!-- Extension Worker Card -->
+        <div class="user-card animate-on-scroll">
+            <div class="user-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                    <path d="M3 3v18h18V3H3Zm2 2h14v14H5V5Zm3 2v2h8V7H8Zm0 4v2h5v-2H8Zm0 4v2h6v-2H8Z"/>
+                </svg>
+            </div>
+            <h3>Extension Workers</h3>
+            <p>Support communities with accessible agricultural technology and education</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta animate-on-scroll">
+    <h2>Ready to Transform Your Agriculture?</h2>
+    <p>Join thousands of farmers already using Agricure to improve their crop yields and reduce losses.</p>
+    <div class="cta-buttons">
+        {% if not user.is_authenticated %}
+            <a href="{% url 'users:signup' %}" class="button white">Start Free Trial</a>
+            <a href="{% url 'users:login' %}" class="button outline">Login</a>
+        {% else %}
+            <a href="{% url 'users:dashboard' %}" class="button white">Go to Dashboard</a>
+            <a href="#" class="button outline">Learn More</a>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+// Smooth scroll animation for scroll-triggered elements
+document.addEventListener("DOMContentLoaded", function() {
+    const animatedItems = document.querySelectorAll('.animate-on-scroll');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15
+    });
+    
+    animatedItems.forEach(item => {
+        observer.observe(item);
+    });
+    
+    // Smooth scroll for get started button
+    const getStartedBtn = document.querySelector('.hero .button');
+    if (getStartedBtn) {
+        getStartedBtn.addEventListener('click', function(e) {
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+});
+
+console.log("Agricure site loaded successfully!");
+</script>
+
+{% endblock %}

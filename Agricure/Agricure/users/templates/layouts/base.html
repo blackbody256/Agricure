@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Agricure - Smart Farm Aid{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #ffffff;
+            color: #2d2d2d;
+        }
+        
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: #fdfffe;
+            padding: 0;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: none;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+            height: 70px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2e7d32;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            list-style: none;
+            gap: 0.5rem;
+            height: 70px;
+        }
+        
+        .nav-links li {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #3fc446;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.0rem;
+            padding: 0.2rem 0.7rem;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-links a:hover, .nav-links a:focus {
+            color: #cddc39;
+            border-bottom: 2px solid #cddc39;
+        }
+        
+        .nav-links li:last-child a {
+            background: #388e3c;
+            color: #fff;
+            border-radius: 6px;
+            padding: 0.5rem 1.5rem;
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(46,125,50,0.10);
+            border: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        
+        .nav-links li:last-child a:hover, .nav-links li:last-child a:focus {
+            background: #2e7d32;
+            color: #cddc39;
+        }
+        
+        /* Logout button styling */
+        .logout-btn {
+            background: none !important;
+            border: none;
+            color: #3fc446 !important;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.2rem 0.7rem;
+            transition: color 0.2s;
+            font-size: 1.0rem;
+        }
+        
+        .logout-btn:hover {
+            color: #cddc39 !important;
+        }
+        
+        /* Secondary Nav for authenticated users */
+        .secondary-nav {
+            background-color: #f8f9fa;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .secondary-nav .nav-links {
+            gap: 1rem;
+            padding: 0 3rem;
+            height: auto;
+        }
+        
+        .secondary-nav .nav-links a {
+            color: #495057;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+        }
+        
+        .secondary-nav .nav-links a:hover {
+            background-color: #e9ecef;
+            color: #2e7d32;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #fdfffe;
+                display: none;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Header -->
+        <header>
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="{% static 'images/agricure.png' %}" alt="Agricure Logo" />
+                        <!-- <span class="brand-name">Agricure</span> -->
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="{% url 'users:home' %}">Home</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'users:dashboard' %}">Dashboard</a></li>
+                            <li><a href="{% url 'users:about' %}">About</a></li>
+                            <li>
+                                <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="logout-btn">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li><a href="{% url 'users:about' %}">About</a></li>
+                            <li><a href="{% url 'users:login' %}">Login</a></li>
+                            <li><a href="{% url 'users:signup' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            
+            <!-- Secondary Navigation for authenticated users -->
+            {% if user.is_authenticated %}
+                <nav class="secondary-nav">
+                    <div class="nav-container">
+                        <ul class="nav-links">
+                            <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li><a href="#"><i class="fas fa-leaf"></i> My Crops</a></li>
+                            <li><a href="#"><i class="fas fa-bug"></i> Disease Detection</a></li>
+                            <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                            <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            {% endif %}
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Agricure. All rights reserved.</p>
+            <p>Contact: info@agricure.com</p>
+        </footer>
+    </div>
+</body>
+</html>
