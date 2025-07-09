@@ -191,8 +191,11 @@
                 </div>
             </div>
             
-            <label for="{{ form.username.id_for_label }}">Email Address</label>
+            <label for="{{ form.username.id_for_label }}">Username</label>
             {{ form.username }}
+            
+            <label for="{{ form.email.id_for_label }}">Email Address</label>
+            {{ form.email }}
             
             <label for="{{ form.role.id_for_label }}">User Type</label>
             {{ form.role }}
