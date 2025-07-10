@@ -55,3 +55,22 @@ class ProfileEditForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("This email address is already in use.")
         return email
+    
+
+# managing users 
+class FarmerCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'FARMER'
+        if commit:
+            user.save()
+        return user
+    
+class FarmerForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'is_active']
