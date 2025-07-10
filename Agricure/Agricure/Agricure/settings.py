@@ -136,3 +136,5 @@ AUTH_USER_MODEL ='users.User'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
+# Email configuration for password reset using Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

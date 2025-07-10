@@ -105,10 +105,27 @@
         background-color: #1b5e20;
     }
     
+    .forgot-password {
+        text-align: center;
+        margin: 1rem 0;
+    }
+    
+    .forgot-password a {
+        color: #2e7d32;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+    
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+    
     .signup-msg {
         text-align: center;
         font-size: 0.9rem;
         margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
     }
     
     .signup-msg a {
@@ -169,6 +186,10 @@
             </div>
             
             <button type="submit" class="submit-btn">Sign In</button>
+            
+            <div class="forgot-password">
+                <a href="{% url 'users:password_reset' %}">Forgot your password?</a>
+            </div>
             
             <p class="signup-msg">
                 Don't have an account? <a href="{% url 'users:signup' %}">Sign up here</a>

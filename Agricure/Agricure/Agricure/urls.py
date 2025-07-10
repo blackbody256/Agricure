@@ -19,10 +19,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),  # Home, signup, login
     path('analytics/', include('analytics.urls')),
     path('recommendations/', include('recommendations.urls')),
     path('diagnosis/', include('diagnosis.urls')),
     path('administrator/', include('administrator.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),  # For password reset, logout, etc.
+    
+    # Remove all the password reset URLs from here
+    # They should be in users/urls.py instead
+    
+    path('', include('users.urls')),  # Home, signup, login
 ]
