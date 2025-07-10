@@ -23,7 +23,7 @@ ENV/
 *.pyc
 db.sqlite3
 db.sqlite3-journal
-media/
+
 *.sqlite3
 *.sqlite3-journal
 local_settings.py
@@ -33,10 +33,7 @@ local_settings.py
 **/migrations/*.pyc
 !*/migrations/__init__.py  # keep __init__.py if needed
 
-# Static files
-staticfiles/
-static/
-static_root/
+
 
 # VS Code
 .vscode/
