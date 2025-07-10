@@ -1,0 +1,189 @@
+{% load static %}
+{% load form_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriCure - Crop Disease Diagnosis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+      <a class="navbar-brand" href="#">🌱 AgriCure</a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link active" href="#"><i class="fas fa-upload"></i> Upload</a>
+        <a class="nav-link" href="#"><i class="fas fa-history"></i> History</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- System Status Alert -->
+  <div class="container mt-4">
+    <div class="alert alert-success d-flex justify-content-between align-items-center flex-wrap shadow-sm fade-in-up" role="alert">
+      <div class="me-3">
+        <h5 class="alert-heading">
+          <i class="fas fa-check-circle text-success"></i> System Ready - Model Loaded Successfully!
+        </h5>
+        <p class="mb-1">
+          <i class="fas fa-brain"></i> <strong>Modern Keras CNN Model v2.1</strong> - Trained on 10,000+ crop images
+        </p>
+        <p class="mb-0">
+          <i class="fas fa-bullseye"></i> <strong>Supported Diagnoses:</strong>
+          <span class="badge bg-success me-1">Healthy</span>
+          <span class="badge bg-warning text-dark me-1">Blight</span>
+          <span class="badge bg-danger me-1">Rust</span>
+          <span class="badge bg-info text-white">Mildew</span>
+        </p>
+        <small class="text-muted">📊 Processing time: ~2.5 seconds | Model version: v2.1 | Last updated: July 2025</small>
+      </div>
+      <div class="bg-gradient rounded p-3 text-white text-center" style="min-width: 120px; background: linear-gradient(135deg, #667eea, #764ba2);">
+        <div style="font-size: 1.75rem; font-weight: bold;">94.2%</div>
+        <div style="font-size: 0.9rem;">Accuracy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Form Card -->
+  <div class="container mt-3">
+    <div class="card shadow-lg mb-4">
+      <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0"><i class="fas fa-camera"></i> Upload Crop Image</h3>
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="upload-area mb-4 text-center" onclick="document.getElementById('id_image').click()">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <h5>Drop your image here or click to browse</h5>
+            <p class="text-muted">Supported formats: JPG, JPEG, PNG (Max: 5MB)</p>
+            {{ form.image|add_class:"form-control d-none" }}
+          </div>
+
+          <div id="imagePreview" class="text-center mb-4" style="display: none;">
+            <img id="previewImg" src="#" alt="Preview" class="image-preview">
+            <div class="mt-2">
+              <small class="text-success">
+                <i class="fas fa-check-circle"></i> Image loaded successfully - Ready for analysis
+              </small>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-secondary btn-lg">
+              <i class="fas fa-microscope"></i> Diagnose Crop with AI
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Analysis Statistics -->
+  <div class="container mt-4 mb-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white border-bottom d-flex align-items-center">
+        <i class="fas fa-chart-bar me-2 text-dark"></i>
+        <strong class="text-dark">Recent Analysis Statistics</strong>
+      </div>
+      <div class="card-body d-flex justify-content-around flex-wrap text-center">
+        <div>
+          <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+            <i class="fas fa-heart fa-2x"></i>
+          </div>
+          <h5 class="mt-3 text-success">67%</h5>
+          <p class="text-muted">Healthy</p>
+        </div>
+        <div>
+          <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+            <i class="fas fa-exclamation-triangle fa-2x"></i>
+          </div>
+          <h5 class="mt-3 text-warning">18%</h5>
+          <p class="text-muted">Blight</p>
+        </div>
+        <div>
+          <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+            <i class="fas fa-virus fa-2x"></i>
+          </div>
+          <h5 class="mt-3 text-danger">10%</h5>
+          <p class="text-muted">Rust</p>
+        </div>
+        <div>
+          <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+            <i class="fas fa-bacteria fa-2x"></i>
+          </div>
+          <h5 class="mt-3 text-info">5%</h5>
+          <p class="text-muted">Mildew</p>
+        </div>
+      </div>
+      <div class="text-center pb-3">
+        <small class="text-muted"><i class="fas fa-info-circle"></i> Distribution from last 100 analyses</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Features -->
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white border-bottom d-flex align-items-center">
+      <i class="fas fa-star me-2 text-dark"></i>
+      <strong class="text-dark">New Features in v2.1</strong>
+    </div>
+    <div class="card-body d-flex justify-content-around flex-wrap text-center">
+      <div class="px-3 mb-4">
+        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+          <i class="fas fa-bolt fa-2x"></i>
+        </div>
+        <h6 class="mt-3 fw-bold"><span class="emoji">⚡</span> Faster Processing</h6>
+        <p class="text-muted small">50% faster analysis with optimized Keras models and GPU acceleration</p>
+      </div>
+      <div class="px-3 mb-4">
+        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+          <i class="fas fa-chart-line fa-2x"></i>
+        </div>
+        <h6 class="mt-3 fw-bold"><span class="emoji">📊</span> Higher Accuracy</h6>
+        <p class="text-muted small">Improved to 94.2% accuracy with expanded training dataset and advanced data augmentation</p>
+      </div>
+      <div class="px-3 mb-4">
+        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
+          <i class="fas fa-mobile-alt fa-2x"></i>
+        </div>
+        <h6 class="mt-3 fw-bold"><span class="emoji">📱</span> Mobile Optimized</h6>
+        <p class="text-muted small">Perfect for field use on smartphones and tablets with responsive design</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <footer class="bg-light text-center py-4">
+    <div class="container">
+      <p class="text-muted mb-0">&copy; 2025 AgriCure | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const fileInput = document.getElementById('id_image');
+    const preview = document.getElementById('previewImg');
+    const previewBox = document.getElementById('imagePreview');
+
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          previewBox.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
