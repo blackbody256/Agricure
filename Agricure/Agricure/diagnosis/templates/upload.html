@@ -1,189 +1,489 @@
+{% extends 'layouts/base.html' %}
 {% load static %}
 {% load form_filters %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgriCure - Crop Disease Diagnosis</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container">
-      <a class="navbar-brand" href="#">🌱 AgriCure</a>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link active" href="#"><i class="fas fa-upload"></i> Upload</a>
-        <a class="nav-link" href="#"><i class="fas fa-history"></i> History</a>
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<style>
+.page-wrapper {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.top-buttons .btn-top {
+  background-color: #f0fdf4;
+  color: #28a745;
+  border: 2px solid #28a745;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.top-buttons .btn-top:hover {
+  background-color: #28a745;
+  color: #fff;
+}
+
+
+.upload-area {
+  border: 2px dashed #7dd3fc;
+  background-color: #f0fdfd;
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  background-color: #e0f7fa;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  color: #38bdf8;
+  background-color: #e0f2fe;
+  border-radius: 50%;
+  padding: 1rem;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.upload-area h5 {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.upload-area p {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+
+.image-preview {
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.alert-success {
+  background-color: #d4ede1;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+}
+
+.alert-success .me-3 {
+  flex-grow: 1;
+}
+
+.alert-success .badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.7em;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+.alert-success .text-muted {
+  font-size: 0.85rem;
+}
+
+.alert-success .bg-gradient {
+  font-weight: bold;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.img-fluid {
+  border-radius: 10px;
+  border: 2px solid #eee;
+}
+
+.btn {
+  background-color: #28a745;
+  color: white;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #218838;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card-body {
+  padding: 1rem 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  background-color: #28a745;
+  color: white;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.analysis-stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding-top: 1rem;
+}
+
+.analysis-stats .stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+
+.stat-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bg-gradient-green {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.bg-gradient-yellow {
+  background: linear-gradient(135deg, #f1c40f, #f39c12);
+}
+
+.bg-gradient-red {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.bg-gradient-blue {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.text-green {
+  color: #27ae60;
+}
+
+.text-yellow {
+  color: #f39c12;
+}
+
+.text-red {
+  color: #e74c3c;
+}
+
+.text-blue {
+  color: #2980b9;
+}
+
+.stat-text .label {
+  color: #6c757d;
+  margin: 0;
+}
+
+.features-section {
+  margin: 2rem auto;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding-bottom: 1rem;
+  max-width: 1200px;
+}
+
+.features-header {
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.features-body {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 2rem 1rem 1rem;
+  text-align: center;
+}
+
+.feature-card {
+  flex: 1 1 250px;
+  max-width: 300px;
+  margin: 1rem;
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+}
+
+.icon-circle.green {
+  background: linear-gradient(to right, #28a745, #2ecc71);
+}
+
+.icon-circle.blue {
+  background: linear-gradient(to right, #007bff, #6f42c1);
+}
+
+.feature-card h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.upload-area img.image-preview {
+  max-height: 200px;
+  max-width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+
+</style>
+<div class="page-wrapper">
+
+      <div class="top-buttons">
+      <a href="#" class="btn-top">
+        <i class="fas fa-seedling"></i> Recommendations
+      </a>
+      <a href="{% url 'diagnosis:diagnosis_history' %}" class="btn-top">
+        <i class="fas fa-history"></i> Diagnosis History
+      </a>
+    </div>
+
+    <!-- System Status Alert -->
+    <div class="container mt-4">
+      <div class="alert alert-success shadow-sm fade-in-up" role="alert">
+        <div class="me-3">
+          <h5 class="alert-heading">
+            <i class="fas fa-check-circle text-success"></i> System Ready - Model Loaded Successfully!
+          </h5>
+          <p class="mb-1">
+            <i class="fas fa-brain"></i> <strong>Modern Keras CNN Model v2.1</strong> - Trained on 10,000+ crop images
+          </p>
+          <p class="mb-0">
+            <i class="fas fa-bullseye"></i> <strong>Supported Diagnoses:</strong>
+            <span class="badge bg-success me-1">Healthy</span>
+            <span class="badge bg-warning text-dark me-1">Blight</span>
+            <span class="badge bg-danger me-1">Rust</span>
+            <span class="badge bg-info text-white">Mildew</span>
+          </p>
+          <small class="text-muted">📊 Processing time: ~2.5 seconds | Model version: v2.1 | Last updated: July 2025</small>
+        </div>
+        <div class="bg-gradient text-white text-center">
+          <div style="font-size: 1.75rem;">94.2%</div>
+          <div style="font-size: 0.9rem;">Accuracy</div>
+        </div>
       </div>
     </div>
-  </nav>
 
-  <!-- System Status Alert -->
-  <div class="container mt-4">
-    <div class="alert alert-success d-flex justify-content-between align-items-center flex-wrap shadow-sm fade-in-up" role="alert">
-      <div class="me-3">
-        <h5 class="alert-heading">
-          <i class="fas fa-check-circle text-success"></i> System Ready - Model Loaded Successfully!
-        </h5>
-        <p class="mb-1">
-          <i class="fas fa-brain"></i> <strong>Modern Keras CNN Model v2.1</strong> - Trained on 10,000+ crop images
-        </p>
-        <p class="mb-0">
-          <i class="fas fa-bullseye"></i> <strong>Supported Diagnoses:</strong>
-          <span class="badge bg-success me-1">Healthy</span>
-          <span class="badge bg-warning text-dark me-1">Blight</span>
-          <span class="badge bg-danger me-1">Rust</span>
-          <span class="badge bg-info text-white">Mildew</span>
-        </p>
-        <small class="text-muted">📊 Processing time: ~2.5 seconds | Model version: v2.1 | Last updated: July 2025</small>
-      </div>
-      <div class="bg-gradient rounded p-3 text-white text-center" style="min-width: 120px; background: linear-gradient(135deg, #667eea, #764ba2);">
-        <div style="font-size: 1.75rem; font-weight: bold;">94.2%</div>
-        <div style="font-size: 0.9rem;">Accuracy</div>
+    <!-- Upload Form Card -->
+    <div class="container mt-3">
+      <div class="card shadow-lg mb-4">
+        <div class="card-header">
+          <h3 class="card-title mb-0"><i class="fas fa-camera"></i> Upload Crop Image</h3>
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="upload-area mb-4" onclick="document.getElementById('id_image').click()">
+                  <div id="imagePreview" style="display: none;">
+                    <img id="previewImg" src="#" alt="Preview" class="image-preview mb-2">
+                    <div class="mt-2">
+                      <small class="text-success">
+                        <i class="fas fa-check-circle"></i> Image loaded successfully - Ready for analysis
+                      </small>
+                    </div>
+                  </div>
+                  <div id="uploadPlaceholder">
+                    <div class="upload-icon">
+                      <i class="fas fa-upload"></i>
+                    </div>
+                    <h5>Drop your image here or click to browse</h5>
+                    <p>Supported formats: JPG, JPEG, PNG (Max: 5MB)</p>
+                  </div>
+                  {{ form.image|add_class:"form-control d-none" }}
+                </div>
+
+
+            <div class="text-center">
+              <button type="submit" class="btn">
+                <i class="fas fa-microscope"></i> Diagnose Crop with AI
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Upload Form Card -->
-  <div class="container mt-3">
-    <div class="card shadow-lg mb-4">
-      <div class="card-header bg-success text-white">
-        <h3 class="card-title mb-0"><i class="fas fa-camera"></i> Upload Crop Image</h3>
-      </div>
-      <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="upload-area mb-4 text-center" onclick="document.getElementById('id_image').click()">
-            <i class="fas fa-cloud-upload-alt upload-icon"></i>
-            <h5>Drop your image here or click to browse</h5>
-            <p class="text-muted">Supported formats: JPG, JPEG, PNG (Max: 5MB)</p>
-            {{ form.image|add_class:"form-control d-none" }}
-          </div>
-
-          <div id="imagePreview" class="text-center mb-4" style="display: none;">
-            <img id="previewImg" src="#" alt="Preview" class="image-preview">
-            <div class="mt-2">
-              <small class="text-success">
-                <i class="fas fa-check-circle"></i> Image loaded successfully - Ready for analysis
-              </small>
+    <!-- Recent Analysis Statistics -->
+    <div class="container mt-4 mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom d-flex align-items-center">
+          <i class="fas fa-chart-bar me-2 text-dark"></i>
+          <strong class="text-dark">Recent Analysis Statistics</strong>
+        </div>
+        <div class="card-body d-flex justify-content-around flex-wrap text-center analysis-stats">
+          <div class="stat-block">
+            <div class="stat-icon bg-gradient-green">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="stat-text">
+              <h5 class="text-green">67%</h5>
+              <p class="label">Healthy</p>
             </div>
           </div>
+          <div class="stat-block">
+            <div class="stat-icon bg-gradient-yellow">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-text">
+              <h5 class="text-yellow">18%</h5>
+              <p class="label">Blight</p>
+            </div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-icon bg-gradient-red">
+              <i class="fas fa-virus"></i>
+            </div>
+            <div class="stat-text">
+              <h5 class="text-red">10%</h5>
+              <p class="label">Rust</p>
+            </div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-icon bg-gradient-blue">
+              <i class="fas fa-bacteria"></i>
+            </div>
+            <div class="stat-text">
+              <h5 class="text-blue">5%</h5>
+              <p class="label">Mildew</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center pb-3">
+          <small class="text-muted"><i class="fas fa-info-circle"></i> Distribution from last 100 analyses</small>
+        </div>
+      </div>
+    </div>
 
-          <div class="d-grid">
-            <button type="submit" class="btn btn-secondary btn-lg">
-              <i class="fas fa-microscope"></i> Diagnose Crop with AI
-            </button>
+    <!-- New Features -->
+    <div class="features-section">
+      <div class="features-header">
+        <i class="fas fa-star"></i>
+        <strong>New Features in v2.1</strong>
+      </div>
+      <div class="features-body">
+        <div class="feature-card">
+          <div class="icon-circle green">
+            <i class="fas fa-bolt"></i>
           </div>
-        </form>
+          <h4>⚡ Faster Processing</h4>
+          <p>50% faster analysis with optimized Keras models and GPU acceleration</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-circle green">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h4>📊 Higher Accuracy</h4>
+          <p>Improved to 94.2% accuracy with expanded training dataset and advanced data augmentation</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-circle blue">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h4>📱 Mobile Optimized</h4>
+          <p>Perfect for field use on smartphones and tablets with responsive design</p>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Recent Analysis Statistics -->
-  <div class="container mt-4 mb-5">
-    <div class="card shadow-sm">
-      <div class="card-header bg-white border-bottom d-flex align-items-center">
-        <i class="fas fa-chart-bar me-2 text-dark"></i>
-        <strong class="text-dark">Recent Analysis Statistics</strong>
-      </div>
-      <div class="card-body d-flex justify-content-around flex-wrap text-center">
-        <div>
-          <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-            <i class="fas fa-heart fa-2x"></i>
-          </div>
-          <h5 class="mt-3 text-success">67%</h5>
-          <p class="text-muted">Healthy</p>
-        </div>
-        <div>
-          <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-            <i class="fas fa-exclamation-triangle fa-2x"></i>
-          </div>
-          <h5 class="mt-3 text-warning">18%</h5>
-          <p class="text-muted">Blight</p>
-        </div>
-        <div>
-          <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-            <i class="fas fa-virus fa-2x"></i>
-          </div>
-          <h5 class="mt-3 text-danger">10%</h5>
-          <p class="text-muted">Rust</p>
-        </div>
-        <div>
-          <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-            <i class="fas fa-bacteria fa-2x"></i>
-          </div>
-          <h5 class="mt-3 text-info">5%</h5>
-          <p class="text-muted">Mildew</p>
-        </div>
-      </div>
-      <div class="text-center pb-3">
-        <small class="text-muted"><i class="fas fa-info-circle"></i> Distribution from last 100 analyses</small>
-      </div>
-    </div>
-  </div>
-
-  <!-- New Features -->
-<div class="container mt-4">
-  <div class="card shadow-sm">
-    <div class="card-header bg-white border-bottom d-flex align-items-center">
-      <i class="fas fa-star me-2 text-dark"></i>
-      <strong class="text-dark">New Features in v2.1</strong>
-    </div>
-    <div class="card-body d-flex justify-content-around flex-wrap text-center">
-      <div class="px-3 mb-4">
-        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-          <i class="fas fa-bolt fa-2x"></i>
-        </div>
-        <h6 class="mt-3 fw-bold"><span class="emoji">⚡</span> Faster Processing</h6>
-        <p class="text-muted small">50% faster analysis with optimized Keras models and GPU acceleration</p>
-      </div>
-      <div class="px-3 mb-4">
-        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-          <i class="fas fa-chart-line fa-2x"></i>
-        </div>
-        <h6 class="mt-3 fw-bold"><span class="emoji">📊</span> Higher Accuracy</h6>
-        <p class="text-muted small">Improved to 94.2% accuracy with expanded training dataset and advanced data augmentation</p>
-      </div>
-      <div class="px-3 mb-4">
-        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; margin: auto;">
-          <i class="fas fa-mobile-alt fa-2x"></i>
-        </div>
-        <h6 class="mt-3 fw-bold"><span class="emoji">📱</span> Mobile Optimized</h6>
-        <p class="text-muted small">Perfect for field use on smartphones and tablets with responsive design</p>
-      </div>
-    </div>
-  </div>
 </div>
 
+<script>
+  const fileInput = document.getElementById('id_image');
+  const preview = document.getElementById('previewImg');
+  const previewBox = document.getElementById('imagePreview');
+  const placeholder = document.getElementById('uploadPlaceholder');
 
-  <!-- Footer -->
-  <footer class="bg-light text-center py-4">
-    <div class="container">
-      <p class="text-muted mb-0">&copy; 2025 AgriCure | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-    </div>
-  </footer>
-
-  <script>
-    const fileInput = document.getElementById('id_image');
-    const preview = document.getElementById('previewImg');
-    const previewBox = document.getElementById('imagePreview');
-
-    fileInput.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          preview.src = e.target.result;
-          previewBox.style.display = 'block';
-        }
-        reader.readAsDataURL(file);
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        previewBox.style.display = 'block';
+        placeholder.style.display = 'none';
       }
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+{% endblock %}

@@ -233,14 +233,16 @@
                             {% if user.role == 'ADMIN' %}
                             <li><a href="{% url 'users:admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
                             <li><a href="#"><i class="fas fa-leaf"></i> My Crops</a></li>
-                            <li><a href="#"><i class="fas fa-bug"></i> Disease Detection</a></li>
+                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
+
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
                             <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
                             <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
                             {% else %}
                             <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
                             <li><a href="#"><i class="fas fa-leaf"></i> My Crops</a></li>
-                            <li><a href="#"><i class="fas fa-bug"></i> Disease Detection</a></li>
+                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
+
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
                             <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
                             <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>

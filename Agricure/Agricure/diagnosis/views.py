@@ -52,3 +52,7 @@ def diagnose(request):
         form = DiagnosisForm()
 
     return render(request, 'upload.html', {'form': form})
+
+def diagnosis_history(request):
+    diagnoses = Diagnosis.objects.all().order_by('-timestamp')
+    return render(request, 'history.html', {'diagnoses': diagnoses})

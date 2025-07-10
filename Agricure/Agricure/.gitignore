@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+/__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# Virtual environment
+env/
+venv/
+ENV/
+.agricure/  # replace with your virtualenv name if different
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+media/
+*.sqlite3
+*.sqlite3-journal
+local_settings.py
+
+# Django migrations (optional to exclude)
+**/migrations/*.py
+**/migrations/*.pyc
+!*/migrations/__init__.py  # keep __init__.py if needed
+
+# Static files
+staticfiles/
+static/
+static_root/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS & Windows
+.DS_Store
+Thumbs.db
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Node modules (if using npm/yarn)
+node_modules/
+
+# Compiled JS/CSS from tools like Webpack
+/build/
+dist/
+
+# dotenv (if you're using .env files for secrets)
+.env
