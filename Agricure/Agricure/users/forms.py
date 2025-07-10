@@ -15,3 +15,43 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+# Add this to edit the profiles
+class ProfileEditForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username')
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Enter your first name'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-input', 
+                'placeholder': 'Enter your last name'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Enter your email address'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Enter your username'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make username field read-only for existing users
+        if self.instance and self.instance.pk:
+            self.fields['username'].widget.attrs['readonly'] = True
+            self.fields['username'].help_text = "Username cannot be changed"
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        # Check if email is already taken by another user
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("This email address is already in use.")
+        return email

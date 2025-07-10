@@ -13,7 +13,10 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     
-    # Add password reset URLs here
+    # Add this new URL
+    path('profile/', views.ProfileEditView.as_view(), name='profile_edit'),
+    
+    # Password reset URLs
     path('password-reset/', 
          auth_views.PasswordResetView.as_view(
              template_name='registration/password_reset_form.html',
