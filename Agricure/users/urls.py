@@ -17,31 +17,31 @@ urlpatterns = [
     path('profile/', views.ProfileEditView.as_view(), name='profile_edit'),
     
     # Password reset URLs
-    path('password-reset/', 
+    path('password-reset/',
          auth_views.PasswordResetView.as_view(
              template_name='registration/password_reset_form.html',
              email_template_name='registration/password_reset_email.html',
              subject_template_name='registration/password_reset_subject.txt',
-             success_url='/password-reset/done/'
-         ), 
+             success_url=reverse_lazy('users:password_reset_done')
+         ),
          name='password_reset'),
-    
-    path('password-reset/done/', 
+
+    path('password-reset/done/',
          auth_views.PasswordResetDoneView.as_view(
              template_name='registration/password_reset_done.html'
-         ), 
+         ),
          name='password_reset_done'),
-    
-    path('reset/<uidb64>/<token>/', 
+
+    path('reset/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(
              template_name='registration/password_reset_confirm.html',
-             success_url='/reset/done/'
-         ), 
+             success_url=reverse_lazy('users:password_reset_complete')
+         ),
          name='password_reset_confirm'),
-    
-    path('reset/done/', 
+
+    path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(
              template_name='registration/password_reset_complete.html'
-         ), 
+         ),
          name='password_reset_complete'),
 ]

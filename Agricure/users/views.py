@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from .forms import SignUpForm, ProfileEditForm
+from .models import User  # Add this import
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
@@ -35,7 +36,7 @@ class SignUpView(CreateView):
 
 # Profile edit page
 class ProfileEditView(LoginRequiredMixin, UpdateView):
-    model = User
+    model = User  # Now this will work because User is imported
     form_class = ProfileEditForm
     template_name = 'profile_edit.html'
     success_url = reverse_lazy('users:profile_edit')
