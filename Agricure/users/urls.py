@@ -44,4 +44,10 @@ urlpatterns = [
              template_name='registration/password_reset_complete.html'
          ),
          name='password_reset_complete'),
+    
+    #manage users
+    path("manage-farmers/", views.manage_farmers, name="manage_farmers"),
+    path("manage-farmers/edit/<int:user_id>/", views.edit_farmer, name="edit_farmer"),
+    path("manage-farmers/delete/<int:user_id>/", views.delete_farmer, name="delete_farmer"),
+    path('add-farmer/', views.add_farmer, name='add_farmer'),
 ]
