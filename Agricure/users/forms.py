@@ -4,6 +4,7 @@ from .models import User
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    role = forms.ChoiceField(choices=User.ROLE_CHOICES, required=True)
     
     class Meta(UserCreationForm.Meta):
         model = User
@@ -22,7 +23,7 @@ class ProfileEditForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'username')
+        fields = ('first_name', 'last_name', 'email')
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class': 'form-input',
@@ -35,10 +36,6 @@ class ProfileEditForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Enter your email address'
-            }),
-            'username': forms.TextInput(attrs={
-                'class': 'form-input',
-                'placeholder': 'Enter your username'
             }),
         }
     
@@ -55,3 +52,22 @@ class ProfileEditForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("This email address is already in use.")
         return email
+    
+
+# managing users 
+class FarmerCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = 'FARMER'
+        if commit:
+            user.save()
+        return user
+    
+class FarmerForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'is_active']
