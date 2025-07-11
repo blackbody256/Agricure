@@ -9,6 +9,8 @@ from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
