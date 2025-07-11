@@ -4,5 +4,6 @@ from . import views
 app_name = 'analytics'
 
 urlpatterns = [
-    # Analytics URLs will go here
+    path('farmer/', views.farmer_analytics, name='farmer_analytics'),
+    path('admin-dashboard/', views.admin_analytics, name='admin_dashboard'),
 ]

@@ -25,7 +25,9 @@ def diagnose(request):
     if request.method == 'POST':
         form = DiagnosisForm(request.POST, request.FILES)
         if form.is_valid():
-            diagnosis = form.save()
+            diagnosis = form.save(commit=False)
+            diagnosis.user = request.user
+            diagnosis.save()
             image_path = diagnosis.image.path
 
             # Load and preprocess image
