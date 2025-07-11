@@ -305,6 +305,20 @@
   margin-bottom: 0.5rem;
 }
 
+.btn-camera {
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-camera:hover {
+  background-color: #0056b3;
+}
 
 </style>
 <div class="page-wrapper">
@@ -353,6 +367,29 @@
         <div class="card-body">
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            <div class="text-center mb-3">
+            <button type="button" class="btn-camera" onclick="startCamera()">📷 Open Camera</button>
+          </div>
+
+          <div id="camera-container" style="display: none;" class="text-center mb-3">
+            <video id="camera-stream" autoplay playsinline width="320" height="240" style="border-radius: 10px; border: 2px solid #28a745;"></video>
+            <br>
+            <button type="button" class="btn mt-2" onclick="capturePhoto()">📸 Capture</button>
+
+            <!-- Image Preview After Capture -->
+            <img id="capturedPreview" src="#" alt="Captured Preview" style="display: none; margin-top: 1rem; border-radius: 10px; max-width: 300px;">
+
+            <!-- Canvas for Processing -->
+            <canvas id="snapshot" style="display: none;"></canvas>
+          </div>
+
+          <!-- Hidden input for captured image -->
+          <input type="hidden" name="captured_image" id="captured_image">
+
+
+
+
             <div class="upload-area mb-4" onclick="document.getElementById('id_image').click()">
                   <div id="imagePreview" style="display: none;">
                     <img id="previewImg" src="#" alt="Preview" class="image-preview mb-2">
@@ -472,6 +509,13 @@
   const previewBox = document.getElementById('imagePreview');
   const placeholder = document.getElementById('uploadPlaceholder');
 
+  let stream = null;
+const video = document.getElementById('camera-stream');
+const cameraContainer = document.getElementById('camera-container');
+const canvas = document.getElementById('snapshot');
+const hiddenInput = document.getElementById('captured_image');
+const capturedPreview = document.getElementById('capturedPreview');
+
   fileInput.addEventListener('change', function () {
     const file = this.files[0];
     if (file) {
@@ -484,6 +528,48 @@
       reader.readAsDataURL(file);
     }
   });
+
+  function startCamera() {
+  cameraContainer.style.display = 'block';
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(s => {
+      stream = s;
+      video.srcObject = stream;
+    })
+    .catch(err => {
+      alert("Camera access denied or not supported.");
+      console.error(err);
+    });
+}
+
+function capturePhoto() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+
+  const dataURL = canvas.toDataURL('image/png');
+  hiddenInput.value = dataURL;
+
+  preview.src = dataURL;
+  previewBox.style.display = 'block';
+  placeholder.style.display = 'none';
+
+  // Show preview
+  capturedPreview.src = dataURL;
+  capturedPreview.style.display = 'block';
+
+  alert("📸 Photo captured and ready to submit!");
+  stopCamera();
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
+  cameraContainer.style.display = 'none';
+}
+  
 </script>
 
 {% endblock %}

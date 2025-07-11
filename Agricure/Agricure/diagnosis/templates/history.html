@@ -3,65 +3,136 @@
 {% block content %}
 
 <style>
-  .history-container {
+  .history-table-container {
     max-width: 1100px;
     margin: 2rem auto;
     padding: 1rem;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
   }
-  .history-entry {
-    display: flex;
+
+  table.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.75rem;
     border-bottom: 1px solid #e0e0e0;
-    padding: 1rem 0;
-    align-items: center;
-    gap: 1.5rem;
+    text-align: left;
+    vertical-align: middle;
   }
-  .history-entry:last-child {
-    border-bottom: none;
+
+  .history-table th {
+    background-color: #f8f9fa;
   }
-  .history-entry img {
-    width: 120px;
+
+  .history-table img {
+    width: 100px;
     height: auto;
-    border-radius: 8px;
+    border-radius: 6px;
     object-fit: cover;
   }
-  .history-details {
-    flex: 1;
-  }
-  .history-details span {
-    display: block;
-    margin: 0.2rem 0;
-  }
+
   .badge {
     padding: 0.2em 0.6em;
     font-size: 0.85rem;
     border-radius: 4px;
     font-weight: 600;
   }
-  .bg-danger { background-color: #dc3545; color: white; }
-  .bg-warning { background-color: #ffc107; color: #212529; }
-  .text-success { color: #198754; }
+
+  .bg-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .bg-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .text-success {
+    color: #198754;
+  }
+
+  /* Floating Button Style */
+  .floating-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 999;
+    transition: background-color 0.3s;
+  }
+
+  .floating-button:hover {
+    background-color: #218838;
+  }
+
+  .floating-button span {
+    font-size: 28px;
+  }
 </style>
 
-<div class="history-container">
+<!-- Floating Button -->
+<a href="{% url 'diagnosis:diagnose' %}" class="floating-button" title="Back to Diagnosis">
+  <span>↩</span>
+</a>
+
+<!-- Diagnosis History Table -->
+
+<div class="history-table-container">
   <h2>🩺 Diagnosis History</h2>
 
-  {% for diag in diagnoses %}
-  <div class="history-entry">
-    <img src="{{ diag.image.url }}" alt="Diagnosis Image">
-    <div class="history-details">
-      <span><strong>Disease:</strong> <span class="badge bg-danger">{{ diag.disease_name }}</span></span>
-      <span><strong>Severity:</strong> <span class="badge bg-warning">{{ diag.severity }}</span></span>
-      <span><strong>Affected Part:</strong> {{ diag.affected_part }}</span>
-      <span><strong>Confidence:</strong> <span class="text-success">{{ diag.confidence }}%</span></span>
-      <span><strong>Timestamp:</strong> {{ diag.timestamp|date:"F j, Y, g:i a" }}</span>
-    </div>
-  </div>
-  {% empty %}
+  {% if diagnoses %}
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Disease</th>
+        <th>Severity</th>
+        <th>Affected Part</th>
+        <th>Confidence</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for diag in diagnoses %}
+      <tr>
+        <td><img src="{{ diag.image.url }}" alt="Diagnosis Image"></td>
+        <td><span class="badge bg-danger">{{ diag.disease_name }}</span></td>
+        <td><span class="badge bg-warning">{{ diag.severity }}</span></td>
+        <td>{{ diag.affected_part }}</td>
+        <td><span class="text-success">{{ diag.confidence }}%</span></td>
+        <td>{{ diag.timestamp|date:"F j, Y, g:i a" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
   <p>No diagnoses available yet.</p>
-  {% endfor %}
+  {% endif %}
 </div>
+
+<!-- Floating Button -->
+<a href="{% url 'diagnosis:diagnose' %}" class="floating-button" title="Back to Diagnosis">
+  <span>↩</span>
+</a>
 
 {% endblock %}
