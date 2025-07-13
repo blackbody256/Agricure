@@ -236,7 +236,7 @@
                             <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
 
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                            <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                            <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
                             <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
                             {% else %}
                             <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
@@ -244,7 +244,7 @@
                             <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
 
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                            <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                            <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
                             <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
                             <!--To be changed.-->
                             <li><a href="{% url 'users:manage_farmers' %}">Manage Farmers</a></li>

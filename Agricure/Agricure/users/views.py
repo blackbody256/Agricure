@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -46,14 +46,19 @@ class SignUpView(CreateView):
     template_name = 'signup.html'
     
     def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        
-        # Redirect based on user role
-        if user.role == 'ADMIN':
-            return HttpResponseRedirect('/admin-dashboard/')
-        else:
-            return HttpResponseRedirect('/dashboard/')
+        try:
+            user = form.save()
+            login(self.request, user)
+            
+            # Redirect based on user role
+            if user.role == 'ADMIN':
+                return HttpResponseRedirect('/admin-dashboard/')
+            else:
+                return HttpResponseRedirect('/dashboard/')
+        except ValidationError as e:
+            # Add the validation error to the form
+            form.add_error('role', e.message if hasattr(e, 'message') else str(e))
+            return self.form_invalid(form)
 
 # Profile edit page
 class ProfileEditView(LoginRequiredMixin, UpdateView):
@@ -122,13 +127,19 @@ def delete_farmer(request, user_id):
     messages.success(request, "Farmer deleted.")
     return redirect("users:manage_farmers")
 
-
 @login_required
 @admin_required
 def add_farmer(request):
     if request.method == "POST":
         form = FarmerCreationForm(request.POST)
         if form.is_valid():
+            # Check if trying to create another admin
+            if form.cleaned_data.get('role') == 'ADMIN':
+                existing_admins = User.objects.filter(role='ADMIN').count()
+                if existing_admins >= 1:
+                    messages.error(request, "Only one admin is allowed in the system.")
+                    return render(request, "add_farmer.html", {"form": form})
+            
             form.save()
             messages.success(request, "Farmer added successfully.")
             return redirect("users:manage_farmers")

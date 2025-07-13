@@ -1,0 +1,480 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body { 
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        /* Alternative green gradients you can try:
+        background: linear-gradient(135deg, #a8e6cf 0%, #dcedc8 100%);
+        background: linear-gradient(135deg, #c8e6c9 0%, #4caf50 100%);
+        background: linear-gradient(135deg, #81c784 0%, #a5d6a7 100%);
+        */
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+    }
+    
+    .dashboard-container { 
+        max-width: 1400px; 
+        margin: auto; 
+        padding: 2rem 1rem;
+    }
+    
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: white;
+    }
+    
+    .dashboard-title { 
+        font-size: 2.8rem; 
+        font-weight: 700; 
+        letter-spacing: -1px;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .dashboard-subtitle { 
+        font-size: 1.2rem; 
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    /* Summary Cards Section */
+    .summary-section {
+        margin-bottom: 3rem;
+    }
+    
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .summary-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 2rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .summary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .summary-card.recent {
+        border-left: 5px solid #2e7d32; /* Dark green */
+    }
+    
+    .summary-card.common {
+        border-left: 5px solid #388e3c; /* Medium green */
+    }
+    
+    .summary-card.total {
+        border-left: 5px solid #689f38; /* Light green */
+    }
+    
+    .summary-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+    
+    .summary-label {
+        font-size: 1.1rem;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .most-recent-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        margin-bottom: 1rem;
+    }
+
+    /* Content Sections */
+    .content-section {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    
+    .section-header {
+        background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%); /* Light green gradient */
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #c8e6c9;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2e7d32; /* Dark green for better contrast */
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .section-content {
+        padding: 2rem;
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.3s ease;
+        border: 1px solid #e8f5e8;
+    }
+    
+    .chart-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(46, 125, 50, 0.1); /* Green shadow on hover */
+    }
+    
+    .chart-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2e7d32; /* Dark green */
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #c8e6c9; /* Light green border */
+    }
+    
+    .chart-container {
+        width: 100%;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Full width chart */
+    .full-width-chart {
+        grid-column: 1 / -1;
+        height: 400px;
+    }
+
+    /* Table Styles */
+    .table-container {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .table {
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    
+    .table th {
+        background: #f1f8e9; /* Light green background */
+        color: #2e7d32; /* Dark green text */
+        font-weight: 600;
+        padding: 1rem;
+        border: none;
+    }
+    
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #e8f5e8; /* Light green border */
+    }
+    
+    .table tbody tr:hover {
+        background: #f9fbe7; /* Very light green on hover */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-title {
+            font-size: 2.2rem;
+        }
+        
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .section-content {
+            padding: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .dashboard-container {
+            padding: 1rem 0.5rem;
+        }
+        
+        .section-header {
+            padding: 1rem 1.5rem;
+        }
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+        color: #81c784; /* Light green for icons */
+    }
+    
+    /* Custom button styling for agricultural theme */
+    .btn-primary {
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+    
+    /* Badge styling for agricultural theme */
+    .badge {
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+    }
+    
+    .badge.bg-success {
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%) !important;
+    }
+    
+    .badge.bg-secondary {
+        background: linear-gradient(135deg, #81c784 0%, #a5d6a7 100%) !important;
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">🌱 Farmer Analytics Dashboard</h1>
+        <p class="dashboard-subtitle">Track your crop disease trends and monitor your farm's health</p>
+    </div>
+
+    <!-- Summary Cards Section -->
+    <div class="summary-section">
+        <div class="summary-grid">
+            <div class="summary-card recent">
+                <div class="summary-label">Most Recent Detection</div>
+                {% if most_recent_detection.image_url %}
+                    <img src="{{ most_recent_detection.image_url }}" class="most-recent-img" alt="Recent Detection">
+                {% endif %}
+                <div class="summary-value">{{ most_recent_detection.disease|default:"None" }}</div>
+                <div class="text-muted" style="font-size:0.9rem;">
+                    {{ most_recent_detection.date|date:"M d, Y"|default:"No data" }}
+                </div>
+            </div>
+            
+            <div class="summary-card common">
+                <div class="summary-label">Most Common Disease</div>
+                <div class="summary-value">{{ most_common_disease|default:"None" }}</div>
+                <div class="text-muted" style="font-size:0.9rem;">
+                    Primary concern
+                </div>
+            </div>
+            
+            <div class="summary-card total">
+                <div class="summary-label">Total Diagnoses</div>
+                <div class="summary-value">{{ history|length }}</div>
+                <div class="text-muted" style="font-size:0.9rem;">
+                    All time
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i>
+                Disease Analysis Charts
+            </h2>
+        </div>
+        <div class="section-content">
+            <div class="charts-grid">
+                <!-- Pie Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Disease Distribution</h3>
+                    <div class="chart-container">
+                        {% if pie_chart %}
+                            {{ pie_chart|safe }}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-chart-pie"></i>
+                                <p>No data available</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Line Graph -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Monthly Trends</h3>
+                    <div class="chart-container">
+                        {% if line_graph %}
+                            {{ line_graph|safe }}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-chart-line"></i>
+                                <p>No data available</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Bar Graph - Full Width -->
+                <div class="chart-card full-width-chart">
+                    <h3 class="chart-title">Disease Frequency Comparison</h3>
+                    <div class="chart-container">
+                        {% if bar_graph %}
+                            {{ bar_graph|safe }}
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>No data available</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnosis History Section -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Diagnosis History
+            </h2>
+        </div>
+        <div class="section-content">
+            {% if history %}
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Date</th>
+                                <th>Disease</th>
+                                <th>Severity</th>
+                                <th>Affected Part</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in history %}
+                            <tr>
+                                <td>
+                                    {% if row.image_url %}
+                                        <img src="{{ row.image_url }}" class="most-recent-img" style="width: 40px; height: 40px;" alt="Diagnosis">
+                                    {% else %}
+                                        <div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>{{ row.timestamp|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    <span class="fw-semibold">{{ row.disease_name }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ row.severity }}</span>
+                                </td>
+                                <td>{{ row.affected_part }}</td>
+                                <td>
+                                    {% if row.confidence %}
+                                        <span class="badge bg-success">{{ row.confidence }}%</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-microscope"></i>
+                    <h4>No diagnosis history</h4>
+                    <p>Start by uploading images for disease detection</p>
+                    <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-primary mt-2">
+                        <i class="fas fa-upload"></i> Upload Image
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Farmer dashboard charts initializing...');
+    
+    setTimeout(function() {
+        const containers = document.querySelectorAll('.chart-container, .plotly-graph-div');
+        console.log('Found', containers.length, 'chart elements');
+        
+        containers.forEach(function(container, index) {
+            const plotlyDiv = container.querySelector ? container.querySelector('div[id]') : (container.id ? container : null);
+            if (plotlyDiv && plotlyDiv.id) {
+                console.log('Found farmer chart:', plotlyDiv.id);
+                
+                plotlyDiv.style.display = 'block';
+                plotlyDiv.style.visibility = 'visible';
+                
+                try {
+                    if (typeof Plotly !== 'undefined') {
+                        Plotly.Plots.resize(plotlyDiv.id);
+                        console.log('✅ Resized farmer chart:', plotlyDiv.id);
+                    }
+                } catch (e) {
+                    console.log('❌ Farmer chart error:', e);
+                }
+            }
+        });
+    }, 1000);
+});
+</script>
+{% endblock %}

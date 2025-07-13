@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .forms import DiagnosisForm
 from .models import Diagnosis
 
@@ -21,11 +22,15 @@ DISEASE_CLASSES = [
     'Black Rot', 'Scab', 'Smut', 'Mold', 'Other'
 ]
 
+@login_required
 def diagnose(request):
     if request.method == 'POST':
         form = DiagnosisForm(request.POST, request.FILES)
         if form.is_valid():
-            diagnosis = form.save()
+            diagnosis = form.save(commit=False)
+            diagnosis.user = request.user  # Add this line
+            diagnosis.save()
+            
             image_path = diagnosis.image.path
 
             # Load and preprocess image
@@ -53,6 +58,7 @@ def diagnose(request):
 
     return render(request, 'upload.html', {'form': form})
 
+@login_required
 def diagnosis_history(request):
-    diagnoses = Diagnosis.objects.all().order_by('-timestamp')
+    diagnoses = Diagnosis.objects.filter(user=request.user).order_by('-timestamp')
     return render(request, 'history.html', {'diagnoses': diagnoses})
