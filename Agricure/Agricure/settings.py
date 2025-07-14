@@ -142,3 +142,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Email configuration for password reset using Gmail
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#enable file uploads 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
