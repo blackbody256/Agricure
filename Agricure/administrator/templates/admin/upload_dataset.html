@@ -127,7 +127,6 @@
             <p>Select a new ZIP dataset and name it</p>
         </div>
 
-        <!-- ✅ Success messages -->
         {% if messages %}
             <div class="form-success">
                 {% for message in messages %}
@@ -136,7 +135,6 @@
             </div>
         {% endif %}
 
-        <!-- ✅ Upload form -->
         <form method="post" enctype="multipart/form-data" class="upload-form">
             {% csrf_token %}
 

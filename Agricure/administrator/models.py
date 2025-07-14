@@ -1,9 +1,6 @@
 from django.db import models
 
 # Create your models here.
-# administrator/models.py
-
-from django.db import models
 
 class DatasetUpload(models.Model):
     name = models.CharField(max_length=100)
