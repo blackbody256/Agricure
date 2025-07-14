@@ -17,27 +17,34 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            background-color: #ffffff;
+            background-color: #f4f7f6;
             color: #2d2d2d;
         }
         
-        .wrapper {
-            min-height: 100vh;
+        .page-container {
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content-body {
+            display: flex;
+            flex: 1;
         }
         
         main {
             flex: 1;
+            padding: 2rem;
         }
-        
-        /* Navbar Styles */
+
+        /* Original Navbar Styles */
         .navbar {
             background-color: #fdfffe;
             padding: 0;
             width: 100%;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border: none;
+            z-index: 1000;
         }
         
         .nav-container {
@@ -58,61 +65,25 @@
             height: 40px;
         }
         
-        .brand-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2e7d32;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         .nav-links {
             display: flex;
-            justify-content: flex-end;
             align-items: center;
             list-style: none;
             gap: 0.5rem;
-            height: 70px;
-        }
-        
-        .nav-links li {
-            display: flex;
-            align-items: center;
         }
         
         .nav-links a {
             color: #3fc446;
             text-decoration: none;
             font-weight: 500;
-            font-size: 1.0rem;
             padding: 0.2rem 0.7rem;
-            transition: color 0.2s, border-bottom 0.2s;
-            border-bottom: 2px solid transparent;
+            transition: color 0.2s;
         }
         
         .nav-links a:hover, .nav-links a:focus {
             color: #cddc39;
-            border-bottom: 2px solid #cddc39;
         }
         
-        .nav-links li:last-child a {
-            background: #388e3c;
-            color: #fff;
-            border-radius: 6px;
-            padding: 0.5rem 1.5rem;
-            margin-left: 1rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(46,125,50,0.10);
-            border: none;
-            transition: background 0.2s, color 0.2s;
-        }
-        
-        .nav-links li:last-child a:hover, .nav-links li:last-child a:focus {
-            background: #2e7d32;
-            color: #cddc39;
-        }
-        
-        /* Logout button styling */
         .logout-btn {
             background: none !important;
             border: none;
@@ -120,37 +91,47 @@
             font-weight: 500;
             cursor: pointer;
             padding: 0.2rem 0.7rem;
-            transition: color 0.2s;
             font-size: 1.0rem;
         }
         
         .logout-btn:hover {
             color: #cddc39 !important;
         }
-        
-        /* Secondary Nav for authenticated users */
-        .secondary-nav {
-            background-color: #f8f9fa;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e9ecef;
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #2e7d32;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding-top: 1.5rem;
         }
-        
-        .secondary-nav .nav-links {
-            gap: 1rem;
-            padding: 0 3rem;
-            height: auto;
+
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
         }
-        
-        .secondary-nav .nav-links a {
-            color: #495057;
-            font-size: 0.9rem;
-            padding: 0.5rem 0.8rem;
-            border-radius: 4px;
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #e8f5e9;
+            text-decoration: none;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.05rem;
+            transition: background 0.3s, color 0.3s;
         }
-        
-        .secondary-nav .nav-links a:hover {
-            background-color: #e9ecef;
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background: #cddc39;
             color: #2e7d32;
+        }
+
+        .sidebar-nav i {
+            width: 20px;
+            text-align: center;
         }
         
         /* Footer */
@@ -160,47 +141,19 @@
             text-align: center;
             padding: 1.5rem;
             font-size: 0.9rem;
-            margin-top: auto;
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 1rem;
-            }
-            
-            .nav-links {
-                flex-direction: column;
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: #fdfffe;
-                display: none;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            
-            .nav-links.active {
-                display: flex;
-            }
-            
-            .nav-links li {
-                width: 100%;
-                text-align: center;
-                padding: 1rem 0;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="page-container">
         <!-- Header -->
         <header>
             <nav class="navbar">
                 <div class="nav-container">
                     <div class="logo">
-                        <img src="{% static 'images/agricure.png' %}" alt="Agricure Logo" />
-                        <!-- <span class="brand-name">Agricure</span> -->
+                        <a href="{% url 'users:home' %}">
+                            <img src="{% static 'images/agricure.png' %}" alt="Agricure Logo" />
+                        </a>
                     </div>
                     <ul class="nav-links">
                         <li><a href="{% url 'users:home' %}">Home</a></li>
@@ -211,9 +164,7 @@
                             <li>
                                 <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="logout-btn">
-                                        Logout
-                                    </button>
+                                    <button type="submit" class="logout-btn">Logout</button>
                                 </form>
                             </li>
                         {% else %}
@@ -224,41 +175,35 @@
                     </ul>
                 </div>
             </nav>
-            
-            <!-- Secondary Navigation for authenticated users -->
-            {% if user.is_authenticated %}
-                <nav class="secondary-nav">
-                    <div class="nav-container">
-                        <ul class="nav-links">
-                            {% if user.role == 'ADMIN' %}
-                            <li><a href="{% url 'users:admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-                            <li><a href="#"><i class="fas fa-leaf"></i> My Crops</a></li>
-                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
-
-                            <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                            <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                            <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-                            {% else %}
-                            <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-                            <li><a href="#"><i class="fas fa-leaf"></i> My Crops</a></li>
-                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
-
-                            <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
-                            <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                            <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-                            <!--To be changed.-->
-                            <li><a href="{% url 'users:manage_farmers' %}">Manage Farmers</a></li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </nav>
-            {% endif %}
         </header>
 
-        <!-- Main Content -->
-        <main>
-            {% block content %}{% endblock %}
-        </main>
+        <div class="content-body">
+            {% if user.is_authenticated %}
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <ul class="sidebar-nav">
+                    {% if user.role == 'ADMIN' %}
+                        <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:manage_farmers' %}"><i class="fas fa-users"></i> Manage Farmers</a></li>
+                        <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
+                        <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Diagnose</a></li>
+                        <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
+                        <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
+                        <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                         <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    {% endif %}
+                </ul>
+            </aside>
+            {% endif %}
+
+            <!-- Main Content -->
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+        </div>
 
         <!-- Footer -->
         <footer class="footer">

@@ -25,11 +25,7 @@ urlpatterns = [
     path('recommendations/', include('recommendations.urls')),
     path('diagnosis/', include('diagnosis.urls')),
     path('administrator/', include('administrator.urls')),
-    
-    # Remove all the password reset URLs from here
-    # They should be in users/urls.py instead
-    
-    path('', include('users.urls')),  # Home, signup, login
+    path('', include('users.urls')),
 ]
 
 if settings.DEBUG:

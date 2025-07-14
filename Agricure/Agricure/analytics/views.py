@@ -49,7 +49,7 @@ def farmer_analytics(request):
         )
         line_fig.update_traces(line=dict(width=4), marker=dict(size=10))
         line_fig.update_layout(margin=dict(l=20, r=20, t=40, b=20))
-        line_graph = plot(line_fig, output_type='div', include_plotlyjs=True)  # Changed to True
+        line_graph = plot(line_fig, output_type='div', include_plotlyjs=True)
 
         # Pie chart: Proportion of diseases detected
         pie_data = df['disease_name'].value_counts().reset_index()
@@ -60,7 +60,7 @@ def farmer_analytics(request):
         )
         pie_fig.update_traces(textposition='inside', textinfo='percent+label')
         pie_fig.update_layout(margin=dict(l=20, r=20, t=40, b=20))
-        pie_chart = plot(pie_fig, output_type='div', include_plotlyjs=True)    # Changed to True
+        pie_chart = plot(pie_fig, output_type='div', include_plotlyjs=True)
 
         # Horizontal bar graph: Diseases detected
         bar_fig = px.bar(
@@ -69,7 +69,7 @@ def farmer_analytics(request):
         )
         bar_fig.update_traces(marker_color='rgba(58, 71, 80, 0.8)', marker_line_width=2)
         bar_fig.update_layout(margin=dict(l=20, r=20, t=40, b=20))
-        bar_graph = plot(bar_fig, output_type='div', include_plotlyjs=True)    # Changed to True
+        bar_graph = plot(bar_fig, output_type='div', include_plotlyjs=True)
 
         history_list = df.to_dict('records')
     else:
@@ -117,7 +117,7 @@ def admin_analytics(request):
         role='FARMER'
     ).count()
     
-    # Active users (users who made diagnoses in last 30 days) - FIX THE RELATIONSHIP
+    # Active users (users who made diagnoses in last 30 days)
     thirty_days_ago = now - timedelta(days=30)
     active_user_ids = Diagnosis.objects.filter(
         timestamp__gte=thirty_days_ago
@@ -131,7 +131,7 @@ def admin_analytics(request):
     # Average diagnoses per user
     avg_diagnoses_per_user = round(total_diagnoses / total_users if total_users > 0 else 0, 1)
     
-    # Most active user - FIX THE RELATIONSHIP
+    # Most active user
     user_diagnosis_counts = {}
     for diagnosis in Diagnosis.objects.select_related('user'):
         if diagnosis.user.role == 'FARMER':
@@ -163,28 +163,15 @@ def admin_analytics(request):
     monthly_trends_chart = None
     user_activity_chart = None
     
-    # Debug: Print the counts to see if data exists
-    print(f"=== ADMIN ANALYTICS DEBUG ===")
-    print(f"Total diagnoses: {total_diagnoses}")
-    print(f"Total users: {total_users}")
-    print(f"Unique diseases: {unique_diseases}")
-    print(f"Active users: {active_users}")
-    print(f"Most active user: {most_active_user}")
-    print(f"User diagnosis counts: {user_diagnosis_counts}")
-    
     if total_diagnoses > 0:
         try:
             # Get ALL diagnoses for system-wide analysis
             all_diagnoses = Diagnosis.objects.all().values('timestamp', 'disease_name', 'user__username')
             df_all = pd.DataFrame(list(all_diagnoses))
-            print(f"DataFrame shape: {df_all.shape}")
-            print(f"DataFrame columns: {df_all.columns.tolist()}")
-            print(f"Sample data:\n{df_all.head()}")
             
             # Disease distribution pie chart
             disease_counts = df_all['disease_name'].value_counts().reset_index()
             disease_counts.columns = ['disease_name', 'count']
-            print(f"Disease counts: {disease_counts}")
             
             if not disease_counts.empty:
                 fig_pie = px.pie(
@@ -200,12 +187,11 @@ def admin_analytics(request):
                     height=300,
                     margin=dict(l=20, r=20, t=40, b=20)
                 )
-                disease_pie_chart = plot(fig_pie, output_type='div', include_plotlyjs=True)      # Changed to True
+                disease_pie_chart = plot(fig_pie, output_type='div', include_plotlyjs=True)
             
             # Monthly trends
             df_all['month'] = pd.to_datetime(df_all['timestamp']).dt.strftime('%Y-%m')
             monthly_counts = df_all.groupby('month').size().reset_index(name='count')
-            print(f"Monthly data: {monthly_counts}")
             
             if not monthly_counts.empty:
                 fig_line = px.line(
@@ -221,12 +207,11 @@ def admin_analytics(request):
                     height=300,
                     margin=dict(l=20, r=20, t=40, b=20)
                 )
-                monthly_trends_chart = plot(fig_line, output_type='div', include_plotlyjs=True)  # Changed to True
+                monthly_trends_chart = plot(fig_line, output_type='div', include_plotlyjs=True)
             
             # User activity chart
             user_activity_counts = df_all['user__username'].value_counts().head(10).reset_index()
             user_activity_counts.columns = ['username', 'count']
-            print(f"User activity data: {user_activity_counts}")
 
             if not user_activity_counts.empty:
                 fig_bar = px.bar(
@@ -242,25 +227,19 @@ def admin_analytics(request):
                     yaxis_title='Number of Diagnoses',
                     height=400,
                     margin=dict(l=20, r=20, t=40, b=20),
-                    # Add these lines to make bars narrower
-                    bargap=0.6,  # Gap between bars (0.6 = 60% gap)
-                    bargroupgap=0.1  # Gap between groups of bars
+                    bargap=0.6,
+                    bargroupgap=0.1
                 )
-                # Make bars narrower by updating traces
                 fig_bar.update_traces(
-                    width=0.4,  # Bar width (0.4 = 40% of available space)
-                    marker_line_width=1,  # Add thin border
-                    marker_line_color='rgba(0,0,0,0.2)'  # Light border color
+                    width=0.4,
+                    marker_line_width=1,
+                    marker_line_color='rgba(0,0,0,0.2)'
                 )
                 user_activity_chart = plot(fig_bar, output_type='div', include_plotlyjs=True)
-                print("✅ Bar chart created successfully")
         
         except Exception as e:
-            print(f"❌ Error creating charts: {e}")
-            import traceback
-            traceback.print_exc()
-    else:
-        print("⚠️ No diagnoses found - charts will be empty")
+            # Silent error handling - no debug output
+            pass
     
     context = {
         'total_users': total_users,
@@ -277,11 +256,5 @@ def admin_analytics(request):
         'monthly_trends_chart': monthly_trends_chart,
         'user_activity_chart': user_activity_chart,
     }
-    
-    print(f"=== CONTEXT SUMMARY ===")
-    print(f"Charts in context:")
-    print(f"  - Pie chart: {'✅' if disease_pie_chart else '❌'}")
-    print(f"  - Line chart: {'✅' if monthly_trends_chart else '❌'}")
-    print(f"  - Bar chart: {'✅' if user_activity_chart else '❌'}")
     
     return render(request, 'analytics/admin_dashboard.html', context)

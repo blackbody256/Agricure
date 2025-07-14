@@ -1,0 +1,219 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Recommendation Details - Agricure{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6 rounded-t-lg">
+            <h1 class="text-3xl font-bold flex items-center">
+                <i class="fas fa-leaf mr-3"></i>
+                AI Recommendation Details
+            </h1>
+            <p class="mt-2 opacity-90">Comprehensive agricultural guidance</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white shadow-xl rounded-b-lg p-8">
+            <!-- Disease Information -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-bug text-red-500 mr-3"></i>
+                    Disease Information
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-700">Disease</h3>
+                        <p class="text-gray-600">{{ recommendation.diagnosis.disease_name }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-700">Confidence</h3>
+                        <p class="text-gray-600">{{ recommendation.diagnosis.confidence }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Context -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-cloud-sun text-blue-500 mr-3"></i>
+                    Weather Context
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-700">Temperature</h3>
+                        <p class="text-blue-600">{{ recommendation.temperature }}°C</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-700">Humidity</h3>
+                        <p class="text-blue-600">{{ recommendation.humidity }}%</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-blue-700">Conditions</h3>
+                        <p class="text-blue-600">{{ recommendation.weather_description }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-robot text-purple-500 mr-3"></i>
+                    AI-Generated Recommendations
+                </h2>
+                
+                <!-- Treatment Summary -->
+                <div class="mb-6">
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                        <h3 class="font-semibold text-red-700 mb-2">
+                            <i class="fas fa-medkit mr-2"></i>
+                            Immediate Treatment
+                        </h3>
+                        <p class="text-gray-700">{{ recommendation.treatment_summary }}</p>
+                    </div>
+                </div>
+
+                <!-- Prevention Summary -->
+                <div class="mb-6">
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
+                        <h3 class="font-semibold text-green-700 mb-2">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Prevention Strategies
+                        </h3>
+                        <p class="text-gray-700">{{ recommendation.prevention_summary }}</p>
+                    </div>
+                </div>
+
+                <!-- Full AI Recommendation -->
+                {% if recommendation.recommendation_json %}
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-brain mr-2"></i>
+                        Complete AI Analysis
+                    </h3>
+                    
+                    {% with recommendation.recommendation_json|safe as ai_data %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Weather Considerations -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-blue-700 mb-2">
+                                <i class="fas fa-cloud mr-2"></i>
+                                Weather Considerations
+                            </h4>
+                            <p class="text-sm text-gray-600">{{ ai_data.weather_considerations }}</p>
+                        </div>
+
+                        <!-- Timing Recommendations -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-green-700 mb-2">
+                                <i class="fas fa-clock mr-2"></i>
+                                Timing Recommendations
+                            </h4>
+                            <p class="text-sm text-gray-600">{{ ai_data.timing_recommendations }}</p>
+                        </div>
+
+                        <!-- Materials Needed -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-purple-700 mb-2">
+                                <i class="fas fa-toolbox mr-2"></i>
+                                Materials Needed
+                            </h4>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                {% for material in ai_data.materials_needed %}
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    {{ material }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Monitoring Schedule -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-orange-700 mb-2">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                Monitoring Schedule
+                            </h4>
+                            <p class="text-sm text-gray-600">{{ ai_data.monitoring_schedule }}</p>
+                        </div>
+
+                        <!-- Emergency Actions -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm md:col-span-2">
+                            <h4 class="font-semibold text-red-700 mb-2">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Emergency Actions
+                            </h4>
+                            <p class="text-sm text-gray-600">{{ ai_data.emergency_actions }}</p>
+                        </div>
+                    </div>
+                    {% endwith %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Location Information -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-map-marker-alt text-green-500 mr-3"></i>
+                    Location Information
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-green-700">City</h3>
+                        <p class="text-green-600">{{ recommendation.city }}</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-green-700">Coordinates</h3>
+                        <p class="text-green-600">{{ recommendation.latitude }}, {{ recommendation.longitude }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timestamp -->
+            <div class="border-t pt-6">
+                <div class="flex justify-between items-center text-sm text-gray-500">
+                    <span>
+                        <i class="fas fa-clock mr-2"></i>
+                        Generated: {{ recommendation.created_at|date:"F j, Y, g:i A" }}
+                    </span>
+                    <span>
+                        <i class="fas fa-robot mr-2"></i>
+                        AI-Powered Recommendation
+                    </span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 mt-8">
+                <a href="{% url 'recommendations:list' %}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center">
+                    <i class="fas fa-list mr-2"></i>
+                    Back to Recommendations
+                </a>
+                <a href="{% url 'diagnosis:diagnose' %}" 
+                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Diagnosis
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add some custom styles for better presentation -->
+<style>
+.grid > div {
+    transition: transform 0.2s;
+}
+
+.grid > div:hover {
+    transform: translateY(-2px);
+}
+
+.bg-gradient-to-r {
+    background: linear-gradient(to right, #16a085, #2980b9);
+}
+</style>
+{% endblock %}
