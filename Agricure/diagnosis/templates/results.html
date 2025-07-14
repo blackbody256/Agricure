@@ -119,41 +119,7 @@
   .me-2 {
     margin-right: 0.5rem;
   }
-
-  .floating-add-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #1f7a45;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 30px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    z-index: 999;
-    transition: background-color 0.3s;
-  }
-
-  .floating-add-button:hover {
-    background-color: #176636;
-  }
-
-  .floating-add-button span {
-    font-size: 36px;
-    line-height: 1;
-  }
 </style>
-<!-- Floating Add Button -->
-<a href="{% url 'diagnosis:diagnose' %}" class="floating-add-button" title="Add New Diagnosis">
-  <span><strong>+</strong></span>
-</a>
 
 <div class="page-wrapper">
   <!-- Diagnosis Card -->
@@ -171,23 +137,23 @@
       <div class="details-container">
         <ul class="list-group">
           <li class="list-group-item">
-            <strong> Disease:</strong>
-            <span class="badge bg-danger">{{ disease_label }}</span>
+            <strong>⚕️ Disease:</strong>
+            <span class="badge bg-danger">{{ diagnosis.disease_name }}</span>
           </li>
           <li class="list-group-item">
-            <strong> Severity:</strong>
+            <strong>🌡️ Severity:</strong>
             <span class="badge bg-warning">{{ diagnosis.severity }}</span>
           </li>
           <li class="list-group-item">
-            <strong> Affected Part:</strong>
+            <strong>🍃 Affected Part:</strong>
             {{ diagnosis.affected_part }}
           </li>
           <li class="list-group-item">
-            <strong> Confidence:</strong>
+            <strong>📊 Confidence:</strong>
             <span class="text-success fw-bold">{{ diagnosis.confidence }}%</span>
           </li>
           <li class="list-group-item">
-            <strong> Timestamp:</strong>
+            <strong>🕒 Timestamp:</strong>
             {{ diagnosis.timestamp }}
           </li>
         </ul>

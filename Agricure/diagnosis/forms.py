@@ -13,9 +13,9 @@ class DiagnosisForm(forms.ModelForm):
                 'id': 'id_image'
             })
         }
-
+        
     # ✅ Mark image field optional so we can fallback to webcam input
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['image'].required = False
-
+   

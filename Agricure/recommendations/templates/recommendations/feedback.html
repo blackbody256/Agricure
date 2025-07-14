@@ -1,0 +1,876 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Provide Feedback - Agricure{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feedback-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feedback-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1.5" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="1.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="1" fill="white" opacity="0.1"/></svg>');
+        animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        100% { transform: translateY(-100px) rotate(360deg); }
+    }
+    
+    .feedback-card {
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .feedback-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feedback-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: sparkle 10s linear infinite;
+    }
+    
+    @keyframes sparkle {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(50px, 50px) rotate(360deg); }
+    }
+    
+    .feedback-header::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: white;
+        border-radius: 30px 30px 0 0;
+    }
+    
+    .feedback-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .recommendation-summary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        margin: 2rem;
+        padding: 2.5rem;
+        border-radius: 20px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        transform: rotate(-1deg);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+    
+    .recommendation-summary::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 2px);
+        background-size: 30px 30px;
+        animation: drift 15s linear infinite;
+    }
+    
+    @keyframes drift {
+        0% { transform: translateX(0) translateY(0); }
+        100% { transform: translateX(-30px) translateY(-30px); }
+    }
+    
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .summary-item {
+        background: rgba(255,255,255,0.25);
+        padding: 1.5rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+        transform: translateY(0);
+        transition: all 0.3s ease;
+    }
+    
+    .summary-item:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.35);
+    }
+    
+    .summary-item:nth-child(even) {
+        transform: translateY(10px);
+    }
+    
+    .form-section {
+        margin: 2rem;
+        padding: 2.5rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 20px;
+        border-left: 6px solid #667eea;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-section:nth-child(even) {
+        transform: translateX(10px);
+        border-left: 6px solid #f093fb;
+    }
+    
+    .form-section:nth-child(odd) {
+        transform: translateX(-10px);
+    }
+    
+    .form-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.05));
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+    
+    .rating-container {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+    
+    .rating-star {
+        font-size: 3rem;
+        color: #d1d5db;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        transform: scale(1) rotate(0deg);
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .rating-star:hover {
+        transform: scale(1.3) rotate(15deg);
+        color: #fbbf24;
+        text-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+    }
+    
+    .rating-star.active {
+        color: #f59e0b;
+        transform: scale(1.2) rotate(5deg);
+        text-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+    }
+    
+    .option-card {
+        background: white;
+        border: 3px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        transform: translateX(0);
+    }
+    
+    .option-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+        transition: left 0.6s ease;
+    }
+    
+    .option-card:hover::before {
+        left: 100%;
+    }
+    
+    .option-card:hover {
+        border-color: #667eea;
+        background: #f8fafc;
+        transform: translateX(10px) translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    
+    .option-card.selected {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateX(15px) translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .option-card:nth-child(even) {
+        transform: translateX(20px);
+    }
+    
+    .option-card:nth-child(odd) {
+        transform: translateX(-20px);
+    }
+    
+    .option-card.selected:nth-child(even) {
+        transform: translateX(35px) translateY(-8px);
+    }
+    
+    .option-card.selected:nth-child(odd) {
+        transform: translateX(-5px) translateY(-8px);
+    }
+    
+    .option-card input[type="radio"],
+    .option-card input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+    }
+    
+    .option-text {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .option-icon {
+        font-size: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .option-card:hover .option-icon {
+        transform: scale(1.2) rotate(10deg);
+    }
+    
+    .comments-textarea {
+        width: 100%;
+        min-height: 180px;
+        padding: 2rem;
+        border: 3px solid #e5e7eb;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        resize: vertical;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+        font-family: inherit;
+    }
+    
+    .comments-textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .improvements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .improvements-grid .option-card:nth-child(1) { transform: translateX(-30px) translateY(-10px); }
+    .improvements-grid .option-card:nth-child(2) { transform: translateX(30px) translateY(10px); }
+    .improvements-grid .option-card:nth-child(3) { transform: translateX(-20px) translateY(20px); }
+    .improvements-grid .option-card:nth-child(4) { transform: translateX(20px) translateY(-20px); }
+    
+    .submit-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 2rem;
+        padding: 3rem;
+        border-radius: 25px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transform: rotate(1deg);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .submit-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .submit-section h3 {
+        color: #1f2937 !important; /* Dark color for visibility */
+        text-shadow: 0 2px 10px rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.9);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .submit-section p {
+        color: #1f2937 !important; /* Dark color for visibility */
+        font-size: 1.2rem;
+        font-weight: 500;
+        background: rgba(255,255,255,0.8);
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        display: inline-block;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        padding: 1.5rem 3rem;
+        border-radius: 50px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        margin: 0.5rem;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
+    }
+    
+    .btn-secondary {
+        background: rgba(255,255,255,0.9);
+        border: 3px solid #1f2937;
+        padding: 1.5rem 3rem;
+        border-radius: 50px;
+        color: #1f2937;
+        font-weight: 700;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        margin: 0.5rem;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .btn-secondary:hover {
+        background: #1f2937;
+        color: white;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 35px rgba(31, 41, 55, 0.4);
+    }
+    
+    .section-title {
+        color: #1f2937;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.05); }
+    }
+    
+    .floating {
+        animation: floating 4s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-10px) rotate(2deg); }
+        75% { transform: translateY(-5px) rotate(-2deg); }
+    }
+    
+    @media (max-width: 768px) {
+        .feedback-container {
+            padding: 1rem;
+        }
+        
+        .feedback-card {
+            margin: 0;
+            border-radius: 20px;
+        }
+        
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .improvements-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .option-card:nth-child(even),
+        .option-card:nth-child(odd) {
+            transform: translateX(0);
+        }
+        
+        .form-section:nth-child(even),
+        .form-section:nth-child(odd) {
+            transform: translateX(0);
+        }
+        
+        .improvements-grid .option-card:nth-child(1),
+        .improvements-grid .option-card:nth-child(2),
+        .improvements-grid .option-card:nth-child(3),
+        .improvements-grid .option-card:nth-child(4) {
+            transform: translateX(0) translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="feedback-container">
+    <div class="container" style="max-width: 950px; margin: 0 auto;">
+        <div class="feedback-card">
+            <!-- Beautiful Header -->
+            <div class="feedback-header">
+                <div class="feedback-icon floating">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h1 style="font-size: 2.8rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; z-index: 1;">
+                    Share Your Experience
+                </h1>
+                <p style="font-size: 1.3rem; opacity: 0.9; margin: 0; position: relative; z-index: 1;">
+                    Your feedback helps us improve our AI recommendations
+                </p>
+            </div>
+
+            <!-- Recommendation Summary -->
+            <div class="recommendation-summary">
+                <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem; text-align: center; position: relative; z-index: 1;">
+                    <i class="fas fa-seedling" style="margin-right: 0.5rem;"></i>
+                    Recommendation Summary
+                </h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🩺</div>
+                        <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem;">Disease</div>
+                        <div style="font-size: 1rem;">{{ recommendation.diagnosis.disease_name }}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
+                        <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem;">Location</div>
+                        <div style="font-size: 1rem;">{{ recommendation.city }}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                        <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem;">Date</div>
+                        <div style="font-size: 1rem;">{{ recommendation.created_at|date:"M j, Y" }}</div>
+                    </div>
+                    <div class="summary-item">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                        <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem;">Confidence</div>
+                        <div style="font-size: 1rem;">{{ recommendation.diagnosis.confidence }}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Form -->
+            <form method="POST" id="feedbackForm">
+                {% csrf_token %}
+                
+                <!-- Rating Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-star" style="color: #f59e0b;"></i>
+                        Overall Rating
+                    </h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">How would you rate this recommendation?</p>
+                    <div class="rating-container">
+                        {% for i in "12345" %}
+                        <input type="radio" name="rating" value="{{ i }}" id="rating{{ i }}" required>
+                        <label for="rating{{ i }}" class="rating-star" data-rating="{{ i }}">
+                            <i class="fas fa-star"></i>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Usefulness Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-thumbs-up" style="color: #10b981;"></i>
+                        Usefulness
+                    </h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">How useful was this recommendation?</p>
+                    
+                    <label class="option-card" for="very_useful">
+                        <input type="radio" name="usefulness" value="very_useful" id="very_useful" required>
+                        <div class="option-text">
+                            <span class="option-icon">🌟</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Very Useful</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Exactly what I needed</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="option-card" for="somewhat_useful">
+                        <input type="radio" name="usefulness" value="somewhat_useful" id="somewhat_useful" required>
+                        <div class="option-text">
+                            <span class="option-icon">👍</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Somewhat Useful</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Helpful but needs improvement</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="option-card" for="not_useful">
+                        <input type="radio" name="usefulness" value="not_useful" id="not_useful" required>
+                        <div class="option-text">
+                            <span class="option-icon">👎</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Not Useful</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Didn't meet my needs</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Treatment Effectiveness -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-line" style="color: #3b82f6;"></i>
+                        Treatment Effectiveness
+                    </h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">Did the recommended treatment work?</p>
+                    
+                    <label class="option-card" for="completely_effective">
+                        <input type="radio" name="treatment_effectiveness" value="completely_effective" id="completely_effective">
+                        <div class="option-text">
+                            <span class="option-icon">✅</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Completely Effective</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Problem completely solved</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="option-card" for="mostly_effective">
+                        <input type="radio" name="treatment_effectiveness" value="mostly_effective" id="mostly_effective">
+                        <div class="option-text">
+                            <span class="option-icon">🟢</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Mostly Effective</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Significant improvement</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="option-card" for="partially_effective">
+                        <input type="radio" name="treatment_effectiveness" value="partially_effective" id="partially_effective">
+                        <div class="option-text">
+                            <span class="option-icon">🟡</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Partially Effective</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">Some improvement</div>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="option-card" for="not_effective">
+                        <input type="radio" name="treatment_effectiveness" value="not_effective" id="not_effective">
+                        <div class="option-text">
+                            <span class="option-icon">❌</span>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700;">Not Effective</div>
+                                <div style="font-size: 1rem; opacity: 0.8;">No improvement</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-comment-alt" style="color: #8b5cf6;"></i>
+                        Additional Comments
+                    </h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">Share your detailed experience and suggestions</p>
+                    <textarea name="comments" class="comments-textarea" 
+                              placeholder="Tell us about your experience with this recommendation. What worked well? What could be improved? Any additional suggestions?"></textarea>
+                </div>
+
+                <!-- Improvements Section -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-lightbulb" style="color: #f59e0b;"></i>
+                        Suggested Improvements
+                    </h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">What aspects could we improve? (Select all that apply)</p>
+                    
+                    <div class="improvements-grid">
+                        <label class="option-card" for="more_specific">
+                            <input type="checkbox" name="improvements" value="more_specific_treatments" id="more_specific">
+                            <div class="option-text">
+                                <span class="option-icon">🎯</span>
+                                <div style="font-size: 1.1rem; font-weight: 700;">More Specific Treatments</div>
+                            </div>
+                        </label>
+                        
+                        <label class="option-card" for="better_timing">
+                            <input type="checkbox" name="improvements" value="better_timing_advice" id="better_timing">
+                            <div class="option-text">
+                                <span class="option-icon">⏰</span>
+                                <div style="font-size: 1.1rem; font-weight: 700;">Better Timing Advice</div>
+                            </div>
+                        </label>
+                        
+                        <label class="option-card" for="local_availability">
+                            <input type="checkbox" name="improvements" value="local_availability" id="local_availability">
+                            <div class="option-text">
+                                <span class="option-icon">🏪</span>
+                                <div style="font-size: 1.1rem; font-weight: 700;">Local Availability Info</div>
+                            </div>
+                        </label>
+                        
+                        <label class="option-card" for="prevention_strategies">
+                            <input type="checkbox" name="improvements" value="prevention_strategies" id="prevention_strategies">
+                            <div class="option-text">
+                                <span class="option-icon">🛡️</span>
+                                <div style="font-size: 1.1rem; font-weight: 700;">Prevention Strategies</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <h3 class="pulse">
+                        <i class="fas fa-heart" style="margin-right: 0.5rem;"></i>
+                        Thank You for Your Feedback!
+                    </h3>
+                    <p>
+                        Your insights help us create better AI recommendations for farmers
+                    </p>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
+                        Submit Feedback
+                    </button>
+                    <a href="{% url 'recommendations:detail' recommendation.pk %}" class="btn-secondary">
+                        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+                        Back to Recommendation
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Star Rating System
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingInputs = document.querySelectorAll('input[name="rating"]');
+    
+    ratingStars.forEach((star, index) => {
+        star.addEventListener('click', function() {
+            ratingInputs[index].checked = true;
+            updateStarDisplay(index + 1);
+        });
+        
+        star.addEventListener('mouseenter', function() {
+            highlightStars(index + 1);
+        });
+    });
+    
+    document.querySelector('.rating-container').addEventListener('mouseleave', function() {
+        const checkedRating = document.querySelector('input[name="rating"]:checked');
+        if (checkedRating) {
+            updateStarDisplay(parseInt(checkedRating.value));
+        } else {
+            resetStars();
+        }
+    });
+    
+    function updateStarDisplay(rating) {
+        ratingStars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+    }
+    
+    function highlightStars(rating) {
+        ratingStars.forEach((star, index) => {
+            if (index < rating) {
+                star.style.color = '#f59e0b';
+                star.style.transform = 'scale(1.2) rotate(10deg)';
+            } else {
+                star.style.color = '#d1d5db';
+                star.style.transform = 'scale(1) rotate(0deg)';
+            }
+        });
+    }
+    
+    function resetStars() {
+        ratingStars.forEach(star => {
+            star.classList.remove('active');
+            star.style.color = '#d1d5db';
+            star.style.transform = 'scale(1) rotate(0deg)';
+        });
+    }
+    
+    // Option Card Selection
+    const radioOptions = document.querySelectorAll('input[type="radio"]');
+    const checkboxOptions = document.querySelectorAll('input[type="checkbox"]');
+    
+    radioOptions.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove selected class from all cards in the same group
+            const groupCards = document.querySelectorAll(`input[name="${this.name}"]`);
+            groupCards.forEach(input => {
+                input.closest('.option-card').classList.remove('selected');
+            });
+            
+            // Add selected class to current card
+            this.closest('.option-card').classList.add('selected');
+        });
+    });
+    
+    checkboxOptions.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                this.closest('.option-card').classList.add('selected');
+            } else {
+                this.closest('.option-card').classList.remove('selected');
+            }
+        });
+    });
+    
+    // Enhanced Form Animation
+    const formSections = document.querySelectorAll('.form-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = entry.target.style.transform.replace('translateY(50px)', 'translateY(0)');
+                }, index * 100);
+            }
+        });
+    });
+    
+    formSections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = section.style.transform + ' translateY(50px)';
+        section.style.transition = 'all 0.8s ease';
+        observer.observe(section);
+    });
+    
+    // Add some sparkle effects
+    function createSparkle() {
+        const sparkle = document.createElement('div');
+        sparkle.innerHTML = '✨';
+        sparkle.style.position = 'fixed';
+        sparkle.style.left = Math.random() * window.innerWidth + 'px';
+        sparkle.style.top = Math.random() * window.innerHeight + 'px';
+        sparkle.style.fontSize = Math.random() * 20 + 10 + 'px';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.zIndex = '9999';
+        sparkle.style.opacity = '0.7';
+        sparkle.style.animation = 'sparkleFloat 3s ease-out forwards';
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => {
+            sparkle.remove();
+        }, 3000);
+    }
+    
+    // Add sparkle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes sparkleFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Create sparkles occasionally
+    setInterval(createSparkle, 2000);
+});
+</script>
+{% endblock %}

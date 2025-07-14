@@ -4,7 +4,6 @@ from .models import User
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    role = forms.ChoiceField(choices=User.ROLE_CHOICES, required=True)
     
     class Meta(UserCreationForm.Meta):
         model = User
@@ -23,7 +22,7 @@ class ProfileEditForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email', 'username')
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class': 'form-input',
@@ -36,6 +35,10 @@ class ProfileEditForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-input',
                 'placeholder': 'Enter your email address'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Enter your username'
             }),
         }
     
