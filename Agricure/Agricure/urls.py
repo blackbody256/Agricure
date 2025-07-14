@@ -26,6 +26,7 @@ urlpatterns = [
     path('diagnosis/', include('diagnosis.urls')),
     path('administrator/', include('administrator.urls')),
     path('', include('users.urls')),
+    
 ]
 
 if settings.DEBUG:
