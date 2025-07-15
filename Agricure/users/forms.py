@@ -12,10 +12,8 @@ class SignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Limit role choices to Farmer and Agronomist only
-        self.fields['role'].choices = [
-            (User.Roles.FARMER, 'Farmer'),
-            (User.Roles.AGRONOMIST, 'Agronomist'),
-        ]
+        self.fields['role'].choices = User.ROLE_CHOICES
+
     
     def save(self, commit=True):
         user = super().save(commit=False)
