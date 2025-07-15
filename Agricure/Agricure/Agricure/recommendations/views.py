@@ -3,8 +3,14 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
+from django.http import HttpResponse
+import csv
+from .models import Recommendation, Feedback
+from .forms import RecommendationRequestForm
 import json
 import logging
 
@@ -357,3 +363,96 @@ def provide_feedback(request, pk):
     return render(request, 'recommendations/feedback.html', {
         'recommendation': recommendation
     })
+
+@staff_member_required
+def admin_feedback_list(request):
+    """Admin view to list all user feedback"""
+    # Get all feedback with related data
+    feedback_list = Feedback.objects.select_related(
+        'recommendation__diagnosis', 
+        'user'
+    ).order_by('-created_at')
+    
+    # Filter by search query
+    search_query = request.GET.get('search', '')
+    if search_query:
+        feedback_list = feedback_list.filter(
+            Q(recommendation__diagnosis__disease_name__icontains=search_query) |
+            Q(user__username__icontains=search_query) |
+            Q(comments__icontains=search_query)
+        )
+    
+    # Filter by rating
+    rating_filter = request.GET.get('rating', '')
+    if rating_filter:
+        feedback_list = feedback_list.filter(rating=rating_filter)
+    
+    # Filter by usefulness
+    usefulness_filter = request.GET.get('usefulness', '')
+    if usefulness_filter:
+        feedback_list = feedback_list.filter(usefulness=usefulness_filter)
+    
+    # Calculate statistics
+    stats = {
+        'total_feedback': feedback_list.count(),
+        'average_rating': feedback_list.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0,
+        'rating_distribution': feedback_list.values('rating').annotate(count=Count('rating')).order_by('rating'),
+        'usefulness_distribution': feedback_list.values('usefulness').annotate(count=Count('usefulness')),
+    }
+    
+    # Pagination
+    paginator = Paginator(feedback_list, 10)
+    page_number = request.GET.get('page')
+    feedback_page = paginator.get_page(page_number)
+    
+    context = {
+        'feedback_page': feedback_page,
+        'stats': stats,
+        'search_query': search_query,
+        'rating_filter': rating_filter,
+        'usefulness_filter': usefulness_filter,
+    }
+    
+    return render(request, 'recommendations/admin_feedback_list.html', context)
+
+@staff_member_required
+def admin_feedback_detail(request, feedback_id):
+    """Admin view to see detailed feedback"""
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    
+    context = {
+        'feedback': feedback,
+    }
+    
+    return render(request, 'recommendations/admin_feedback_detail.html', context)
+
+@staff_member_required
+def admin_feedback_export(request):
+    """Export feedback data to CSV"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="feedback_export.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow([
+        'ID', 'User', 'Disease', 'Rating', 'Usefulness', 'Treatment Effectiveness',
+        'Comments', 'Improvements', 'Date Created'
+    ])
+    
+    feedback_list = Feedback.objects.select_related(
+        'recommendation__diagnosis', 
+        'user'
+    ).order_by('-created_at')
+    for feedback in feedback_list:
+        writer.writerow([
+            feedback.id,
+            feedback.user.username,
+            feedback.recommendation.diagnosis.disease_name,
+            feedback.rating,
+            feedback.usefulness,
+            feedback.treatment_effectiveness,
+            feedback.comments,
+            ', '.join(feedback.improvements) if feedback.improvements else '',
+            feedback.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    
+    return response
