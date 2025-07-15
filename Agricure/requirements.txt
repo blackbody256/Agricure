@@ -1,0 +1,10 @@
+django
+tensorflow
+numpy
+pandas
+matplotlib
+dotenv
+requests
+pyplot
+Pillow
+
