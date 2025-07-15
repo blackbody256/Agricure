@@ -1,0 +1,212 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+
+.dashboard-subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h4 {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 0.3rem;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.stat-subtext {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.recent-activities {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.recent-activities ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.recent-activities li {
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  background: #fafafa;
+  border-radius: 8px;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge.green { background: #e0fce4; color: #2e7d32; }
+.badge.blue { background: #e3f2fd; color: #1976d2; }
+.badge.gray { background: #eeeeee; color: #424242; }
+
+.view-all {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sidebar-cards .card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.weather-list,
+.health-breakdown {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.health-score {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.health-score .subtext {
+  font-size: 0.9rem;
+  color: #777;
+  display: block;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress {
+  background: #4caf50;
+  height: 100%;
+}
+
+</style>
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Agronomist Dashboard</h2>
+    <p class="dashboard-subtitle">Welcome back, Dr. {{ user.last_name }}</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Active Farms</h4>
+            <p class="stat-value">24</p>
+            <span class="stat-subtext">+3 this month</span>
+        </div>
+        <div class="stat-card">
+            <h4>Crops Monitored</h4>
+            <p class="stat-value">156</p>
+            <span class="stat-subtext">+12 this week</span>
+        </div>
+        <div class="stat-card">
+            <h4>Critical Alerts</h4>
+            <p class="stat-value">3</p>
+            <span class="stat-subtext">2 resolved today</span>
+        </div>
+        <div class="stat-card">
+            <h4>Growth Rate</h4>
+            <p class="stat-value">94%</p>
+            <span class="stat-subtext">+5% from last month</span>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="recent-activities">
+            <h3>Recent Activities</h3>
+            <ul>
+                <li><strong>Green Valley Farm</strong><br><small>Pest alert resolved</small><span class="badge green">2 hours ago</span></li>
+                <li><strong>Sunset Acres</strong><br><small>Soil analysis completed</small><span class="badge blue">4 hours ago</span></li>
+                <li><strong>Mountain View</strong><br><small>Irrigation issue reported</small><span class="badge gray">1 day ago</span></li>
+                <li><strong>River Bend Farm</strong><br><small>Harvest recommendation sent</small><span class="badge green">2 days ago</span></li>
+            </ul>
+            <button class="view-all">View All Activities</button>
+        </div>
+
+        <div class="sidebar-cards">
+            <div class="card">
+                <h3>Current Weather</h3>
+                <ul class="weather-list">
+                    <li>🌡️ Temperature: <strong>24°C</strong></li>
+                    <li>💧 Humidity: <strong>68%</strong></li>
+                    <li>☀️ UV Index: <strong>6</strong></li>
+                    <li>💨 Wind Speed: <strong>12 km/h</strong></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Farm Health Score</h3>
+                <p class="health-score">87% <span class="subtext">Overall Health</span></p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 87%;"></div>
+                </div>
+                <ul class="health-breakdown">
+                    <li>Soil Quality: <strong>92%</strong></li>
+                    <li>Crop Health: <strong>84%</strong></li>
+                    <li>Water Management: <strong>89%</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

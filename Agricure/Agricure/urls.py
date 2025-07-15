@@ -26,6 +26,8 @@ urlpatterns = [
     path('diagnosis/', include('diagnosis.urls')),
     path('administrator/', include('administrator.urls')),
     path('', include('users.urls')),
+    path('agronomist/', include('agronomist.urls')),
+    path('chat/', include('chat.urls')),
     
 ]
 

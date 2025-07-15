@@ -103,11 +103,6 @@
     color: white;
   }
 
-  .bg-warning {
-    background-color: #ffc107;
-    color: #212529;
-  }
-
   .text-success {
     color: #198754;
   }
@@ -116,8 +111,22 @@
     font-weight: bold;
   }
 
-  .me-2 {
-    margin-right: 0.5rem;
+  .view-recommendation-btn {
+    margin-top: 1.5rem;
+    background-color: #1f7a45;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .view-recommendation-btn:hover {
+    background-color: #186a3b;
   }
 </style>
 
@@ -141,14 +150,6 @@
             <span class="badge bg-danger">{{ diagnosis.disease_name }}</span>
           </li>
           <li class="list-group-item">
-            <strong>🌡️ Severity:</strong>
-            <span class="badge bg-warning">{{ diagnosis.severity }}</span>
-          </li>
-          <li class="list-group-item">
-            <strong>🍃 Affected Part:</strong>
-            {{ diagnosis.affected_part }}
-          </li>
-          <li class="list-group-item">
             <strong>📊 Confidence:</strong>
             <span class="text-success fw-bold">{{ diagnosis.confidence }}%</span>
           </li>
@@ -157,6 +158,8 @@
             {{ diagnosis.timestamp }}
           </li>
         </ul>
+
+        <a href="#" class="view-recommendation-btn">View Recommendation</a>
       </div>
     </div>
   </div>

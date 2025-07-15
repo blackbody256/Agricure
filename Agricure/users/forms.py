@@ -9,6 +9,14 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'role')
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limit role choices to Farmer and Agronomist only
+        self.fields['role'].choices = [
+            (User.Roles.FARMER, 'Farmer'),
+            (User.Roles.AGRONOMIST, 'Agronomist'),
+        ]
+    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']

@@ -156,18 +156,19 @@
                         </a>
                     </div>
                     <ul class="nav-links">
-                        <li><a href="{% url 'users:home' %}">Home</a></li>
+                        <!-- <li><a href="{% url 'users:home' %}">Home</a></li> -->
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'users:dashboard' %}">Dashboard</a></li>
-                            <li><a href="{% url 'users:about' %}">About</a></li>
-                            <li><a href="{% url 'users:profile_edit' %}">Profile</a></li>
-                            <li>
+                            <!-- <li><a href="{% url 'users:dashboard' %}">Dashboard</a></li> -->
+                            <!-- <li><a href="{% url 'users:about' %}">About</a></li> -->
+                            <!-- <li><a href="{% url 'users:profile_edit' %}">Profile</a></li> -->
+                            <!-- <li>
                                 <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="logout-btn">Logout</button>
                                 </form>
-                            </li>
+                            </li> -->
                         {% else %}
+                            <li><a href="{% url 'users:home' %}">Home</a></li>
                             <li><a href="{% url 'users:about' %}">About</a></li>
                             <li><a href="{% url 'users:login' %}">Login</a></li>
                             <li><a href="{% url 'users:signup' %}">Register</a></li>
@@ -184,18 +185,51 @@
                 <ul class="sidebar-nav">
                     {% if user.role == 'ADMIN' %}
                         <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i>Profile</a></li>
                         <li><a href="{% url 'users:manage_farmers' %}"><i class="fas fa-users"></i> Manage Farmers</a></li>
                         <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
                         <li><a href="{% url 'administrator:upload_dataset' %}"><i class="fas fa-upload"></i> Upload New Dataset</a></li>
                         <li><a href="{% url 'administrator:dataset_list' %}"><i class="fas fa-folder"></i> Manage Datasets</a></li>
                         <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li>
+                        <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
+                            {% csrf_token %}
+                            <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
+                            <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
+                        </form>
+                        </li>
+                    {% elif user.role == 'AGRONOMIST' %}
+                            <li><a href="{% url 'agronomist:dashboard' %}"><i class="fas fa-home"></i> Agronomist Dashboard</a></li>
+                            <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Assist Diagnosis</a></li>
+                            <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i> Chat</a></li>
+                            <li><a href="#"><i class="fas fa-cloud-sun"></i> reports</a></li>
+                            
+                            <li>
+                            <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
+                                {% csrf_token %}
+                                <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
+                                <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
+                            </form>
+                            </li>
+                                                    
+
                     {% else %}
                         <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i>Profile</a></li>
                         <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Diagnose</a></li>
                         <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
                         <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
-                        <li><a href="#"><i class="fas fa-cloud-sun"></i> Weather</a></li>
+                        <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i> Chat</a></li>
                          <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                         <li>
+                            <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
+                                {% csrf_token %}
+                                <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
+                                <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
+                            </form>
+                            </li>
+                        
                     {% endif %}
                 </ul>
             </aside>

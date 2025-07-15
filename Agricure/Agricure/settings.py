@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'analytics',
     'recommendations',
     'diagnosis',
-    'administrator'
+    'administrator',
+    'agronomist',
+    'chat',
 ]
 
 MIDDLEWARE = [
