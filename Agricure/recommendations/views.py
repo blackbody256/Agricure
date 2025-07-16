@@ -357,3 +357,15 @@ def provide_feedback(request, pk):
     return render(request, 'recommendations/feedback.html', {
         'recommendation': recommendation
     })
+
+def admin_feedback_list(request):
+    """
+    View for admin to see all feedback submissions
+    """
+    if not request.user.is_staff:
+        return redirect('home')  # or appropriate redirect
+    
+    feedbacks = Feedback.objects.all().order_by('-created_at')
+    return render(request, 'recommendations/admin_feedback_list.html', {
+        'feedbacks': feedbacks
+    })
