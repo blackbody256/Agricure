@@ -191,6 +191,7 @@
                         <li><a href="{% url 'administrator:upload_dataset' %}"><i class="fas fa-upload"></i> Upload New Dataset</a></li>
                         <li><a href="{% url 'administrator:dataset_list' %}"><i class="fas fa-folder"></i> Manage Datasets</a></li>
                         <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="{% url 'recommendations:admin_feedback_list' %}"><i class="fas fa-chart-line"></i> View User Feedback</a></li>
                         <li>
                         <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
                             {% csrf_token %}

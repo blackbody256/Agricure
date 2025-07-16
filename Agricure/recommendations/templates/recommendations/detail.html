@@ -4,6 +4,269 @@
 {% block title %}Recommendation Details - Agricure{% endblock %}
 
 {% block content %}
+<style>
+    .detail-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+
+    .detail-header {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .detail-header h1 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .detail-header .subtitle {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.healthy {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .status-badge.diseased {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+    }
+
+    .detail-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .content-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .content-card h2 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    .content-card h3 {
+        color: #34495e;
+        margin: 1.5rem 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .content-card p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .content-card ul {
+        color: #555;
+        line-height: 1.8;
+        padding-left: 1.5rem;
+    }
+
+    .content-card li {
+        margin-bottom: 0.5rem;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .grid > div {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .grid > div:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .grid h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .grid p {
+        color: #555;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .bg-gradient-to-r {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .bg-gradient-to-r h3 {
+        color: white;
+    }
+
+    .bg-gradient-to-r p {
+        color: rgba(255,255,255,0.9);
+    }
+
+    .bg-green-50 {
+        background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+    }
+
+    .bg-green-50 h3 {
+        color: #1e7e34;
+    }
+
+    .bg-green-50 p {
+        color: #155724;
+    }
+
+    .text-green-700 {
+        color: #1e7e34;
+    }
+
+    .text-green-600 {
+        color: #155724;
+    }
+
+    .border-t {
+        border-top: 2px solid #ecf0f1;
+        margin-top: 2rem;
+        padding-top: 2rem;
+    }
+
+    .timestamp-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    .timestamp-info i {
+        color: #3498db;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2980b9, #1f618d);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #27ae60, #1e8449);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+    }
+
+    .section-divider {
+        height: 2px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 2rem 0;
+        border-radius: 1px;
+    }
+
+    @media (max-width: 768px) {
+        .detail-header h1 {
+            font-size: 2rem;
+        }
+        
+        .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .timestamp-info {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+    }
+</style>
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
