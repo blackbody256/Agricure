@@ -9,15 +9,6 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'role')
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Limit role choices to Farmer and Agronomist only (exclude Admin)
-        self.fields['role'].choices = [
-            choice for choice in User.ROLE_CHOICES if choice[0] != 'ADMIN'
-        ]
-
-
-    
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']

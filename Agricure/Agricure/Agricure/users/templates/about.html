@@ -1,0 +1,344 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}About Agricure{% endblock %}
+
+{% block content %}
+<style>
+    /* Reset & Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9fafb;
+        color: #2d3748;
+        line-height: 1.6;
+    }
+    
+    main {
+        padding: 2rem 1rem;
+    }
+    
+    .mission,
+    .values,
+    .team,
+    .milestones,
+    .impact {
+        padding: 4rem 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .hero {
+        width: 100%;
+        background: linear-gradient(90deg, #1b5e20, #388e3c);
+        color: white;
+        padding: 6rem 1rem;
+        text-align: center;
+    }
+    
+    .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .hero p {
+        font-size: 1.25rem;
+        line-height: 1.6;
+    }
+    
+    h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    p.subtitle, section > p {
+        text-align: center;
+        font-size: 1rem;
+        color: #4a5568;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    
+    .card h3 {
+        margin: 1rem 0 0.5rem;
+        font-size: 1.25rem;
+    }
+    
+    .card p {
+        font-size: 0.95rem;
+        color: #4a5568;
+    }
+    
+    .card small {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: #718096;
+    }
+    
+    .card-icon {
+        background-color: #c9b7a3;
+        color: white;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    
+    .mission {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 2rem;
+    }
+    
+    .mission .text {
+        flex: 1 1 50%;
+        min-width: 300px;
+    }
+    
+    .mission .highlight {
+        flex: 1 1 45%;
+        min-width: 280px;
+        background: linear-gradient(to bottom, #fafafa, #f4f2eb);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+    
+    .mission h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #1a3b2f;
+    }
+    
+    .mission .text p {
+        font-size: 1.1rem;
+        color: #3d5a4c;
+        margin-bottom: 1rem;
+    }
+    
+    .mission .highlight h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #1a3b2f;
+    }
+    
+    .mission .highlight p {
+        font-size: 1rem;
+        color: #3d5a4c;
+        line-height: 1.6;
+    }
+    
+    .values {
+        background-color: #f4f2eb;
+        padding: 4rem 1rem;
+        max-width: 100%;
+    }
+    
+    .team {
+        background-color: #f9fafb;
+        padding: 4rem 1rem;
+        max-width: 100%;
+    }
+    
+    .milestones {
+        background-color: #f4f2eb;
+        padding: 4rem 1rem;
+        max-width: 100%;
+    }
+    
+    footer {
+        text-align: center;
+        padding: 1rem;
+        background-color: #2e7d32;
+        color: white;
+        font-weight: bold;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2rem;
+        }
+        
+        .hero p {
+            font-size: 1rem;
+        }
+        
+        .mission {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .mission h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>About Agricure</h1>
+        <p>
+            We're on a mission to revolutionize agriculture through artificial intelligence,
+            empowering farmers worldwide with the tools they need to grow healthier crops and build sustainable futures.
+        </p>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="mission">
+    <div class="text">
+        <h2>Our Mission</h2>
+        <p>At Agricure, we believe that technology should serve humanity's most fundamental need: food security. Our mission is to empower farmers, agronomists, and agricultural professionals with AI-driven tools that make crop management more efficient, sustainable, and profitable.</p>
+        <p>We're building a future where every farmer, regardless of their location or resources, has access to world-class agricultural intelligence that helps them make informed decisions about their crops.</p>
+    </div>
+    <div class="highlight">
+        <div class="card-icon">💡</div>
+        <h3>The Power of AI in Agriculture</h3>
+        <p>By 2050, the world will need to produce 70% more food to feed a growing population. AI technology like ours is essential to meeting this challenge sustainably.</p>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="values">
+    <h2>Our Values</h2>
+    <p class="subtitle">
+        These core values guide everything we do at Agricure, from product development to customer relationships.
+    </p>
+    <div class="grid">
+        <div class="card">
+            <div class="card-icon">🎯</div>
+            <h3>Innovation</h3>
+            <p>We continuously push the boundaries of agricultural technology to solve real-world farming challenges.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">👥</div>
+            <h3>Collaboration</h3>
+            <p>We work closely with farmers, researchers, and agricultural experts to develop practical solutions.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">💚</div>
+            <h3>Sustainability</h3>
+            <p>We're committed to promoting sustainable farming practices that protect our planet's future.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">🌍</div>
+            <h3>Accessibility</h3>
+            <p>We believe advanced agricultural technology should be accessible to farmers worldwide.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team">
+    <h2>Meet Our Team</h2>
+    <p>Our diverse team combines deep agricultural expertise with cutting-edge technology skills to deliver innovative solutions for farmers worldwide.</p>
+    <div class="grid">
+        <div class="card">
+            <h3>Dr. Sarah Chen</h3>
+            <p><strong>CEO & Co-Founder</strong><br>Former Lead Researcher at Agricultural AI Institute with 15 years in crop science<br><em>Expertise:</em> Computer Vision, Plant Pathology</p>
+        </div>
+        <div class="card">
+            <h3>Michael Rodriguez</h3>
+            <p><strong>CTO & Co-Founder</strong><br>Previously Senior Engineer at leading AgTech company<br><em>Expertise:</em> Machine Learning, Cloud Architecture</p>
+        </div>
+        <div class="card">
+            <h3>Dr. Priya Patel</h3>
+            <p><strong>Head of Research</strong><br>PhD in Agricultural Engineering, published 50+ papers<br><em>Expertise:</em> Precision Agriculture, Data Science</p>
+        </div>
+        <div class="card">
+            <h3>James Thompson</h3>
+            <p><strong>Head of Partnerships</strong><br>20 years experience with farming communities<br><em>Expertise:</em> Farmer Relations, Business Development</p>
+        </div>
+    </div>
+</section>
+
+<!-- Milestones Section -->
+<section class="milestones">
+    <h2>Our Journey</h2>
+    <p>From a small startup to a global platform serving farmers worldwide, here are the key milestones in our journey.</p>
+    <div class="grid">
+        <div class="card">
+            <div class="card-icon">2021</div>
+            <h3>Company Founded</h3>
+            <p>Agricure was founded with the mission to democratize AI-powered crop diagnostics.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">2022</div>
+            <h3>First AI Model</h3>
+            <p>Launched our first disease detection model with 95% accuracy across 10 crop types.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">2023</div>
+            <h3>Global Expansion</h3>
+            <p>Expanded to serve farmers in 25 countries with localized disease databases.</p>
+        </div>
+        <div class="card">
+            <div class="card-icon">2024</div>
+            <h3>100K+ Users</h3>
+            <p>Reached over 100,000 farmers using our platform to improve their crop yields.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Impact Section -->
+<section class="impact">
+    <h2>Our Impact</h2>
+    <p>We measure our success by the positive impact we have on farmers and agricultural communities worldwide.</p>
+    <div class="grid">
+        <div class="card">
+            <h3>100K+</h3>
+            <p>Farmers Served<br><small>Farmers across 25 countries using our platform to improve crop health and yields.</small></p>
+        </div>
+        <div class="card">
+            <h3>15M+</h3>
+            <p>Images Analyzed<br><small>Crop images processed through our AI models for disease detection and health assessment.</small></p>
+        </div>
+        <div class="card">
+            <h3>25%</h3>
+            <p>Average Yield Increase<br><small>Average improvement in crop yields reported by farmers using our recommendations.</small></p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

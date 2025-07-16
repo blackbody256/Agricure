@@ -42,11 +42,8 @@ class CustomLoginView(LoginView):
         # Check if user is admin and redirect to analytics dashboard
         if (hasattr(user, 'role') and user.role == 'ADMIN') or user.is_superuser or user.is_staff:
             return '/analytics/admin-dashboard/'  # This matches your analytics:admin_dashboard URL
-        elif user.role == 'AGRONOMIST':
-            return '/agronomist/dashboard/'  # Make sure this path is defined
-        else:
-            return '/dashboard/'  # Default: FARMER
         
+        return '/dashboard/'  # Regular users go to main dashboard
 
 class SignUpView(CreateView):
     form_class = SignUpForm
@@ -60,10 +57,8 @@ class SignUpView(CreateView):
             # Redirect based on user role
             if (hasattr(user, 'role') and user.role == 'ADMIN') or user.is_superuser or user.is_staff:
                 return HttpResponseRedirect('/analytics/admin-dashboard/')
-            elif user.role == 'AGRONOMIST':
-               return HttpResponseRedirect('/agronomist/dashboard/')
             else:
-               return HttpResponseRedirect('/dashboard/')
+                return HttpResponseRedirect('/dashboard/')
         except ValidationError as e:
             # Add the validation error to the form
             form.add_error('role', e.message if hasattr(e, 'message') else str(e))

@@ -14,7 +14,6 @@ __pycache__/
 # Virtual environment
 env/
 venv/
-.venv/
 ENV/
 .agricure/  # replace with your virtualenv name if different
 
