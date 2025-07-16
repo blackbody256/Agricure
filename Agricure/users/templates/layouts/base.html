@@ -202,7 +202,12 @@
                             <li><a href="{% url 'agronomist:dashboard' %}"><i class="fas fa-home"></i> Agronomist Dashboard</a></li>
                             <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
                             <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Assist Diagnosis</a></li>
+                            <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
+                            <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
                             <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i> Chat</a></li>
+                            <a href="{% url 'agronomist:dataset_list' %}" class="btn btn-outline-success">View Datasets</a>
+                            
+
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> reports</a></li>
                             
                             <li>
