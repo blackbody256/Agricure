@@ -205,8 +205,8 @@
                             <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
                             <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
 
-                            <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i> Chat</a></li>
-                            <a href="{% url 'agronomist:dataset_list' %}" class="btn btn-outline-success">View Datasets</a>
+                            <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-comment"></i> Chat</a></li>
+                            <a href="{% url 'agronomist:dataset_list' %}" class="btn btn-outline-success"> <i class="fas fa-folder-open"></i>View Datasets</a>
                             
 
                             <li><a href="#"><i class="fas fa-cloud-sun"></i> reports</a></li>
@@ -226,7 +226,7 @@
                         <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Diagnose</a></li>
                         <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
                         <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
-                        <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i>Message</a></li>
+                        <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-comment"></i>Message</a></li>
                          <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
                          <li>
                             <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
