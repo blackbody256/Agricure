@@ -40,21 +40,21 @@
     border-radius: 4px;
     font-weight: 600;
   }
-  .bg-danger { background-color: #dc3545; color: white; }
+  .bg-danger { background-color: #f4919b; color: white; }
   .bg-warning { background-color: #ffc107; color: #212529; }
   .text-success { color: #198754; }
 </style>
 
 <div class="history-container">
-  <h2>🩺 Diagnosis History</h2>
+  <h2>Diagnosis History</h2>
 
   {% for diag in diagnoses %}
   <div class="history-entry">
     <img src="{{ diag.image.url }}" alt="Diagnosis Image">
     <div class="history-details">
       <span><strong>Disease:</strong> <span class="badge bg-danger">{{ diag.disease_name }}</span></span>
-      <span><strong>Severity:</strong> <span class="badge bg-warning">{{ diag.severity }}</span></span>
-      <span><strong>Affected Part:</strong> {{ diag.affected_part }}</span>
+      <!-- <span><strong>Severity:</strong> <span class="badge bg-warning">{{ diag.severity }}</span></span>
+      <span><strong>Affected Part:</strong> {{ diag.affected_part }}</span> -->
       <span><strong>Confidence:</strong> <span class="text-success">{{ diag.confidence }}%</span></span>
       <span><strong>Timestamp:</strong> {{ diag.timestamp|date:"F j, Y, g:i a" }}</span>
     </div>
