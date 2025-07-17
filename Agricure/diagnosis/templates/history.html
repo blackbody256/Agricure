@@ -50,7 +50,12 @@
 
   {% for diag in diagnoses %}
   <div class="history-entry">
-    <img src="{{ diag.image.url }}" alt="Diagnosis Image">
+    {% if diag.image %}
+  <img src="{{ diag.image.url }}" alt="Diagnosis Image">
+{% else %}
+  <p><em>No image available</em></p>
+{% endif %}
+
     <div class="history-details">
       <span><strong>Disease:</strong> <span class="badge bg-danger">{{ diag.disease_name }}</span></span>
       <!-- <span><strong>Severity:</strong> <span class="badge bg-warning">{{ diag.severity }}</span></span>

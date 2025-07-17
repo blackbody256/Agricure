@@ -115,16 +115,17 @@ def diagnose(request):
             diagnosis = form.save(commit=False)
             diagnosis.user = request.user
             diagnosis.save()
+        else: 
+            return render(request, 'upload.html', {'form': form})   
+            
+        if diagnosis.image and diagnosis.image.name:
+            image_path = diagnosis.image.path
+            # Proceed with model prediction
         else:
-            # Form validation failed
-            messages.error(request, 'Please select a valid image file.')
-            return render(request, 'upload.html', {'form': form})
-        
-        # Ensure we have a valid image file before processing
-        if not diagnosis.image:
-            messages.error(request, 'No image file was provided. Please upload an image.')
-            return render(request, 'upload.html', {'form': form})
-        
+            messages.error(request, "Please upload an image or capture one before diagnosing.")
+            return redirect('diagnosis:diagnose')
+
+
         try:
             # Check if the image file exists
             if not hasattr(diagnosis.image, 'path') or not diagnosis.image.path:
