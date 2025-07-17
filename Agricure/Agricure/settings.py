@@ -29,7 +29,17 @@ SECRET_KEY = 'django-insecure--tq(^980_0*n^#1#8&n89cosu8ze2en+(gbdsa7ehbs#3zxf68
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '8000-cs-eb98b676-bd6d-4f67-b2de-e85afe6e6ee3.cs-europe-west1-onse.cloudshell.dev',
+    '127.0.0.1',
+    'localhost'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://8000-cs-eb98b676-bd6d-4f67-b2de-e85afe6e6ee3.cs-europe-west1-onse.cloudshell.dev'
+]
+
+
 
 
 # Application definition
