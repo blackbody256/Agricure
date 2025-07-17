@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 import json
 import logging
+import csv
 
 from .Open_weather import WeatherClient
 from .Soil import ISDAsoilClient
@@ -357,3 +358,61 @@ def provide_feedback(request, pk):
     return render(request, 'recommendations/feedback.html', {
         'recommendation': recommendation
     })
+
+def admin_feedback_list(request):
+    """
+    View for admin to see all feedback submissions
+    """
+    if not request.user.is_staff:
+        return redirect('home')  # or appropriate redirect
+    
+    feedbacks = Feedback.objects.all().order_by('-created_at')
+    return render(request, 'recommendations/admin_feedback_list.html', {
+        'feedbacks': feedbacks
+    })
+
+def admin_feedback_detail(request, feedback_id):
+    """
+    View for admin to see detailed feedback submission
+    """
+    if not request.user.is_staff:
+        return redirect('home')  # or appropriate redirect
+    
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    
+    context = {
+        'feedback': feedback,
+        'recommendation': feedback.recommendation,
+        'diagnosis': feedback.recommendation.diagnosis,
+    }
+    
+    return render(request, 'recommendations/admin_feedback_detail.html', context)
+
+def admin_feedback_export(request):
+    """
+    Export feedback data to CSV
+    """
+    if not request.user.is_staff:
+        return redirect('home')  # or appropriate redirect
+    
+    # Create the HttpResponse object with CSV header
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="feedback_export.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'User', 'Disease', 'Rating', 'Usefulness', 'Treatment Effectiveness', 'Comments', 'Date'])
+    
+    feedbacks = Feedback.objects.select_related('recommendation__diagnosis', 'user').all()
+    for feedback in feedbacks:
+        writer.writerow([
+            feedback.id,
+            feedback.user.username,
+            feedback.recommendation.diagnosis.disease_name,
+            feedback.rating,
+            feedback.usefulness,
+            feedback.treatment_effectiveness,
+            feedback.comments,
+            feedback.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    
+    return response
