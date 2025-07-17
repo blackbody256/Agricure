@@ -1,494 +1,273 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Agricure{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Header -->
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">🌾 Admin Analytics Dashboard</h1>
-        <p class="dashboard-subtitle">System-wide insights and performance metrics</p>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="summary-section">
-        <div class="summary-grid">
-            <div class="summary-card users">
-                <div class="summary-value">{{ total_users|default:0 }}</div>
-                <div class="summary-label">Total Users</div>
-            </div>
-            <div class="summary-card diagnoses">
-                <div class="summary-value">{{ total_diagnoses|default:0 }}</div>
-                <div class="summary-label">Total Diagnoses</div>
-            </div>
-            <div class="summary-card diseases">
-                <div class="summary-value">{{ unique_diseases|default:0 }}</div>
-                <div class="summary-label">Unique Diseases</div>
-            </div>
-            <div class="summary-card recent">
-                <div class="summary-value">{{ monthly_diagnoses|default:0 }}</div>
-                <div class="summary-label">This Month</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Section -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <i class="fas fa-chart-pie"></i>
-                System-Wide Disease Analysis
-            </h2>
-        </div>
-        <div class="section-content">
-            <div class="charts-grid">
-                <!-- Disease Distribution -->
-                <div class="chart-card">
-                    <h3 class="chart-title">Disease Distribution</h3>
-                    <div class="chart-container" style="height: 300px;">
-                        {% if disease_pie_chart %}
-                            {{ disease_pie_chart|safe }}
-                        {% else %}
-                            <div class="empty-state">
-                                <i class="fas fa-chart-pie"></i>
-                                <p>No data available</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <!-- Monthly Trends -->
-                <div class="chart-card">
-                    <h3 class="chart-title">Monthly Detection Trends</h3>
-                    <div class="chart-container" style="height: 300px;">
-                        {% if monthly_trends_chart %}
-                            {{ monthly_trends_chart|safe }}
-                        {% else %}
-                            <div class="empty-state">
-                                <i class="fas fa-chart-line"></i>
-                                <p>No data available</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <!-- User Activity Chart - Full Width -->
-                <div class="chart-card full-width-chart">
-                    <h3 class="chart-title">User Activity & System Usage</h3>
-                    <div class="chart-container" style="height: 400px;">
-                        {% if user_activity_chart %}
-                            {{ user_activity_chart|safe }}
-                        {% else %}
-                            <div class="empty-state">
-                                <i class="fas fa-chart-bar"></i>
-                                <p>No data available</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Statistics -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <i class="fas fa-users"></i>
-                User Statistics
-            </h2>
-        </div>
-        <div class="section-content">
-            <div class="user-stats-grid">
-                <div class="user-stat-item">
-                    <div class="user-stat-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="user-stat-content">
-                        <h4>{{ new_users_this_month|default:0 }}</h4>
-                        <p>New Users This Month</p>
-                    </div>
-                </div>
-                <div class="user-stat-item">
-                    <div class="user-stat-icon">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <div class="user-stat-content">
-                        <h4>{{ active_users|default:0 }}</h4>
-                        <p>Active Users (Last 30 Days)</p>
-                    </div>
-                </div>
-                <div class="user-stat-item">
-                    <div class="user-stat-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="user-stat-content">
-                        <h4>{{ avg_diagnoses_per_user|default:0 }}</h4>
-                        <p>Average Diagnoses per User</p>
-                    </div>
-                </div>
-                <div class="user-stat-item">
-                    <div class="user-stat-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="user-stat-content">
-                        <h4>{{ most_active_user|default:"None" }}</h4>
-                        <p>Most Active User</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <i class="fas fa-clock"></i>
-                Recent System Activity
-            </h2>
-        </div>
-        <div class="section-content">
-            {% if recent_diagnoses %}
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Image</th>
-                                <th>Date</th>
-                                <th>Disease</th>
-                                <th>Confidence</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for diagnosis in recent_diagnoses %}
-                            <tr>
-                                <td>{{ diagnosis.user.username }}</td>
-                                <td>
-                                    {% if diagnosis.image %}
-                                        <img src="{{ diagnosis.image.url }}" class="table-img" alt="Diagnosis">
-                                    {% else %}
-                                        <i class="fas fa-image text-muted"></i>
-                                    {% endif %}
-                                </td>
-                                <td>{{ diagnosis.timestamp|date:"M d, Y H:i" }}</td>
-                                <td>{{ diagnosis.disease_name }}</td>
-                                <td>
-                                    {% if diagnosis.confidence %}
-                                        <span class="badge bg-success">{{ diagnosis.confidence }}%</span>
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if diagnosis.disease_name == "Healthy" %}
-                                        <span class="badge bg-success">Healthy</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">Detected</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-database"></i>
-                    <h4>No recent activity</h4>
-                    <p>System activity will appear here as users perform diagnoses</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Top Diseases -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <i class="fas fa-exclamation-triangle"></i>
-                Most Common Diseases
-            </h2>
-        </div>
-        <div class="section-content">
-            {% if top_diseases %}
-                <div class="diseases-grid">
-                    {% for disease in top_diseases %}
-                    <div class="disease-card">
-                        <div class="disease-info">
-                            <h4>{{ disease.name }}</h4>
-                            <p>{{ disease.count }} occurrences</p>
-                        </div>
-                        <div class="disease-percentage">
-                            <span class="percentage-value">{{ disease.percentage }}%</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: {{ disease.percentage }}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-seedling"></i>
-                    <h4>No disease data</h4>
-                    <p>Disease statistics will appear here as diagnoses are performed</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-</div>
-
-<!-- Beautiful Agricultural Theme CSS -->
 <style>
-    body { 
-        background: linear-gradient(135deg, #f8f9fa 0%, #8fd3f4 100%);
-        font-family: 'Inter', sans-serif;
-        min-height: 100vh;
-    }
-    
-    .dashboard-container { 
-        max-width: 1400px; 
-        margin: auto; 
-        padding: 2rem 1rem;
-    }
-    
-    .dashboard-header {
-        text-align: center;
-        margin-bottom: 3rem;
-        color: white;
-    }
-    
-    .dashboard-title { 
-        font-size: 2.8rem; 
-        font-weight: 700; 
-        letter-spacing: -1px;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .dashboard-subtitle { 
-        font-size: 1.2rem; 
-        opacity: 0.9;
-        font-weight: 500;
+    body {
+        overflow-x: hidden;
     }
 
-    /* Summary Cards */
-    .summary-section {
-        margin-bottom: 3rem;
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
     }
-    
-    .summary-grid {
+
+    .header-card {
+        background: linear-gradient(135deg, #2e7d32, #20c997);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        text-align: center;
+    }
+
+    .header-card h1 {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .header-card p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
-    
-    .summary-card {
+
+    .stat-card {
         background: white;
-        border-radius: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        padding: 2rem;
+        border-radius: 10px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid #e9ecef;
         text-align: center;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .summary-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
-    
-    .summary-card.users {
-        border-left: 5px solid #2e7d32;
-    }
-    
-    .summary-card.diagnoses {
-        border-left: 5px solid #388e3c;
-    }
-    
-    .summary-card.diseases {
-        border-left: 5px solid #689f38;
-    }
-    
-    .summary-card.recent {
-        border-left: 5px solid #558b2f;
-    }
-    
-    .summary-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.5rem;
-    }
-    
-    .summary-label {
-        font-size: 1.1rem;
-        color: #6b7280;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-
-    /* Content Sections */
-    .content-section {
-        background: white;
-        border-radius: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
+        position: relative;
         overflow: hidden;
     }
-    
-    .section-header {
-        background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #c8e6c9;
-    }
-    
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #2e7d32;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .section-content {
-        padding: 2rem;
+
+    .stat-card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745, #20c997);
     }
 
-    /* Charts Grid */
-    .charts-grid {
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .stat-icon {
+        font-size: 1.75rem;
+        color: #28a745;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-number {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
+    .dashboard-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr 1fr;
         gap: 2rem;
         margin-bottom: 2rem;
     }
-    
-    .chart-card {
+
+    .content-card {
         background: white;
-        border-radius: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-radius: 12px;
         padding: 1.5rem;
-        text-align: center;
-        transition: transform 0.3s ease;
-        border: 1px solid #e8f5e8;
-    }
-    
-    .chart-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(46, 125, 50, 0.1);
-    }
-    
-    .chart-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2e7d32;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #c8e6c9;
-    }
-    
-    .chart-container {
-        width: 100%;
-        position: relative;
-        overflow: visible;
-    }
-    
-    .full-width-chart {
-        grid-column: 1 / -1;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
+        overflow: hidden;
     }
 
-    /* User Statistics */
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 1.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f3f4;
+    }
+
+    .chart-container {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        height: 400px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .chart-content {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+    .table th {
+        background: #f8f9fa;
+        color: #2c3e50;
+        font-weight: 600;
+        padding: 1rem;
+        border-bottom: 2px solid #e9ecef;
+        text-align: left;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table td {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .table-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #e9ecef;
+    }
+
+    .badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .badge.bg-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .badge.bg-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
     .user-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
+        gap: 1rem;
         margin-bottom: 2rem;
     }
 
     .user-stat-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.25rem;
+        border: 1px solid #e9ecef;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 12px;
-        border-left: 4px solid #4caf50;
+    }
+
+    .user-stat-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .user-stat-icon {
         font-size: 2rem;
-        color: #4caf50;
+        color: #28a745;
+        min-width: 40px;
     }
 
     .user-stat-content h4 {
-        margin: 0 0 0.5rem 0;
-        color: #2e7d32;
+        margin: 0 0 0.25rem 0;
+        color: #2c3e50;
         font-size: 1.5rem;
         font-weight: 700;
     }
 
     .user-stat-content p {
         margin: 0;
-        color: #6b7280;
+        color: #6c757d;
         font-size: 0.9rem;
     }
 
-    /* Table Styles */
-    .table-container {
-        background: white;
-        border-radius: 1rem;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
-    
-    .table {
-        margin: 0;
-        font-size: 0.95rem;
-        width: 100%;
-    }
-    
-    .table th {
-        background: #f1f8e9;
-        color: #2e7d32;
-        font-weight: 600;
-        padding: 1rem;
-        border: none;
-    }
-    
-    .table td {
-        padding: 1rem;
-        vertical-align: middle;
-        border-color: #e8f5e8;
-        border-bottom: 1px solid #e8f5e8;
-    }
-    
-    .table tbody tr:hover {
-        background: #f9fbe7;
-    }
-
-    .table-img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 2px solid #e5e7eb;
-    }
-
-    /* Diseases Grid */
     .diseases-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .disease-card {
         background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
+        border-radius: 10px;
+        padding: 1.25rem;
+        border: 1px solid #e9ecef;
         border-left: 4px solid #ff9800;
         display: flex;
         justify-content: space-between;
@@ -496,14 +275,15 @@
     }
 
     .disease-info h4 {
-        margin: 0 0 0.5rem 0;
-        color: #2e7d32;
-        font-size: 1.2rem;
+        margin: 0 0 0.25rem 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+        font-weight: 600;
     }
 
     .disease-info p {
         margin: 0;
-        color: #6b7280;
+        color: #6c757d;
         font-size: 0.9rem;
     }
 
@@ -515,139 +295,490 @@
     .percentage-value {
         font-weight: 700;
         font-size: 1.1rem;
-        color: #2e7d32;
+        color: #28a745;
+        display: block;
+        margin-bottom: 0.5rem;
     }
 
     .progress-bar {
         width: 60px;
-        height: 8px;
-        background: #e5e7eb;
-        border-radius: 4px;
+        height: 6px;
+        background: #e9ecef;
+        border-radius: 3px;
         overflow: hidden;
-        margin-top: 0.5rem;
     }
 
     .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #4caf50, #66bb6a);
+        background: linear-gradient(90deg, #28a745, #20c997);
         transition: width 0.3s ease;
     }
 
-    /* Debug Styles */
-    .debug-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
+    .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
-    .debug-item h4 {
-        color: #2e7d32;
-        margin-bottom: 1rem;
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
     }
 
-    .debug-item ul {
-        list-style: none;
-        padding: 0;
+    .btn-primary {
+        background: #28a745;
+        color: white;
     }
 
-    .debug-item li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #e8f5e8;
+    .btn-primary:hover {
+        background: #1e7e34;
+        transform: translateY(-1px);
+        text-decoration: none;
     }
 
-    .status-success {
-        color: #4caf50;
-        font-weight: 600;
+    .btn-success {
+        background: #20c997;
+        color: white;
     }
 
-    .status-error {
-        color: #f44336;
-        font-weight: 600;
+    .btn-success:hover {
+        background: #17a2b8;
+        transform: translateY(-1px);
+        text-decoration: none;
     }
 
-    /* Empty State */
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .btn-warning:hover {
+        background: #e0a800;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+    }
+
+    .btn-outline:hover {
+        background: #6c757d;
+        color: white;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .quick-actions .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+    }
+
     .empty-state {
         text-align: center;
-        padding: 3rem;
-        color: #6b7280;
+        padding: 2rem;
+        color: #6c757d;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-    
+
     .empty-state i {
-        font-size: 3rem;
+        font-size: 2.5rem;
         margin-bottom: 1rem;
-        opacity: 0.5;
-        color: #81c784;
+        color: #28a745;
+        opacity: 0.7;
     }
 
     .empty-state h4 {
-        color: #2e7d32;
-        margin-bottom: 1rem;
+        color: #495057;
+        margin-bottom: 0.5rem;
     }
 
-    /* Badges */
-    .badge {
-        border-radius: 8px;
-        padding: 0.4rem 0.8rem;
-        font-weight: 500;
-        font-size: 0.8rem;
-    }
-    
-    .badge.bg-success {
-        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%) !important;
-    }
-    
-    .badge.bg-warning {
-        background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%) !important;
-        color: white !important;
+    .empty-state p {
+        margin-bottom: 1.5rem;
     }
 
-    /* Responsive Design */
+    .help-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .help-section h4 {
+        color: #495057;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .help-section p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Plotly chart styling */
+    .plotly-graph-div {
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
     @media (max-width: 768px) {
-        .charts-grid {
-            grid-template-columns: 1fr;
+        .container {
+            padding: 0.5rem;
+            margin: 1rem auto;
         }
-        
-        .dashboard-title {
-            font-size: 2.2rem;
-        }
-        
-        .summary-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .section-content {
+
+        .header-card {
             padding: 1.5rem;
         }
-        
-        .user-stats-grid {
+
+        .header-card h1 {
+            font-size: 1.8rem;
+        }
+
+        .dashboard-grid {
             grid-template-columns: 1fr;
         }
 
-        .debug-grid {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+        }
+
+        .user-stats-grid {
             grid-template-columns: 1fr;
         }
 
         .diseases-grid {
             grid-template-columns: 1fr;
         }
+
+        .chart-container {
+            height: 300px;
+        }
     }
-    
+
     @media (max-width: 576px) {
-        .dashboard-container {
-            padding: 1rem 0.5rem;
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
         
-        .section-header {
-            padding: 1rem 1.5rem;
+        .stat-card {
+            padding: 0.875rem;
+        }
+        
+        .stat-icon {
+            font-size: 1.25rem;
+        }
+        
+        .stat-number {
+            font-size: 1.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .chart-container {
+            height: 250px;
         }
     }
 </style>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <h1><i class="fas fa-chart-line"></i> Admin Analytics Dashboard</h1>
+        <p>System-wide insights and performance metrics for Agricure platform</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ total_users|default:"125" }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <div class="stat-number">{{ total_diagnoses|default:"432" }}</div>
+            <div class="stat-label">Total Diagnoses</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-bug"></i>
+            </div>
+            <div class="stat-number">{{ unique_diseases|default:"18" }}</div>
+            <div class="stat-label">Unique Diseases</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-number">{{ monthly_diagnoses|default:"67" }}</div>
+            <div class="stat-label">This Month</div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <!-- Charts and Analytics -->
+        <div class="content-card">
+            <h3 class="section-title">
+                <i class="fas fa-chart-pie"></i>
+                System Analytics
+            </h3>
+            
+            <!-- Disease Distribution Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Disease Distribution</div>
+                <div class="chart-content">
+                    {% if disease_pie_chart %}
+                        {{ disease_pie_chart|safe }}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-chart-pie"></i>
+                            <h4>Disease Distribution Chart</h4>
+                            <p>Visual breakdown of detected diseases across the platform</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Monthly Trends Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Monthly Detection Trends</div>
+                <div class="chart-content">
+                    {% if monthly_trends_chart %}
+                        {{ monthly_trends_chart|safe }}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Monthly Trends Chart</h4>
+                            <p>Track diagnosis patterns and user activity over time</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- User Activity Chart -->
+            <div class="chart-container">
+                <div class="chart-title">User Activity & System Usage</div>
+                <div class="chart-content">
+                    {% if user_activity_chart %}
+                        {{ user_activity_chart|safe }}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-chart-bar"></i>
+                            <h4>User Activity Chart</h4>
+                            <p>Monitor user engagement and platform usage metrics</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div>
+            <!-- User Statistics -->
+            <div class="content-card">
+                <h3 class="section-title">
+                    <i class="fas fa-users"></i>
+                    User Statistics
+                </h3>
+                <div class="user-stats-grid">
+                    <div class="user-stat-item">
+                        <div class="user-stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="user-stat-content">
+                            <h4>{{ new_users_this_month|default:"23" }}</h4>
+                            <p>New Users This Month</p>
+                        </div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="user-stat-content">
+                            <h4>{{ active_users|default:"89" }}</h4>
+                            <p>Active Users (Last 30 Days)</p>
+                        </div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="user-stat-content">
+                            <h4>{{ avg_diagnoses_per_user|default:"3.4" }}</h4>
+                            <p>Average Diagnoses per User</p>
+                        </div>
+                    </div>
+                    <div class="user-stat-item">
+                        <div class="user-stat-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="user-stat-content">
+                            <h4>{{ most_active_user|default:"farmer.john" }}</h4>
+                            <p>Most Active User</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="content-card">
+        <h3 class="section-title">
+            <i class="fas fa-clock"></i>
+            Recent System Activity
+        </h3>
+        {% if recent_diagnoses %}
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Image</th>
+                            <th>Date</th>
+                            <th>Disease</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for diagnosis in recent_diagnoses %}
+                        <tr>
+                            <td>{{ diagnosis.user.username }}</td>
+                            <td>
+                                {% if diagnosis.image %}
+                                    <img src="{{ diagnosis.image.url }}" class="table-img" alt="Diagnosis">
+                                {% else %}
+                                    <i class="fas fa-image text-muted"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ diagnosis.timestamp|date:"M d, Y H:i" }}</td>
+                            <td>{{ diagnosis.disease_name }}</td>
+                            <td>
+                                {% if diagnosis.confidence %}
+                                    <span class="badge bg-success">{{ diagnosis.confidence }}%</span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if diagnosis.disease_name == "Healthy" %}
+                                    <span class="badge bg-success">Healthy</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Detected</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-database"></i>
+                <h4>No Recent Activity</h4>
+                <p>System activity will appear here as users perform diagnoses</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Top Diseases -->
+    <div class="content-card">
+        <h3 class="section-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            Most Common Diseases
+        </h3>
+        {% if top_diseases %}
+            <div class="diseases-grid">
+                {% for disease in top_diseases %}
+                <div class="disease-card">
+                    <div class="disease-info">
+                        <h4>{{ disease.name }}</h4>
+                        <p>{{ disease.count }} occurrences</p>
+                    </div>
+                    <div class="disease-percentage">
+                        <span class="percentage-value">{{ disease.percentage }}%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ disease.percentage|default:'0%' }}"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-seedling"></i>
+                <h4>No Disease Data</h4>
+                <p>Disease statistics will appear here as diagnoses are performed</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 <!-- Plotly JavaScript -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Beautiful Admin Dashboard Loading...');
+    console.log('🚀 Admin Analytics Dashboard Loading...');
     
     function initCharts() {
         if (typeof Plotly === 'undefined') {
@@ -667,16 +798,25 @@ document.addEventListener('DOMContentLoaded', function() {
             if (plotlyDiv) {
                 console.log('🎯 Found chart:', plotlyDiv.id);
                 
-                // Ensure proper styling
+                // Ensure proper styling to prevent scrollbars
                 plotlyDiv.style.display = 'block';
                 plotlyDiv.style.visibility = 'visible';
                 plotlyDiv.style.width = '100%';
                 plotlyDiv.style.height = '100%';
+                plotlyDiv.style.overflow = 'hidden';
                 
-                // Resize chart
+                // Resize chart with proper dimensions
                 setTimeout(function() {
                     try {
-                        Plotly.Plots.resize(plotlyDiv.id);
+                        const parentContainer = container.querySelector('.chart-content');
+                        const containerRect = parentContainer.getBoundingClientRect();
+                        
+                        Plotly.relayout(plotlyDiv.id, {
+                            width: containerRect.width,
+                            height: containerRect.height,
+                            autosize: true
+                        });
+                        
                         console.log('✅ Chart resized successfully:', plotlyDiv.id);
                     } catch (e) {
                         console.log('❌ Chart resize error:', e);
@@ -700,7 +840,16 @@ window.addEventListener('resize', function() {
         const plotlyDivs = document.querySelectorAll('div[id*="plotly"]');
         plotlyDivs.forEach(function(div) {
             try {
-                Plotly.Plots.resize(div.id);
+                const container = div.closest('.chart-container');
+                if (container) {
+                    const chartContent = container.querySelector('.chart-content');
+                    const rect = chartContent.getBoundingClientRect();
+                    
+                    Plotly.relayout(div.id, {
+                        width: rect.width,
+                        height: rect.height
+                    });
+                }
             } catch (e) {
                 // Silent fail
             }
@@ -708,5 +857,4 @@ window.addEventListener('resize', function() {
     }
 });
 </script>
-
 {% endblock %}

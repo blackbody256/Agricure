@@ -4,62 +4,136 @@
 {% block content %}
 <style>
     .dashboard-container {
-        padding: 2rem;
-        font-family: 'Segoe UI', sans-serif;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     .dashboard-title {
         font-size: 2rem;
-        margin-bottom: 0.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .dashboard-title i {
+        color: #28a745;
+        font-size: 1.8rem;
     }
 
     .dashboard-subtitle {
-        color: #666;
-        margin-bottom: 1.5rem;
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
     }
 
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
         margin-bottom: 2rem;
     }
 
     .stat-card {
-        background: #fff;
+        background: white;
         padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(40, 167, 69, 0.08);
+        border: 1px solid rgba(40, 167, 69, 0.1);
+        position: relative;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(40, 167, 69, 0.15);
+        border-color: #28a745;
     }
 
     .stat-card h4 {
+        font-size: 0.95rem;
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-card h4 i {
+        color: #28a745;
         font-size: 1rem;
-        color: #444;
-        margin-bottom: 0.3rem;
     }
 
     .stat-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #2e7d32;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #28a745;
+        margin-bottom: 0.25rem;
+        line-height: 1;
     }
 
     .stat-subtext {
-        font-size: 0.9rem;
-        color: #888;
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 500;
     }
 
     .main-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        gap: 1.5rem;
+        gap: 2rem;
     }
 
     .recent-activities {
-        background: #fff;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.08);
+        border: 1px solid rgba(40, 167, 69, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .recent-activities::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .recent-activities h3 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .recent-activities h3::before {
+        content: '📊';
+        font-size: 1.2rem;
     }
 
     .recent-activities ul {
@@ -69,55 +143,118 @@
     }
 
     .recent-activities li {
-        padding: 0.8rem;
-        margin-bottom: 0.5rem;
-        background: #fafafa;
-        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: #f8fff8;
+        border-radius: 10px;
         position: relative;
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+    }
+
+    .recent-activities li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 3px 15px rgba(40, 167, 69, 0.1);
     }
 
     .badge {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        padding: 0.3rem 0.6rem;
-        border-radius: 999px;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
         font-size: 0.75rem;
-        font-weight: 500;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .badge.green { background: #e0fce4; color: #2e7d32; }
-    .badge.red { background: #ffebee; color: #d32f2f; }
-    .badge.blue { background: #e3f2fd; color: #1976d2; }
-    .badge.gray { background: #eeeeee; color: #424242; }
+    .badge.green { 
+        background: linear-gradient(135deg, #28a745, #20c997); 
+        color: white; 
+    }
+    .badge.red { 
+        background: linear-gradient(135deg, #dc3545, #c82333); 
+        color: white; 
+    }
+    .badge.blue { 
+        background: linear-gradient(135deg, #17a2b8, #138496); 
+        color: white; 
+    }
+    .badge.gray { 
+        background: linear-gradient(135deg, #6c757d, #495057); 
+        color: white; 
+    }
 
     .view-all {
         display: block;
         width: 100%;
-        margin-top: 1rem;
-        padding: 0.7rem;
-        border: 1px solid #ddd;
-        background: #fff;
-        border-radius: 6px;
+        margin-top: 1.5rem;
+        padding: 0.875rem;
+        border: 2px solid #28a745;
+        background: white;
+        border-radius: 10px;
         font-weight: 600;
         cursor: pointer;
         text-decoration: none;
         text-align: center;
-        color: #2e7d32;
+        color: #28a745;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
     }
 
     .view-all:hover {
-        background: #f5f5f5;
+        background: #28a745;
+        color: white;
         text-decoration: none;
-        color: #1b5e20;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+    }
+
+    .sidebar-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
     .sidebar-cards .card {
-        background: #fff;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        background: white;
+        padding: 1.75rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.08);
+        border: 1px solid rgba(40, 167, 69, 0.1);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-cards .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+    }
+
+    .sidebar-cards .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(40, 167, 69, 0.15);
+        border-color: #28a745;
+    }
+
+    .sidebar-cards .card h3 {
+        color: #2c3e50;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .weather-list,
@@ -130,70 +267,107 @@
 
     .weather-list li,
     .health-breakdown li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #eee;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(40, 167, 69, 0.1);
         display: flex;
         justify-content: space-between;
+        align-items: center;
+    }
+
+    .weather-list li:last-child,
+    .health-breakdown li:last-child {
+        border-bottom: none;
     }
 
     .health-score {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #2e7d32;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #28a745;
+        margin-bottom: 0.5rem;
     }
 
     .health-score .subtext {
         font-size: 0.9rem;
-        color: #777;
+        color: #6c757d;
+        font-weight: 500;
         display: block;
     }
 
     .progress-bar {
-        height: 8px;
-        background: #e0e0e0;
-        border-radius: 6px;
+        height: 10px;
+        background: #e9ecef;
+        border-radius: 10px;
         margin: 1rem 0;
         overflow: hidden;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .progress {
-        background: #4caf50;
+        background: linear-gradient(135deg, #28a745, #20c997);
         height: 100%;
+        border-radius: 10px;
+        transition: width 0.6s ease;
+        box-shadow: 0 1px 3px rgba(40, 167, 69, 0.3);
     }
 
     .urgent-alert {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
-        border-radius: 8px;
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border: 1px solid #f39c12;
+        border-radius: 10px;
         padding: 1rem;
         margin-bottom: 0.75rem;
         border-left: 4px solid #f39c12;
+        box-shadow: 0 2px 8px rgba(243, 156, 18, 0.1);
     }
 
     .urgent-alert h5 {
         margin: 0 0 0.5rem 0;
         color: #d68910;
+        font-weight: 700;
     }
 
     .weather-card {
-        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin-bottom: 1rem;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 6px 25px rgba(40, 167, 69, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .weather-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        transform: rotate(45deg);
+    }
+
+    .weather-card h3 {
+        margin: 0 0 1rem 0;
+        position: relative;
+        z-index: 1;
+        font-weight: 700;
     }
 
     .weather-temp {
-        font-size: 2rem;
-        font-weight: 600;
+        font-size: 2.5rem;
+        font-weight: 800;
         margin: 0.5rem 0;
+        position: relative;
+        z-index: 1;
     }
 
     .quick-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
     }
 
     .action-btn {
@@ -201,19 +375,25 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        padding: 0.75rem;
-        background: #2e7d32;
+        padding: 1rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
         color: white;
         text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: background-color 0.2s ease;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
     }
 
     .action-btn:hover {
-        background: #1b5e20;
+        background: linear-gradient(135deg, #20c997, #17a2b8);
         color: white;
         text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(40, 167, 69, 0.3);
     }
 
     .tips-list {
@@ -223,28 +403,106 @@
     }
 
     .tips-list li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 0.875rem 0;
+        border-bottom: 1px solid rgba(40, 167, 69, 0.1);
         display: flex;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
     }
 
     .tips-list li:last-child {
         border-bottom: none;
     }
 
+    .tips-list li:hover {
+        padding-left: 0.5rem;
+        background: rgba(40, 167, 69, 0.03);
+        border-radius: 8px;
+    }
+
+    .tips-list li i {
+        color: #28a745;
+        margin-top: 0.25rem;
+        font-size: 1rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #6c757d;
+        background: rgba(40, 167, 69, 0.03);
+        border-radius: 15px;
+        border: 2px dashed rgba(40, 167, 69, 0.2);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #28a745;
+        opacity: 0.7;
+    }
+
+    .empty-state h4 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
     @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 1rem;
+        }
+
+        .dashboard-title {
+            font-size: 1.75rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
         .main-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
         
         .stats-grid {
             grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            padding: 1.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
         }
         
         .quick-actions {
             grid-template-columns: 1fr;
+        }
+
+        .recent-activities {
+            padding: 1.5rem;
+        }
+
+        .sidebar-cards .card {
+            padding: 1.5rem;
+        }
+
+        .weather-card {
+            padding: 1.5rem;
+        }
+
+        .weather-temp {
+            font-size: 2rem;
         }
     }
 </style>
@@ -252,33 +510,36 @@
 <div class="dashboard-container">
     {% if user_type == 'farmer' %}
         <!-- Farmer Dashboard -->
-        <h2 class="dashboard-title">🌾 Welcome back, {{ user.first_name|default:user.username }}!</h2>
+        <h2 class="dashboard-title">
+            <i class="fas fa-seedling"></i>
+            Welcome back, {{ user.first_name|default:user.username }}!
+        </h2>
         <p class="dashboard-subtitle">
             {% if recent_diagnoses > 0 %}
-                You've analyzed {{ recent_diagnoses }} plant{{ recent_diagnoses|pluralize }} this week. Keep monitoring your crops!
+                You've analyzed {{ recent_diagnoses }} plant{{ recent_diagnoses|pluralize }} this week. Keep monitoring your crops for optimal health!
             {% else %}
-                Ready to analyze your crops? Start by taking photos of your plants.
+                Ready to analyze your crops? Start by taking photos of your plants to get instant disease detection and treatment recommendations.
             {% endif %}
         </p>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <h4>Plants Analyzed</h4>
+                <h4><i class="fas fa-search"></i> Plants Analyzed</h4>
                 <p class="stat-value">{{ total_diagnoses }}</p>
                 <p class="stat-subtext">Total scanned</p>
             </div>
             <div class="stat-card">
-                <h4>Diseased Plants</h4>
+                <h4><i class="fas fa-exclamation-triangle"></i> Diseased Plants</h4>
                 <p class="stat-value">{{ diseased_plants }}</p>
                 <p class="stat-subtext">Need attention</p>
             </div>
             <div class="stat-card">
-                <h4>Healthy Plants</h4>
+                <h4><i class="fas fa-check-circle"></i> Healthy Plants</h4>
                 <p class="stat-value">{{ healthy_plants }}</p>
                 <p class="stat-subtext">Good condition</p>
             </div>
             <div class="stat-card">
-                <h4>Recommendations</h4>
+                <h4><i class="fas fa-lightbulb"></i> Recommendations</h4>
                 <p class="stat-value">{{ recommendations_count }}</p>
                 <p class="stat-subtext">Received</p>
             </div>
@@ -301,18 +562,19 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p style="color: #666; text-align: center; padding: 2rem;">
-                        <i class="fas fa-seedling" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #2e7d32;"></i>
-                        No plant analysis yet. Start by scanning your crops!
-                    </p>
+                    <div class="empty-state">
+                        <i class="fas fa-seedling"></i>
+                        <h4>No Plant Analysis Yet</h4>
+                        <p>Start by scanning your crops to track their health and get personalized recommendations!</p>
+                    </div>
                 {% endif %}
                 
                 <div class="quick-actions">
                     <a href="{% url 'diagnosis:diagnose' %}" class="action-btn">
-                        <i class="fas fa-camera"></i> Scan Crop
+                        <i class="fas fa-camera"></i> Diagnose Crop
                     </a>
                     <a href="{% url 'recommendations:dashboard' %}" class="action-btn">
-                        <i class="fas fa-lightbulb"></i> View Tips
+                        <i class="fas fa-lightbulb"></i> View Recommendations
                     </a>
                 </div>
             </div>
@@ -321,7 +583,7 @@
                 <!-- Weather Card -->
                 {% if weather %}
                 <div class="weather-card">
-                    <h3 style="margin: 0 0 1rem 0;">
+                    <h3>
                         <i class="fas fa-cloud-sun"></i> Current Weather
                     </h3>
                     <div class="weather-temp">{{ weather.temperature }}°C</div>
@@ -335,24 +597,24 @@
 
                 <!-- Farm Health Score -->
                 <div class="card">
-                    <h3>Farm Health Score</h3>
+                    <h3><i class="fas fa-heart"></i> Farm Health Score</h3>
                     <p class="health-score">{{ health_percentage }}% <span class="subtext">Overall Health</span></p>
                     <div class="progress-bar">
                         <div class="progress" style="width: {{ health_percentage }}%;"></div>
                     </div>
                     {% if health_percentage >= 80 %}
-                        <p style="color: #2e7d32;">Excellent! Your crops are healthy 🌟</p>
+                        <p style="color: #28a745; font-weight: 600;">🌟 Excellent! Your crops are healthy</p>
                     {% elif health_percentage >= 60 %}
-                        <p style="color: #f57c00;">Good, but monitor closely 👀</p>
+                        <p style="color: #f57c00; font-weight: 600;">👀 Good, but monitor closely</p>
                     {% else %}
-                        <p style="color: #d32f2f;">Needs attention ⚠️</p>
+                        <p style="color: #dc3545; font-weight: 600;">⚠️ Needs immediate attention</p>
                     {% endif %}
                 </div>
 
                 <!-- Urgent Alerts -->
                 {% if urgent_alerts %}
                 <div class="card">
-                    <h3>⚠️ Urgent Alerts</h3>
+                    <h3><i class="fas fa-exclamation-triangle"></i> Urgent Alerts</h3>
                     {% for alert in urgent_alerts %}
                     <div class="urgent-alert">
                         <h5>{{ alert.disease_name }}</h5>
@@ -364,11 +626,11 @@
 
                 <!-- Farming Tips -->
                 <div class="card">
-                    <h3>🌱 Farming Tips</h3>
+                    <h3><i class="fas fa-leaf"></i> Farming Tips</h3>
                     <ul class="tips-list">
                         {% for tip in farming_tips %}
                         <li>
-                            <i class="fas fa-leaf" style="color: #2e7d32; margin-top: 0.25rem;"></i>
+                            <i class="fas fa-leaf"></i>
                             <span>{{ tip }}</span>
                         </li>
                         {% endfor %}
@@ -379,27 +641,30 @@
 
     {% else %}
         <!-- Basic Dashboard for other user types -->
-        <h2 class="dashboard-title">Dashboard</h2>
-        <p class="dashboard-subtitle">Welcome back, {{ user.username }}</p>
+        <h2 class="dashboard-title">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </h2>
+        <p class="dashboard-subtitle">Welcome back, {{ user.username }}! Here's your platform overview.</p>
 
         <div class="stats-grid">
             <div class="stat-card">
-                <h4>Your Farms</h4>
+                <h4><i class="fas fa-map-marked-alt"></i> Your Farms</h4>
                 <p class="stat-value">{{ total_farms|default:"0" }}</p>
                 <p class="stat-subtext">Active farms</p>
             </div>
             <div class="stat-card">
-                <h4>Total Diagnoses</h4>
+                <h4><i class="fas fa-search"></i> Total Diagnoses</h4>
                 <p class="stat-value">{{ total_diagnoses|default:"0" }}</p>
                 <p class="stat-subtext">Plants analyzed</p>
             </div>
             <div class="stat-card">
-                <h4>Uploads</h4>
+                <h4><i class="fas fa-cloud-upload-alt"></i> Uploads</h4>
                 <p class="stat-value">{{ total_uploads|default:"0" }}</p>
                 <p class="stat-subtext">Images uploaded</p>
             </div>
             <div class="stat-card">
-                <h4>Pending Tasks</h4>
+                <h4><i class="fas fa-tasks"></i> Pending Tasks</h4>
                 <p class="stat-value">{{ pending_tasks|default:"0" }}</p>
                 <p class="stat-subtext">Requires attention</p>
             </div>
@@ -408,15 +673,17 @@
         <div class="main-grid">
             <div class="recent-activities">
                 <h3>Recent Activities</h3>
-                <p style="color: #666; text-align: center; padding: 2rem;">
-                    Start using the platform to see your activities here.
-                </p>
+                <div class="empty-state">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Start Your Journey</h4>
+                    <p>Begin using the platform to see your activities and insights here.</p>
+                </div>
                 <a href="{% url 'diagnosis:diagnose' %}" class="view-all">Start Diagnosis</a>
             </div>
 
             <div class="sidebar-cards">
                 <div class="card">
-                    <h3>Getting Started</h3>
+                    <h3><i class="fas fa-rocket"></i> Getting Started</h3>
                     <ul class="tips-list">
                         <li>
                             <i class="fas fa-camera"></i>
@@ -437,4 +704,3 @@
     {% endif %}
 </div>
 {% endblock %}
-

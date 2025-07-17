@@ -6,7 +6,7 @@
 {% block extra_css %}
 <style>
     .feedback-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         min-height: 100vh;
         padding: 2rem 0;
         position: relative;
@@ -32,7 +32,7 @@
     .feedback-card {
         background: white;
         border-radius: 25px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        box-shadow: 0 30px 60px rgba(40, 167, 69, 0.3);
         overflow: hidden;
         transition: all 0.3s ease;
         position: relative;
@@ -40,7 +40,7 @@
     }
     
     .feedback-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
         padding: 3rem 2rem;
         text-align: center;
@@ -85,7 +85,7 @@
     }
     
     .recommendation-summary {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         margin: 2rem;
         padding: 2.5rem;
         border-radius: 20px;
@@ -93,7 +93,7 @@
         position: relative;
         overflow: hidden;
         transform: rotate(-1deg);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        box-shadow: 0 15px 35px rgba(40, 167, 69, 0.2);
     }
     
     .recommendation-summary::before {
@@ -144,16 +144,16 @@
     .form-section {
         margin: 2rem;
         padding: 2.5rem;
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #e8f5e8 100%);
         border-radius: 20px;
-        border-left: 6px solid #667eea;
+        border-left: 6px solid #28a745;
         position: relative;
         overflow: hidden;
     }
     
     .form-section:nth-child(even) {
         transform: translateX(10px);
-        border-left: 6px solid #f093fb;
+        border-left: 6px solid #20c997;
     }
     
     .form-section:nth-child(odd) {
@@ -167,7 +167,7 @@
         right: 0;
         width: 100px;
         height: 100px;
-        background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.05));
+        background: linear-gradient(45deg, transparent, rgba(40, 167, 69, 0.05));
         border-radius: 50%;
         transform: translate(50%, -50%);
     }
@@ -191,14 +191,14 @@
     
     .rating-star:hover {
         transform: scale(1.3) rotate(15deg);
-        color: #fbbf24;
-        text-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+        color: #28a745;
+        text-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
     }
     
     .rating-star.active {
-        color: #f59e0b;
+        color: #20c997;
         transform: scale(1.2) rotate(5deg);
-        text-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        text-shadow: 0 5px 20px rgba(32, 201, 151, 0.4);
     }
     
     .option-card {
@@ -221,7 +221,7 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+        background: linear-gradient(90deg, transparent, rgba(40, 167, 69, 0.1), transparent);
         transition: left 0.6s ease;
     }
     
@@ -230,18 +230,18 @@
     }
     
     .option-card:hover {
-        border-color: #667eea;
-        background: #f8fafc;
+        border-color: #28a745;
+        background: #f8fff8;
         transform: translateX(10px) translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        box-shadow: 0 15px 35px rgba(40, 167, 69, 0.15);
     }
     
     .option-card.selected {
-        border-color: #667eea;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #28a745;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
         transform: translateX(15px) translateY(-8px);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 40px rgba(40, 167, 69, 0.3);
     }
     
     .option-card:nth-child(even) {
@@ -293,14 +293,14 @@
         font-size: 1.1rem;
         resize: vertical;
         transition: all 0.3s ease;
-        background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+        background: linear-gradient(135deg, white 0%, #f8fff8 100%);
         font-family: inherit;
     }
     
     .comments-textarea:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.1);
+        border-color: #28a745;
+        box-shadow: 0 0 0 5px rgba(40, 167, 69, 0.1);
         transform: translateY(-2px);
     }
     
@@ -317,7 +317,7 @@
     .improvements-grid .option-card:nth-child(4) { transform: translateX(20px) translateY(-20px); }
     
     .submit-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         margin: 2rem;
         padding: 3rem;
         border-radius: 25px;
@@ -325,7 +325,7 @@
         position: relative;
         overflow: hidden;
         transform: rotate(1deg);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        box-shadow: 0 20px 40px rgba(40, 167, 69, 0.3);
     }
     
     .submit-section::before {
@@ -346,7 +346,7 @@
     }
     
     .submit-section h3 {
-        color: #1f2937 !important; /* Dark color for visibility */
+        color: #1f2937 !important;
         text-shadow: 0 2px 10px rgba(255,255,255,0.8);
         background: rgba(255,255,255,0.9);
         padding: 1rem 2rem;
@@ -359,7 +359,7 @@
     }
     
     .submit-section p {
-        color: #1f2937 !important; /* Dark color for visibility */
+        color: #1f2937 !important;
         font-size: 1.2rem;
         font-weight: 500;
         background: rgba(255,255,255,0.8);
@@ -372,7 +372,7 @@
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
         border: none;
         padding: 1.5rem 3rem;
         border-radius: 50px;
@@ -392,15 +392,16 @@
     
     .btn-primary:hover {
         transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 15px 35px rgba(240, 147, 251, 0.4);
+        box-shadow: 0 15px 35px rgba(32, 201, 151, 0.4);
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
     }
     
     .btn-secondary {
         background: rgba(255,255,255,0.9);
-        border: 3px solid #1f2937;
+        border: 3px solid #28a745;
         padding: 1.5rem 3rem;
         border-radius: 50px;
-        color: #1f2937;
+        color: #28a745;
         font-weight: 700;
         font-size: 1.2rem;
         cursor: pointer;
@@ -415,10 +416,10 @@
     }
     
     .btn-secondary:hover {
-        background: #1f2937;
+        background: #28a745;
         color: white;
         transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 15px 35px rgba(31, 41, 55, 0.4);
+        box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
     }
     
     .section-title {
@@ -450,6 +451,44 @@
         0%, 100% { transform: translateY(0px) rotate(0deg); }
         25% { transform: translateY(-10px) rotate(2deg); }
         75% { transform: translateY(-5px) rotate(-2deg); }
+    }
+    
+    /* Enhanced green theme icons */
+    .section-title i[style*="color: #f59e0b"] {
+        color: #28a745 !important;
+    }
+    
+    .section-title i[style*="color: #10b981"] {
+        color: #20c997 !important;
+    }
+    
+    .section-title i[style*="color: #3b82f6"] {
+        color: #17a2b8 !important;
+    }
+    
+    .section-title i[style*="color: #8b5cf6"] {
+        color: #28a745 !important;
+    }
+    
+    /* Green sparkle effects */
+    .sparkle-green {
+        color: #28a745;
+        animation: sparkleGreen 3s ease-out forwards;
+    }
+    
+    @keyframes sparkleGreen {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: translateY(-50px) rotate(180deg) scale(1.5);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) rotate(360deg) scale(0.5);
+            opacity: 0;
+        }
     }
     
     @media (max-width: 768px) {
@@ -544,7 +583,7 @@
                 <!-- Rating Section -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-star" style="color: #f59e0b;"></i>
+                        <i class="fas fa-star" style="color: #28a745;"></i>
                         Overall Rating
                     </h3>
                     <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">How would you rate this recommendation?</p>
@@ -561,7 +600,7 @@
                 <!-- Usefulness Section -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-thumbs-up" style="color: #10b981;"></i>
+                        <i class="fas fa-thumbs-up" style="color: #20c997;"></i>
                         Usefulness
                     </h3>
                     <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">How useful was this recommendation?</p>
@@ -603,7 +642,7 @@
                 <!-- Treatment Effectiveness -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-chart-line" style="color: #3b82f6;"></i>
+                        <i class="fas fa-chart-line" style="color: #17a2b8;"></i>
                         Treatment Effectiveness
                     </h3>
                     <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">Did the recommended treatment work?</p>
@@ -656,7 +695,7 @@
                 <!-- Comments Section -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-comment-alt" style="color: #8b5cf6;"></i>
+                        <i class="fas fa-comment-alt" style="color: #28a745;"></i>
                         Additional Comments
                     </h3>
                     <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">Share your detailed experience and suggestions</p>
@@ -667,7 +706,7 @@
                 <!-- Improvements Section -->
                 <div class="form-section">
                     <h3 class="section-title">
-                        <i class="fas fa-lightbulb" style="color: #f59e0b;"></i>
+                        <i class="fas fa-lightbulb" style="color: #28a745;"></i>
                         Suggested Improvements
                     </h3>
                     <p style="color: #6b7280; margin-bottom: 1.5rem; font-size: 1.1rem;">What aspects could we improve? (Select all that apply)</p>
@@ -769,7 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function highlightStars(rating) {
         ratingStars.forEach((star, index) => {
             if (index < rating) {
-                star.style.color = '#f59e0b';
+                star.style.color = '#28a745';
                 star.style.transform = 'scale(1.2) rotate(10deg)';
             } else {
                 star.style.color = '#d1d5db';
@@ -833,18 +872,18 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(section);
     });
     
-    // Add some sparkle effects
-    function createSparkle() {
+    // Add green sparkle effects
+    function createGreenSparkle() {
+        const sparkles = ['🌱', '🍃', '✨', '💚'];
         const sparkle = document.createElement('div');
-        sparkle.innerHTML = '✨';
+        sparkle.innerHTML = sparkles[Math.floor(Math.random() * sparkles.length)];
         sparkle.style.position = 'fixed';
         sparkle.style.left = Math.random() * window.innerWidth + 'px';
         sparkle.style.top = Math.random() * window.innerHeight + 'px';
-        sparkle.style.fontSize = Math.random() * 20 + 10 + 'px';
+        sparkle.style.fontSize = Math.random() * 20 + 15 + 'px';
         sparkle.style.pointerEvents = 'none';
         sparkle.style.zIndex = '9999';
-        sparkle.style.opacity = '0.7';
-        sparkle.style.animation = 'sparkleFloat 3s ease-out forwards';
+        sparkle.classList.add('sparkle-green');
         
         document.body.appendChild(sparkle);
         
@@ -853,24 +892,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
-    // Add sparkle animation CSS
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes sparkleFloat {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Create sparkles occasionally
-    setInterval(createSparkle, 2000);
+    // Create green sparkles occasionally
+    setInterval(createGreenSparkle, 2500);
 });
 </script>
 {% endblock %}
