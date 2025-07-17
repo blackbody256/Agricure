@@ -15,10 +15,10 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            background-color: #f4f7f6;
-            color: #2d2d2d;
+            background-color: #f5f7f5;
+            color: #1a3c34;
         }
         
         .page-container {
@@ -30,19 +30,21 @@
         .content-body {
             display: flex;
             flex: 1;
+            min-height: 0; /* Allow flex items to shrink */
         }
         
         main {
             flex: 1;
             padding: 2rem;
+            overflow-y: auto; /* Allow scrolling if content exceeds height */
         }
 
-        /* Original Navbar Styles */
+        /* Navbar Styles - Only for unauthenticated users */
         .navbar {
-            background-color: #fdfffe;
+            background-color: #ffffff;
             padding: 0;
             width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             border: none;
             z-index: 1000;
         }
@@ -51,8 +53,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 3rem;
-            height: 70px;
+            padding: 0 2rem;
+            height: 64px;
         }
         
         .logo {
@@ -62,91 +64,221 @@
         }
         
         .logo img {
-            height: 40px;
+            height: 36px;
         }
         
         .nav-links {
             display: flex;
             align-items: center;
             list-style: none;
-            gap: 0.5rem;
+            gap: 1rem;
         }
         
         .nav-links a {
-            color: #3fc446;
+            color: #2e7d32;
             text-decoration: none;
             font-weight: 500;
-            padding: 0.2rem 0.7rem;
-            transition: color 0.2s;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.2s ease;
         }
         
         .nav-links a:hover, .nav-links a:focus {
-            color: #cddc39;
+            color: #4caf50;
         }
         
         .logout-btn {
             background: none !important;
             border: none;
-            color: #3fc446 !important;
+            color: #2e7d32 !important;
             font-weight: 500;
             cursor: pointer;
-            padding: 0.2rem 0.7rem;
-            font-size: 1.0rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
         }
         
         .logout-btn:hover {
-            color: #cddc39 !important;
+            color: #4caf50 !important;
         }
 
-        /* Sidebar Styles */
+        /* Sidebar Styles - Full Height */
         .sidebar {
-            width: 250px;
-            background: #2e7d32;
-            color: white;
+            width: 240px;
+            min-width: 240px; /* Prevent shrinking */
+            background: linear-gradient(180deg, #2e7d32 0%, #206922 100%);
+            color: #ffffff;
             display: flex;
             flex-direction: column;
-            padding-top: 1.5rem;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            height: 100%; /* Full height of content area */
+            min-height: 100vh; /* Minimum full viewport height */
+        }
+
+        .sidebar .logo {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0; /* Don't shrink logo area */
         }
 
         .sidebar-nav {
             list-style: none;
-            margin-top: 1rem;
+            flex: 1; /* Take remaining space */
+            padding: 1rem 0;
+            overflow-y: auto; /* Allow scrolling if many items */
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.75rem;
             color: #e8f5e9;
             text-decoration: none;
-            padding: 0.9rem 1.5rem;
-            font-size: 1.05rem;
-            transition: background 0.3s, color 0.3s;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 400;
+            transition: all 0.2s ease;
         }
 
-        .sidebar-nav a:hover, .sidebar-nav a.active {
-            background: #cddc39;
-            color: #2e7d32;
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+        }
+
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #4caf50;
         }
 
         .sidebar-nav i {
             width: 20px;
             text-align: center;
+            color: #e8f5e9;
+        }
+
+        .sidebar-nav a.active i {
+            color: #ffffff;
+        }
+
+        /* Form styles for logout buttons in sidebar */
+        .sidebar-nav form {
+            margin: 0;
+        }
+
+        .sidebar-nav form button {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #e8f5e9;
+            font-size: 0.95rem;
+            font-weight: 400;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-nav form button:hover {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+        }
+
+        /* Authenticated layout - Full height setup */
+        .authenticated-layout {
+            height: 100vh;
+            overflow: hidden; /* Prevent page scrolling */
+        }
+
+        .authenticated-layout .content-body {
+            height: 100vh;
+            overflow: hidden; /* Content manages its own overflow */
+        }
+
+        .authenticated-layout main {
+            padding: 1.5rem;
+            height: 100%;
+            overflow-y: auto; /* Allow main content to scroll */
         }
         
         /* Footer */
         .footer {
-            background-color: #2e7d32;
-            color: white;
+            background: linear-gradient(180deg, #2e7d32 0%, #206922 100%);
+            color: #e8f5e9;
             text-align: center;
-            padding: 1.5rem;
-            font-size: 0.9rem;
+            padding: 1rem;
+            font-size: 0.85rem;
+            flex-shrink: 0; /* Don't shrink footer */
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .content-body {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                min-width: 100%;
+                order: 2;
+                height: auto;
+                min-height: auto;
+            }
+            
+            .sidebar .logo {
+                padding: 1rem;
+            }
+            
+            .sidebar-nav {
+                padding: 0.5rem 0;
+            }
+            
+            main {
+                order: 1;
+                padding: 1rem;
+                height: auto;
+                overflow-y: visible;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .authenticated-layout {
+                height: auto;
+                overflow: visible;
+            }
+            
+            .authenticated-layout .content-body {
+                height: auto;
+                overflow: visible;
+            }
+            
+            .authenticated-layout main {
+                height: auto;
+                overflow-y: visible;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="page-container">
-        <!-- Header -->
+    <div class="page-container {% if user.is_authenticated %}authenticated-layout{% endif %}">
+        <!-- Header - Only show for unauthenticated users -->
+        {% if not user.is_authenticated %}
         <header>
             <nav class="navbar">
                 <div class="nav-container">
@@ -156,89 +288,70 @@
                         </a>
                     </div>
                     <ul class="nav-links">
-                        <!-- <li><a href="{% url 'users:home' %}">Home</a></li> -->
-                        {% if user.is_authenticated %}
-                            <!-- <li><a href="{% url 'users:dashboard' %}">Dashboard</a></li> -->
-                            <!-- <li><a href="{% url 'users:about' %}">About</a></li> -->
-                            <!-- <li><a href="{% url 'users:profile_edit' %}">Profile</a></li> -->
-                            <!-- <li>
-                                <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="logout-btn">Logout</button>
-                                </form>
-                            </li> -->
-                        {% else %}
-                            <li><a href="{% url 'users:home' %}">Home</a></li>
-                            <li><a href="{% url 'users:about' %}">About</a></li>
-                            <li><a href="{% url 'users:login' %}">Login</a></li>
-                            <li><a href="{% url 'users:signup' %}">Register</a></li>
-                        {% endif %}
+                        <li><a href="{% url 'users:home' %}">Home</a></li>
+                        <li><a href="{% url 'users:about' %}">About</a></li>
+                        <li><a href="{% url 'users:login' %}">Login</a></li>
+                        <li><a href="{% url 'users:signup' %}">Register</a></li>
                     </ul>
                 </div>
             </nav>
         </header>
+        {% endif %}
 
         <div class="content-body">
             {% if user.is_authenticated %}
             <!-- Sidebar -->
             <aside class="sidebar">
+                <div class="logo">
+                    <a href="{% url 'users:home' %}">
+                        <img src="{% static 'images/agricure.png' %}" alt="Agricure Logo" />
+                    </a>
+                </div>
                 <ul class="sidebar-nav">
                     {% if user.role == 'ADMIN' %}
-                        <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-                        <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i>Profile</a></li>
-                        <li><a href="{% url 'users:manage_farmers' %}"><i class="fas fa-users"></i> Manage Farmers</a></li>
-                        <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Disease Detection</a></li>
-                        <li><a href="{% url 'administrator:upload_dataset' %}"><i class="fas fa-upload"></i> Upload New Dataset</a></li>
-                        <li><a href="{% url 'administrator:dataset_list' %}"><i class="fas fa-folder"></i> Manage Datasets</a></li>
-                        <li><a href="{% url 'analytics:admin_dashboard' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                        <li><a href="{% url 'recommendations:admin_feedback_list' %}"><i class="fas fa-chart-line"></i> View User Feedback</a></li>
+                        <li><a href="{% url 'analytics:admin_dashboard' %}" data-page="admin_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:profile_edit' %}" data-page="profile_edit"><i class="fas fa-user-edit"></i> Profile</a></li>
+                        <li><a href="{% url 'users:manage_farmers' %}" data-page="manage_farmers"><i class="fas fa-users"></i> Manage Farmers</a></li>
+                        <li><a href="{% url 'diagnosis:diagnose' %}" data-page="diagnose"><i class="fas fa-bug"></i> Disease Detection</a></li>
+                        <li><a href="{% url 'administrator:upload_dataset' %}" data-page="upload_dataset"><i class="fas fa-upload"></i> Upload Dataset</a></li>
+                        <li><a href="{% url 'administrator:dataset_list' %}" data-page="dataset_list"><i class="fas fa-folder"></i> Manage Datasets</a></li>
+                        <li><a href="{% url 'recommendations:admin_feedback_list' %}" data-page="admin_feedback_list"><i class="fas fa-chart-line"></i> User Feedback</a></li>
                         <li>
-                        <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
-                            {% csrf_token %}
-                            <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
-                            <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
-                        </form>
+                            <form action="{% url 'users:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                            </form>
                         </li>
                     {% elif user.role == 'AGRONOMIST' %}
-                            <li><a href="{% url 'agronomist:dashboard' %}"><i class="fas fa-home"></i> Agronomist Dashboard</a></li>
-                            <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-                            <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Assist Diagnosis</a></li>
-                            <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
-                            <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
-
-                            <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-cloud-sun"></i> Chat</a></li>
-                            <a href="{% url 'agronomist:dataset_list' %}" class="btn btn-outline-success"><i class="fas fa-file-alt"></i>View Datasets</a>
-
-                            
-
-                            <li><a href="{% url 'agronomist:report' %}"><i class="fas fa-eye"></i> reports</a></li>
-                            
-                            <li>
-                            <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
+                        <li><a href="{% url 'agronomist:dashboard' %}" data-page="agronomist_dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:profile_edit' %}" data-page="profile_edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                        <li><a href="{% url 'diagnosis:diagnose' %}" data-page="diagnose"><i class="fas fa-bug"></i> Assist Diagnosis</a></li>
+                        <li><a href="{% url 'recommendations:dashboard' %}" data-page="recommendations_dashboard"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
+                        <li><a href="{% url 'recommendations:list' %}" data-page="recommendations_list"><i class="fas fa-list"></i> History</a></li>
+                        <li><a href="{% url 'chat:dashboard' %}" data-page="chat_dashboard"><i class="fas fa-cloud-sun"></i> Chat</a></li>
+                        <li><a href="{% url 'agronomist:dataset_list' %}" data-page="agronomist_dataset_list"><i class="fas fa-file-alt"></i> View Datasets</a></li>
+                        <li><a href="{% url 'agronomist:report' %}" data-page="agronomist_report"><i class="fas fa-eye"></i> Reports</a></li>
+                        <li>
+                            <form action="{% url 'users:logout' %}" method="post">
                                 {% csrf_token %}
-                                <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
-                                <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
+                                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
                             </form>
-                            </li>
-                                                    
-
+                        </li>
                     {% else %}
-                        <li><a href="{% url 'users:dashboard' %}"><i class="fas fa-home"></i> Dashboard</a></li>
-                        <li><a href="{% url 'users:profile_edit' %}"><i class="fas fa-user-edit"></i>Profile</a></li>
-                        <li><a href="{% url 'diagnosis:diagnose' %}"><i class="fas fa-bug"></i> Diagnose</a></li>
-                        <li><a href="{% url 'recommendations:dashboard' %}"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
-                        <li><a href="{% url 'recommendations:list' %}"><i class="fas fa-list"></i> History</a></li>
-                        <li><a href="{% url 'chat:dashboard' %}"><i class="fas fa-comment"></i>Message</a></li>
-                         <li><a href="{% url 'analytics:farmer_analytics' %}"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                         <li><a href="{% url 'agronomist:report' %}"><i class="fas fa-eye"></i> reports</a></li>
-                         <li>
-                            <form action="{% url 'users:logout' %}" method="post" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.5rem;">
+                        <li><a href="{% url 'users:dashboard' %}" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="{% url 'users:profile_edit' %}" data-page="profile_edit"><i class="fas fa-user-edit"></i> Profile</a></li>
+                        <li><a href="{% url 'diagnosis:diagnose' %}" data-page="diagnose"><i class="fas fa-bug"></i> Diagnose</a></li>
+                        <li><a href="{% url 'recommendations:dashboard' %}" data-page="recommendations_dashboard"><i class="fas fa-lightbulb"></i> Recommendations</a></li>
+                        <li><a href="{% url 'recommendations:list' %}" data-page="recommendations_list"><i class="fas fa-list"></i> History</a></li>
+                        <li><a href="{% url 'chat:dashboard' %}" data-page="chat_dashboard"><i class="fas fa-comment"></i> Message</a></li>
+                        <li><a href="{% url 'analytics:farmer_analytics' %}" data-page="farmer_analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li><a href="{% url 'agronomist:report' %}" data-page="report"><i class="fas fa-eye"></i> Reports</a></li>
+                        <li>
+                            <form action="{% url 'users:logout' %}" method="post">
                                 {% csrf_token %}
-                                <i class="fas fa-sign-out-alt" style="width: 20px; text-align: center; color: #e8f5e9;"></i>
-                                <button type="submit" style="all: unset; cursor: pointer; color: #e8f5e9; font-size: 1.05rem;">Logout</button>
+                                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
                             </form>
-                            </li>
-                        
+                        </li>
                     {% endif %}
                 </ul>
             </aside>
@@ -250,11 +363,111 @@
             </main>
         </div>
 
-        <!-- Footer -->
+        <!-- Footer - Only show for unauthenticated users -->
+        {% if not user.is_authenticated %}
         <footer class="footer">
-            <p>&copy; 2025 Agricure. All rights reserved.</p>
+            <p>© 2025 Agricure. All rights reserved.</p>
             <p>Contact: info@agricure.com</p>
         </footer>
+        {% endif %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Initializing sidebar navigation...');
+            
+            // Get current URL path
+            const currentPath = window.location.pathname;
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-page]');
+            
+            console.log('📍 Current path:', currentPath);
+            console.log('🔗 Found sidebar links:', sidebarLinks.length);
+            
+            // Enhanced URL to data-page mapping
+            const urlMapping = {
+                // Admin URLs
+                '/analytics/admin-dashboard/': 'admin_dashboard',
+                '/users/profile/edit/': 'profile_edit',
+                '/users/manage-farmers/': 'manage_farmers',
+                '/diagnosis/diagnose/': 'diagnose',
+                '/administrator/upload-dataset/': 'upload_dataset',
+                '/administrator/dataset-list/': 'dataset_list',
+                '/recommendations/admin-feedback/': 'admin_feedback_list',
+                
+                // Agronomist URLs
+                '/agronomist/dashboard/': 'agronomist_dashboard',
+                '/recommendations/dashboard/': 'recommendations_dashboard',
+                '/recommendations/list/': 'recommendations_list',
+                '/chat/dashboard/': 'chat_dashboard',
+                '/agronomist/dataset-list/': 'agronomist_dataset_list',
+                '/agronomist/report/': 'agronomist_report',
+                
+                // Farmer URLs
+                '/users/dashboard/': 'dashboard',
+                '/analytics/farmer-analytics/': 'farmer_analytics',
+            };
+            
+            // Function to check if current path matches link
+            function isActiveLink(link) {
+                const href = link.getAttribute('href');
+                const dataPage = link.getAttribute('data-page');
+                
+                console.log(`🔍 Checking link: ${dataPage} (${href})`);
+                
+                // Direct URL match (exact)
+                if (currentPath === href) {
+                    console.log(`✅ Exact match found: ${dataPage}`);
+                    return true;
+                }
+                
+                // Check URL mapping
+                if (urlMapping[currentPath] === dataPage) {
+                    console.log(`✅ Mapping match found: ${dataPage}`);
+                    return true;
+                }
+                
+                // Special handling for diagnosis pages
+                if (dataPage === 'diagnose' && (
+                    currentPath.includes('/diagnosis/') || 
+                    currentPath.startsWith('/diagnosis')
+                )) {
+                    console.log(`✅ Diagnosis match found: ${dataPage}`);
+                    return true;
+                }
+                
+                // Partial match for nested pages (but not root)
+                if (href !== '/' && currentPath.startsWith(href)) {
+                    console.log(`✅ Partial match found: ${dataPage}`);
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // Clear all active states first
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Set active state based on current page
+            let activeFound = false;
+            sidebarLinks.forEach(link => {
+                if (isActiveLink(link) && !activeFound) {
+                    link.classList.add('active');
+                    activeFound = true;
+                    console.log(`🎯 Set active: ${link.getAttribute('data-page')}`);
+                }
+            });
+            
+            if (!activeFound) {
+                console.log('⚠️ No active link found for current path');
+            }
+            
+            // Handle click events (removed to prevent conflicts)
+            // The active state will only be set based on the actual current page
+            
+            console.log('✅ Sidebar navigation initialized');
+        });
+    </script>
 </body>
 </html>
