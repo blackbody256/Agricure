@@ -150,24 +150,24 @@
 
     <div class="stats-grid">
         <div class="stat-card">
-            <h4>Active Farms</h4>
-            <p class="stat-value">24</p>
-            <span class="stat-subtext">+3 this month</span>
+            <h4>Number of Farmers</h4>
+            <p class="stat-value">{{ num_farmers }}</p>
+            
         </div>
         <div class="stat-card">
-            <h4>Crops Monitored</h4>
-            <p class="stat-value">156</p>
-            <span class="stat-subtext">+12 this week</span>
+            <h4>Diseases diagnosed</h4>
+            <p class="stat-value">{{ num_diagnoses }}</p>
+            
         </div>
         <div class="stat-card">
-            <h4>Critical Alerts</h4>
-            <p class="stat-value">3</p>
-            <span class="stat-subtext">2 resolved today</span>
+            <h4>Number of recommendations</h4>
+            <p class="stat-value">{{ num_recommendations }}</p>
+            
         </div>
         <div class="stat-card">
-            <h4>Growth Rate</h4>
-            <p class="stat-value">94%</p>
-            <span class="stat-subtext">+5% from last month</span>
+            <h4>Number of uploads made</h4>
+            <p class="stat-value">{{ num_uploads }}</p>
+            
         </div>
     </div>
 
@@ -175,35 +175,50 @@
         <div class="recent-activities">
             <h3>Recent Activities</h3>
             <ul>
-                <li><strong>Green Valley Farm</strong><br><small>Pest alert resolved</small><span class="badge green">2 hours ago</span></li>
-                <li><strong>Sunset Acres</strong><br><small>Soil analysis completed</small><span class="badge blue">4 hours ago</span></li>
-                <li><strong>Mountain View</strong><br><small>Irrigation issue reported</small><span class="badge gray">1 day ago</span></li>
-                <li><strong>River Bend Farm</strong><br><small>Harvest recommendation sent</small><span class="badge green">2 days ago</span></li>
-            </ul>
+  {% for activity in recent_activities %}
+    <li>
+      <strong>{{ activity.title }}</strong><br>
+      <small>{{ activity.detail }}</small>
+      <span class="badge {{ activity.badge }}">{{ activity.time|timesince }} ago</span>
+    </li>
+  {% empty %}
+    <li>No recent activities found.</li>
+  {% endfor %}
+</ul>
+
             <button class="view-all">View All Activities</button>
         </div>
 
         <div class="sidebar-cards">
             <div class="card">
                 <h3>Current Weather</h3>
+                {% if weather %}
                 <ul class="weather-list">
-                    <li>🌡️ Temperature: <strong>24°C</strong></li>
-                    <li>💧 Humidity: <strong>68%</strong></li>
-                    <li>☀️ UV Index: <strong>6</strong></li>
-                    <li>💨 Wind Speed: <strong>12 km/h</strong></li>
+                    <ul class="weather-list">
+    <li>&#x1F321; Temperature: <strong>{{ weather.temperature }}°C</strong></li> <!-- 🌡️ -->
+    <li>&#x1F4A7; Humidity: <strong>{{ weather.humidity }}%</strong></li>        <!-- 💧 -->
+    <li>&#x2600;&#xFE0F; Description: <strong>{{ weather.description|title }}</strong></li> <!-- ☀️ -->
+    <li>&#x1F4A8; Wind Speed: <strong>{{ weather.wind_speed }} km/h</strong></li> <!-- 💨 -->
+</ul>
+
                 </ul>
+                {% else %}
+                <p>⚠️ Weather data is currently unavailable.</p>
+                {% endif %}
+
             </div>
             <div class="card">
-                <h3>Farm Health Score</h3>
-                <p class="health-score">87% <span class="subtext">Overall Health</span></p>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 87%;"></div>
-                </div>
-                <ul class="health-breakdown">
-                    <li>Soil Quality: <strong>92%</strong></li>
-                    <li>Crop Health: <strong>84%</strong></li>
-                    <li>Water Management: <strong>89%</strong></li>
-                </ul>
+                <p class="health-score">{{ activity_score }}% <span class="subtext">Agronomist Activity Score</span></p>
+<div class="progress-bar">
+  <div class="progress" style="width: {{ activity_score }}%;"></div>
+</div>
+<ul class="health-breakdown">
+  <li>Uploads Score: <strong>{{ num_uploads }} × 5 = {{ upload_score|default:'0' }}%</strong></li>
+  <li>Diagnoses Score: <strong>{{ num_diagnoses }} × 2 = {{ diagnosis_score|default:'0' }}%</strong></li>
+  <li>Recommendations Score: <strong>{{ num_recommendations }} × 3 = {{ recommendation_score|default:'0' }}%</strong></li>
+</ul>
+
+                
             </div>
         </div>
     </div>
