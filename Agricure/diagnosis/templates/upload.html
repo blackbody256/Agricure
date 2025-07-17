@@ -390,9 +390,30 @@
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
+            <!-- Display messages -->
+            {% if messages %}
+                <div class="container mt-2">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                            {% if message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% elif message.tags == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-triangle"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
             <div class="text-center mb-3">
-            <button type="button" class="btn-camera" onclick="startCamera()">📷 Open Camera</button>
-          </div>
+                <button type="button" class="btn-camera" onclick="startCamera()">📷 Open Camera</button>
+            </div>
 
           <div id="camera-container" style="display: none;" class="text-center mb-3">
             <video id="camera-stream" autoplay playsinline width="320" height="240" style="border-radius: 10px; border: 2px solid #28a745;"></video>
@@ -408,8 +429,6 @@
 
           <!-- Hidden input for captured image -->
           <input type="hidden" name="captured_image" id="captured_image">
-
-
 
 
             <div class="upload-area mb-4" onclick="document.getElementById('id_image').click()">
