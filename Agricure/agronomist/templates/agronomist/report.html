@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  .report-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+  }
+
+  .report-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #1f7a45;
+    margin-bottom: 1rem;
+  }
+
+  .report-stat {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .report-stat span {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .disease-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+  }
+
+  .disease-list li {
+    margin: 0.4rem 0;
+    padding: 0.6rem 1rem;
+    background-color: #f0fdf4;
+    border-left: 4px solid #1f7a45;
+    border-radius: 6px;
+    color: #333;
+  }
+
+  .email-form {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+  }
+
+  .email-form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .email-form input[type="email"] {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+
+  .email-form button {
+    background-color: #1f7a45;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .email-form button:hover {
+    background-color: #166a38;
+  }
+</style>
+
+<div class="report-container">
+  <h2 class="report-title">📋 Agronomist Report</h2>
+
+  <div class="report-stat">
+    <span>Total Diagnoses:</span> {{ diagnoses.count }}
+  </div>
+  <div class="report-stat">
+    <span>Average Confidence:</span> {{ avg_confidence }}%
+  </div>
+
+  <h4 class="mt-4 mb-2">Top Diseases</h4>
+  <ul class="disease-list">
+    {% for item in disease_summary %}
+      <li>{{ item.disease_name }} – {{ item.total }} times</li>
+    {% empty %}
+      <li>No diagnoses available.</li>
+    {% endfor %}
+  </ul>
+
+  <h4 class="mt-5 mb-2">Common Treatment Advice</h4>
+<ul class="disease-list">
+  {% for treatment, count in top_treatments %}
+    <li>{{ treatment }} – {{ count }} times</li>
+  {% empty %}
+    <li>No treatment recommendations found.</li>
+  {% endfor %}
+</ul>
+
+<h4 class="mt-4 mb-2">Common Prevention Advice</h4>
+<ul class="disease-list">
+  {% for prevention, count in top_preventions %}
+    <li>{{ prevention }} – {{ count }} times</li>
+  {% empty %}
+    <li>No prevention recommendations found.</li>
+  {% endfor %}
+</ul>
+
+
+  <div class="email-form">
+    <form method="post">
+      {% csrf_token %}
+      <label for="recipient_email">Send Report via Email</label>
+      <input type="email" name="recipient_email" placeholder="Enter recipient email" required>
+      <button type="submit">Send Report</button>
+    </form>
+  </div>
+</div>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-whatever" crossorigin="anonymous"></script>
+
+{% endblock %}
