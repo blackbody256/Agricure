@@ -65,9 +65,9 @@ media/diagnosis_images/
 # media/  # Uncomment if you want to exclude all media files
 
 
-# Prevent duplicate app folders
-Agricure/Agricure/recommendations/
-Agricure/Agricure/users/
-Agricure/Agricure/analytics/
-Agricure/Agricure/diagnosis/
-Agricure/Agricure/administrator/
+# # Prevent duplicate app folders
+# Agricure/Agricure/recommendations/
+# Agricure/Agricure/users/
+# Agricure/Agricure/analytics/
+# Agricure/Agricure/diagnosis/
+# Agricure/Agricure/administrator/
