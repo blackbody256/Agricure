@@ -106,7 +106,13 @@ def diagnose(request):
         else: 
             return render(request, 'upload.html', {'form': form})   
             
-        image_path = diagnosis.image.path
+        if diagnosis.image and diagnosis.image.name:
+            image_path = diagnosis.image.path
+            # Proceed with model prediction
+        else:
+            messages.error(request, "Please upload an image or capture one before diagnosing.")
+            return redirect('diagnosis:diagnose')
+
 
         try:
             # 🔧 FIXED: EfficientNetB0 preprocessing
