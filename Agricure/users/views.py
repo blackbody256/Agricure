@@ -74,11 +74,14 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = ProfileEditForm
     template_name = 'profile_edit.html'
-    success_url = reverse_lazy('profile_edit')
     
     def get_object(self):
         # Return the current user's profile
         return self.request.user
+    
+    def get_success_url(self):
+        # Keep user on the same profile edit page
+        return self.request.path  # This returns the current URL path
     
     def form_valid(self, form):
         messages.success(self.request, 'Your profile has been updated successfully!')

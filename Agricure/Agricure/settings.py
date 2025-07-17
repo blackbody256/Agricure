@@ -151,7 +151,13 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Email configuration for password reset using Gmail
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ayanhilwa@gmail.com'
+EMAIL_HOST_PASSWORD = 'ebab fque aknk ngjn'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #enable file uploads 
 MEDIA_URL = '/media/'

@@ -1,0 +1,11 @@
+<h2>Agronomist Report Summary</h2>
+<p><strong>Agronomist:</strong> {{ agronomist.get_full_name }} ({{ agronomist.email }})</p>
+<p><strong>Total Diagnoses:</strong> {{ diagnoses.count }}</p>
+<p><strong>Average Confidence:</strong> {{ avg_confidence }}%</p>
+
+<h4>Common Diagnosed Diseases</h4>
+<ul>
+  {% for item in disease_summary %}
+    <li>{{ item.disease_name }} - {{ item.total }} cases</li>
+  {% endfor %}
+</ul>

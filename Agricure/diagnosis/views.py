@@ -92,13 +92,25 @@ def diagnose(request):
         
         # Handle webcam capture
         captured_image = request.POST.get('captured_image')
+        
+        # Check if neither file upload nor webcam capture was provided
+        if not request.FILES.get('image') and not captured_image:
+            messages.error(request, 'Please upload an image or capture one using the camera before diagnosing.')
+            return render(request, 'upload.html', {'form': form})
+        
         if captured_image and not request.FILES.get('image'):
-            format, imgstr = captured_image.split(';base64,')
-            ext = format.split('/')[-1]
-            image_data = ContentFile(base64.b64decode(imgstr), name=f"captured_{uuid.uuid4()}.{ext}")
-            
-            diagnosis = Diagnosis(image=image_data, user=request.user)
-            diagnosis.save()
+            try:
+                format, imgstr = captured_image.split(';base64,')
+                ext = format.split('/')[-1]
+                image_data = ContentFile(base64.b64decode(imgstr), name=f"captured_{uuid.uuid4()}.{ext}")
+                
+                diagnosis = Diagnosis(image=image_data, user=request.user)
+                diagnosis.save()
+            except Exception as e:
+                logger.error(f"Error processing captured image: {str(e)}")
+                messages.error(request, 'Error processing captured image. Please try again.')
+                return render(request, 'upload.html', {'form': form})
+                
         elif form.is_valid():
             diagnosis = form.save(commit=False)
             diagnosis.user = request.user
@@ -106,18 +118,36 @@ def diagnose(request):
         else: 
             return render(request, 'upload.html', {'form': form})   
             
-        image_path = diagnosis.image.path
+        if diagnosis.image and diagnosis.image.name:
+            image_path = diagnosis.image.path
+            # Proceed with model prediction
+        else:
+            messages.error(request, "Please upload an image or capture one before diagnosing.")
+            return redirect('diagnosis:diagnose')
+
 
         try:
-            # 🔧 FIXED: EfficientNetB0 preprocessing
+            # Check if the image file exists
+            if not hasattr(diagnosis.image, 'path') or not diagnosis.image.path:
+                messages.error(request, 'Image file is invalid. Please try uploading again.')
+                return render(request, 'upload.html', {'form': form})
+                
+            image_path = diagnosis.image.path
+            
+            # Verify the file actually exists
+            if not os.path.exists(image_path):
+                messages.error(request, 'Image file could not be found. Please try uploading again.')
+                return render(request, 'upload.html', {'form': form})
+
+            # Process the image
             img = keras_image.load_img(image_path, target_size=(224, 224))
             img_array = keras_image.img_to_array(img)
             
             # Ensure proper data type
             img_array = img_array.astype('float32')
             
-            # 🔧 CRITICAL FIX: Use EfficientNet preprocessing instead of simple normalization
-            img_array = preprocess_input(img_array)  # This applies ImageNet preprocessing for EfficientNet
+            # Use EfficientNet preprocessing
+            img_array = preprocess_input(img_array)
             
             # Add batch dimension
             img_array = np.expand_dims(img_array, axis=0)
@@ -165,11 +195,12 @@ def diagnose(request):
             messages.error(request, "The analysis model is currently unavailable. Please try again later.")
             return redirect('diagnosis:diagnose')
         except Exception as e:
-            logger.error(f"Error during diagnosis for image {image_path}: {str(e)}")
+            logger.error(f"Error during diagnosis: {str(e)}")
             messages.error(request, f'An unexpected error occurred during diagnosis. Please try again.')
             return redirect('diagnosis:diagnose')
     else:
         form = DiagnosisForm()
+    
     return render(request, 'upload.html', {'form': form})
 
 
