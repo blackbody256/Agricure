@@ -96,7 +96,7 @@ DATABASES = {
         'CONN_MAX_AGE': 600,
         'OPTIONS': {
             'options': '-c pool_mode=session'
-        },
+        }if os.environ.get('DB_ENGINE')=='django.db.backends.postgresql' else {}
     }
 }
 
@@ -125,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Kampala'
 
 USE_I18N = True
 
