@@ -12,6 +12,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import logout
+from django.db.models import Count, Q
+from django.utils import timezone
+from datetime import datetime, timedelta
+from recommendations.Open_weather import WeatherClient
 
 #for user management
 from django.contrib.auth import get_user_model
@@ -96,7 +100,125 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    """
+    Dynamic dashboard that shows different content based on user role
+    """
+    user = request.user
+    
+    # For farmers, show personalized farming dashboard
+    if user.role == 'FARMER':
+        # Get farmer's diagnoses
+        user_diagnoses = Diagnosis.objects.filter(user=user)
+        
+        # Statistics
+        total_diagnoses = user_diagnoses.count()
+        diseased_plants = user_diagnoses.exclude(
+            Q(disease_name__icontains='healthy') | 
+            Q(disease_name__icontains='no disease')
+        ).count()
+        healthy_plants = total_diagnoses - diseased_plants
+        
+        # Recent diagnoses (last 7 days)
+        last_week = timezone.now() - timedelta(days=7)
+        recent_diagnoses = user_diagnoses.filter(timestamp__gte=last_week).count()
+        
+        # Most common disease
+        most_common_disease = user_diagnoses.exclude(
+            Q(disease_name__icontains='healthy') | 
+            Q(disease_name__icontains='no disease')
+        ).values('disease_name').annotate(
+            count=Count('disease_name')
+        ).order_by('-count').first()
+        
+        # Recent activities (last 5 diagnoses)
+        recent_activities = user_diagnoses.order_by('-timestamp')[:5]
+        
+        # Recommendations count
+        recommendations_count = Recommendation.objects.filter(
+            diagnosis__user=user
+        ).count()
+        
+        # Urgent alerts (diseases with low confidence or critical diseases)
+        urgent_alerts = user_diagnoses.filter(
+            Q(confidence__lt=70) | 
+            Q(disease_name__icontains='blight') |
+            Q(disease_name__icontains='rot') |
+            Q(disease_name__icontains='virus')
+        ).order_by('-timestamp')[:3]
+        
+        # Weather information
+        weather_data = None
+        try:
+            weather_client = WeatherClient()
+            # Using Kampala as default - you can modify this to use farmer's location
+            coords = weather_client.get_coordinates_by_city("Kampala", "UG")
+            if coords:
+                weather_data = weather_client.get_weather_by_coordinates(coords["lat"], coords["lon"])
+        except Exception as e:
+            print(f"Weather fetch failed: {e}")
+        
+        # Health score calculation
+        if total_diagnoses > 0:
+            health_percentage = round((healthy_plants / total_diagnoses) * 100)
+        else:
+            health_percentage = 100
+        
+        # Get farming tips based on recent diseases
+        farming_tips = []
+        if diseased_plants > 0:
+            farming_tips = [
+                "Regular monitoring helps catch diseases early",
+                "Ensure proper spacing between plants for air circulation",
+                "Water at the base of plants to avoid leaf wetness",
+                "Remove infected plant parts immediately"
+            ]
+        else:
+            farming_tips = [
+                "Great job maintaining healthy crops!",
+                "Continue your regular monitoring routine",
+                "Consider crop rotation for next season",
+                "Keep maintaining proper irrigation schedules"
+            ]
+        
+        # Get recent feedback count (for notifications)
+        recent_feedback = Feedback.objects.filter(
+            recommendation__diagnosis__user=user,
+            created_at__gte=last_week
+        ).count()
+        
+        context = {
+            'user_type': 'farmer',
+            'user': user,
+            'total_diagnoses': total_diagnoses,
+            'diseased_plants': diseased_plants,
+            'healthy_plants': healthy_plants,
+            'recent_diagnoses': recent_diagnoses,
+            'most_common_disease': most_common_disease,
+            'recent_activities': recent_activities,
+            'recommendations_count': recommendations_count,
+            'urgent_alerts': urgent_alerts,
+            'weather': weather_data,
+            'health_percentage': health_percentage,
+            'farming_tips': farming_tips,
+            'recent_feedback': recent_feedback,
+            # Additional stats for the existing template structure
+            'total_farms': 1,  # Simple count for farmer
+            'total_uploads': total_diagnoses,  # Same as diagnoses for farmer
+            'pending_tasks': urgent_alerts.count(),
+        }
+        
+    else:
+        # For other user types, return basic dashboard data
+        context = {
+            'user_type': 'basic',
+            'user': user,
+            'total_farms': 0,
+            'total_diagnoses': 0,
+            'total_uploads': 0,
+            'pending_tasks': 0,
+        }
+    
+    return render(request, 'dashboard.html', context)
 
 @login_required
 def admin_dashboard(request):

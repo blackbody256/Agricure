@@ -4,209 +4,437 @@
 {% block content %}
 <style>
     .dashboard-container {
-  padding: 2rem;
-  font-family: 'Segoe UI', sans-serif;
-}
+        padding: 2rem;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-.dashboard-title {
-  font-size: 2rem;
-  margin-bottom: 0.2rem;
-}
+    .dashboard-title {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+    }
 
-.dashboard-subtitle {
-  color: #666;
-  margin-bottom: 1.5rem;
-}
+    .dashboard-subtitle {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
 
-.stat-card {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+    .stat-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
 
-.stat-card h4 {
-  font-size: 1rem;
-  color: #444;
-  margin-bottom: 0.3rem;
-}
+    .stat-card h4 {
+        font-size: 1rem;
+        color: #444;
+        margin-bottom: 0.3rem;
+    }
 
-.stat-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2e7d32;
-}
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2e7d32;
+    }
 
-.stat-subtext {
-  font-size: 0.9rem;
-  color: #888;
-}
+    .stat-subtext {
+        font-size: 0.9rem;
+        color: #888;
+    }
 
-.main-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1.5rem;
-}
+    .main-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+    }
 
-.recent-activities {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+    .recent-activities {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
 
-.recent-activities ul {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
+    .recent-activities ul {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+    }
 
-.recent-activities li {
-  padding: 0.8rem;
-  margin-bottom: 0.5rem;
-  background: #fafafa;
-  border-radius: 8px;
-  position: relative;
-}
+    .recent-activities li {
+        padding: 0.8rem;
+        margin-bottom: 0.5rem;
+        background: #fafafa;
+        border-radius: 8px;
+        position: relative;
+    }
 
-.badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
+    .badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
 
-.badge.green { background: #e0fce4; color: #2e7d32; }
-.badge.blue { background: #e3f2fd; color: #1976d2; }
-.badge.gray { background: #eeeeee; color: #424242; }
+    .badge.green { background: #e0fce4; color: #2e7d32; }
+    .badge.red { background: #ffebee; color: #d32f2f; }
+    .badge.blue { background: #e3f2fd; color: #1976d2; }
+    .badge.gray { background: #eeeeee; color: #424242; }
 
-.view-all {
-  display: block;
-  width: 100%;
-  margin-top: 1rem;
-  padding: 0.7rem;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
+    .view-all {
+        display: block;
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.7rem;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        color: #2e7d32;
+    }
 
-.sidebar-cards .card {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+    .view-all:hover {
+        background: #f5f5f5;
+        text-decoration: none;
+        color: #1b5e20;
+    }
 
-.weather-list,
-.health-breakdown {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-  font-size: 0.95rem;
-}
+    .sidebar-cards .card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
 
-.health-score {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #2e7d32;
-}
+    .weather-list,
+    .health-breakdown {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
 
-.health-score .subtext {
-  font-size: 0.9rem;
-  color: #777;
-  display: block;
-}
+    .weather-list li,
+    .health-breakdown li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
 
-.progress-bar {
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 6px;
-  margin: 1rem 0;
-  overflow: hidden;
-}
+    .health-score {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2e7d32;
+    }
 
-.progress {
-  background: #4caf50;
-  height: 100%;
-}
+    .health-score .subtext {
+        font-size: 0.9rem;
+        color: #777;
+        display: block;
+    }
 
+    .progress-bar {
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 6px;
+        margin: 1rem 0;
+        overflow: hidden;
+    }
+
+    .progress {
+        background: #4caf50;
+        height: 100%;
+    }
+
+    .urgent-alert {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-left: 4px solid #f39c12;
+    }
+
+    .urgent-alert h5 {
+        margin: 0 0 0.5rem 0;
+        color: #d68910;
+    }
+
+    .weather-card {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .weather-temp {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0.5rem 0;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #2e7d32;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+    }
+
+    .action-btn:hover {
+        background: #1b5e20;
+        color: white;
+        text-decoration: none;
+    }
+
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tips-list li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .tips-list li:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
+
 <div class="dashboard-container">
-    <h2 class="dashboard-title">Farmer Dashboard</h2>
-    <p class="dashboard-subtitle">Welcome back, {{ user.last_name }}</p>
+    {% if user_type == 'farmer' %}
+        <!-- Farmer Dashboard -->
+        <h2 class="dashboard-title">🌾 Welcome back, {{ user.first_name|default:user.username }}!</h2>
+        <p class="dashboard-subtitle">
+            {% if recent_diagnoses > 0 %}
+                You've analyzed {{ recent_diagnoses }} plant{{ recent_diagnoses|pluralize }} this week. Keep monitoring your crops!
+            {% else %}
+                Ready to analyze your crops? Start by taking photos of your plants.
+            {% endif %}
+        </p>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h4>Your Farms</h4>
-            <p class="stat-value">2</p>
-            <span class="stat-subtext">+1 this month</span>
-        </div>
-        <div class="stat-card">
-            <h4>Crops Monitored</h4>
-            <p class="stat-value">156</p>
-            <span class="stat-subtext">+12 this week</span>
-        </div>
-        <div class="stat-card">
-            <h4>Critical Alerts</h4>
-            <p class="stat-value">3</p>
-            <span class="stat-subtext">2 resolved today</span>
-        </div>
-        <div class="stat-card">
-            <h4>Growth Rate</h4>
-            <p class="stat-value">94%</p>
-            <span class="stat-subtext">+5% from last month</span>
-        </div>
-    </div>
-
-    <div class="main-grid">
-        <div class="recent-activities">
-            <h3>Recent Activities</h3>
-            <ul>
-                <li><strong>Green Valley Farm</strong><br><small>Pest alert resolved</small><span class="badge green">2 hours ago</span></li>
-                <li><strong>Sunset Acres</strong><br><small>Soil analysis completed</small><span class="badge blue">4 hours ago</span></li>
-                <li><strong>Mountain View</strong><br><small>Irrigation issue reported</small><span class="badge gray">1 day ago</span></li>
-                <li><strong>River Bend Farm</strong><br><small>Harvest recommendation sent</small><span class="badge green">2 days ago</span></li>
-            </ul>
-            <button class="view-all">View All Activities</button>
-        </div>
-
-        <div class="sidebar-cards">
-            <div class="card">
-                <h3>Current Weather</h3>
-                <ul class="weather-list">
-                    <li>🌡️ Temperature: <strong>24°C</strong></li>
-                    <li>💧 Humidity: <strong>68%</strong></li>
-                    <li>☀️ UV Index: <strong>6</strong></li>
-                    <li>💨 Wind Speed: <strong>12 km/h</strong></li>
-                </ul>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Plants Analyzed</h4>
+                <p class="stat-value">{{ total_diagnoses }}</p>
+                <p class="stat-subtext">Total scanned</p>
             </div>
-            <div class="card">
-                <h3>Farm Health Score</h3>
-                <p class="health-score">87% <span class="subtext">Overall Health</span></p>
-                <div class="progress-bar">
-                    <div class="progress" style="width: 87%;"></div>
+            <div class="stat-card">
+                <h4>Diseased Plants</h4>
+                <p class="stat-value">{{ diseased_plants }}</p>
+                <p class="stat-subtext">Need attention</p>
+            </div>
+            <div class="stat-card">
+                <h4>Healthy Plants</h4>
+                <p class="stat-value">{{ healthy_plants }}</p>
+                <p class="stat-subtext">Good condition</p>
+            </div>
+            <div class="stat-card">
+                <h4>Recommendations</h4>
+                <p class="stat-value">{{ recommendations_count }}</p>
+                <p class="stat-subtext">Received</p>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="recent-activities">
+                <h3>Recent Plant Analysis</h3>
+                {% if recent_activities %}
+                    <ul>
+                        {% for activity in recent_activities %}
+                        <li>
+                            <strong>{{ activity.disease_name }}</strong>
+                            <br>
+                            <small>{{ activity.timestamp|timesince }} ago • {{ activity.confidence }}% confidence</small>
+                            <span class="badge {% if 'healthy' in activity.disease_name|lower %}green{% else %}red{% endif %}">
+                                {% if 'healthy' in activity.disease_name|lower %}✓ Healthy{% else %}⚠ Disease{% endif %}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p style="color: #666; text-align: center; padding: 2rem;">
+                        <i class="fas fa-seedling" style="font-size: 2rem; display: block; margin-bottom: 1rem; color: #2e7d32;"></i>
+                        No plant analysis yet. Start by scanning your crops!
+                    </p>
+                {% endif %}
+                
+                <div class="quick-actions">
+                    <a href="{% url 'diagnosis:diagnose' %}" class="action-btn">
+                        <i class="fas fa-camera"></i> Scan Crop
+                    </a>
+                    <a href="{% url 'recommendations:dashboard' %}" class="action-btn">
+                        <i class="fas fa-lightbulb"></i> View Tips
+                    </a>
                 </div>
-                <ul class="health-breakdown">
-                    <li>Soil Quality: <strong>92%</strong></li>
-                    <li>Crop Health: <strong>84%</strong></li>
-                    <li>Water Management: <strong>89%</strong></li>
-                </ul>
+            </div>
+
+            <div class="sidebar-cards">
+                <!-- Weather Card -->
+                {% if weather %}
+                <div class="weather-card">
+                    <h3 style="margin: 0 0 1rem 0;">
+                        <i class="fas fa-cloud-sun"></i> Current Weather
+                    </h3>
+                    <div class="weather-temp">{{ weather.temperature }}°C</div>
+                    <div style="opacity: 0.9;">{{ weather.description|title }}</div>
+                    <ul class="weather-list" style="color: white; margin-top: 1rem;">
+                        <li><span>Humidity:</span> <strong>{{ weather.humidity }}%</strong></li>
+                        <li><span>Wind:</span> <strong>{{ weather.wind_speed }} km/h</strong></li>
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Farm Health Score -->
+                <div class="card">
+                    <h3>Farm Health Score</h3>
+                    <p class="health-score">{{ health_percentage }}% <span class="subtext">Overall Health</span></p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{ health_percentage }}%;"></div>
+                    </div>
+                    {% if health_percentage >= 80 %}
+                        <p style="color: #2e7d32;">Excellent! Your crops are healthy 🌟</p>
+                    {% elif health_percentage >= 60 %}
+                        <p style="color: #f57c00;">Good, but monitor closely 👀</p>
+                    {% else %}
+                        <p style="color: #d32f2f;">Needs attention ⚠️</p>
+                    {% endif %}
+                </div>
+
+                <!-- Urgent Alerts -->
+                {% if urgent_alerts %}
+                <div class="card">
+                    <h3>⚠️ Urgent Alerts</h3>
+                    {% for alert in urgent_alerts %}
+                    <div class="urgent-alert">
+                        <h5>{{ alert.disease_name }}</h5>
+                        <p>Confidence: {{ alert.confidence }}% • {{ alert.timestamp|timesince }} ago</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Farming Tips -->
+                <div class="card">
+                    <h3>🌱 Farming Tips</h3>
+                    <ul class="tips-list">
+                        {% for tip in farming_tips %}
+                        <li>
+                            <i class="fas fa-leaf" style="color: #2e7d32; margin-top: 0.25rem;"></i>
+                            <span>{{ tip }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
+
+    {% else %}
+        <!-- Basic Dashboard for other user types -->
+        <h2 class="dashboard-title">Dashboard</h2>
+        <p class="dashboard-subtitle">Welcome back, {{ user.username }}</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Your Farms</h4>
+                <p class="stat-value">{{ total_farms|default:"0" }}</p>
+                <p class="stat-subtext">Active farms</p>
+            </div>
+            <div class="stat-card">
+                <h4>Total Diagnoses</h4>
+                <p class="stat-value">{{ total_diagnoses|default:"0" }}</p>
+                <p class="stat-subtext">Plants analyzed</p>
+            </div>
+            <div class="stat-card">
+                <h4>Uploads</h4>
+                <p class="stat-value">{{ total_uploads|default:"0" }}</p>
+                <p class="stat-subtext">Images uploaded</p>
+            </div>
+            <div class="stat-card">
+                <h4>Pending Tasks</h4>
+                <p class="stat-value">{{ pending_tasks|default:"0" }}</p>
+                <p class="stat-subtext">Requires attention</p>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <div class="recent-activities">
+                <h3>Recent Activities</h3>
+                <p style="color: #666; text-align: center; padding: 2rem;">
+                    Start using the platform to see your activities here.
+                </p>
+                <a href="{% url 'diagnosis:diagnose' %}" class="view-all">Start Diagnosis</a>
+            </div>
+
+            <div class="sidebar-cards">
+                <div class="card">
+                    <h3>Getting Started</h3>
+                    <ul class="tips-list">
+                        <li>
+                            <i class="fas fa-camera"></i>
+                            <span>Take photos of your plants</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-search"></i>
+                            <span>Get instant disease diagnosis</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Receive treatment recommendations</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 
