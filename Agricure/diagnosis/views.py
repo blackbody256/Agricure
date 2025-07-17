@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages  # 🔧 FIX: Add missing import
+from django.contrib import messages
 from .forms import DiagnosisForm
 from .models import Diagnosis
 
@@ -11,6 +11,7 @@ from django.core.files.base import ContentFile
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing import image as keras_image
+from tensorflow.keras.applications.efficientnet import preprocess_input  # 🔧 ADD: EfficientNet preprocessing
 import os
 
 import logging
@@ -20,7 +21,6 @@ import json
 from recommendations.models import Recommendation
 from recommendations.Open_weather import WeatherClient
 from recommendations.Gemini import GeminiContentGenerator
-
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +81,6 @@ DISEASE_LABELS = {
     'Potato___healthy': 'Potato (Healthy)'
 }
 
-# 🔧 FIX: Add missing get_model function
 def get_model():
     """Return the loaded model"""
     return model
@@ -91,7 +90,7 @@ def diagnose(request):
     if request.method == 'POST':
         form = DiagnosisForm(request.POST, request.FILES)
         
-        # 🔧 Handle webcam capture
+        # Handle webcam capture
         captured_image = request.POST.get('captured_image')
         if captured_image and not request.FILES.get('image'):
             format, imgstr = captured_image.split(';base64,')
@@ -110,24 +109,45 @@ def diagnose(request):
         image_path = diagnosis.image.path
 
         try:
+            # 🔧 FIXED: EfficientNetB0 preprocessing
             img = keras_image.load_img(image_path, target_size=(224, 224))
-            img_array = keras_image.img_to_array(img) / 255.0
+            img_array = keras_image.img_to_array(img)
+            
+            # Ensure proper data type
+            img_array = img_array.astype('float32')
+            
+            # 🔧 CRITICAL FIX: Use EfficientNet preprocessing instead of simple normalization
+            img_array = preprocess_input(img_array)  # This applies ImageNet preprocessing for EfficientNet
+            
+            # Add batch dimension
             img_array = np.expand_dims(img_array, axis=0)
+            
+            # Debug logging
+            logger.info(f"Image shape: {img_array.shape}, dtype: {img_array.dtype}")
+            logger.info(f"Image min: {img_array.min():.3f}, max: {img_array.max():.3f}")
 
             model = get_model()
             
+            # Get prediction
             prediction = model.predict(img_array)[0]
+            logger.info(f"Raw predictions shape: {prediction.shape}")
+            logger.info(f"Top 3 predictions: {np.argsort(prediction)[-3:][::-1]} with values: {prediction[np.argsort(prediction)[-3:][::-1]]}")
+            
             predicted_index = np.argmax(prediction)
             disease_name = DISEASE_CLASSES[predicted_index]
             confidence = float(np.max(prediction))
-
+            
+            # Additional validation
+            if confidence < 0.05:  # Very low confidence
+                logger.warning(f"Very low confidence: {confidence:.3f} for class {disease_name}")
+            
             diagnosis.disease_name = disease_name
             diagnosis.severity = "Unknown"
             diagnosis.affected_part = "Unknown"
             diagnosis.confidence = round(confidence * 100, 1)
             diagnosis.save()
             
-            # 🤖 PURE AI RECOMMENDATION GENERATION
+            # Generate AI recommendation
             try:
                 create_ai_recommendation(diagnosis)
                 messages.success(request, f'Diagnosis complete: {DISEASE_LABELS.get(disease_name, disease_name)}. AI recommendation generated!')
@@ -151,6 +171,8 @@ def diagnose(request):
     else:
         form = DiagnosisForm()
     return render(request, 'upload.html', {'form': form})
+
+
 
 def create_ai_recommendation(diagnosis):
     """Create PURE AI-powered recommendation using APIs - NO HARDCODED CONTENT"""
