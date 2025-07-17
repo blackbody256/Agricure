@@ -1,320 +1,538 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
+{% block title %}Dashboard - Agricure{% endblock %}
+
 {% block content %}
 <style>
-    .dashboard-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 2rem 1rem;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 1rem;
     }
 
-    .dashboard-container h1 {
-        text-align: center;
-        color: #2c3e50;
-        margin-bottom: 0.5rem;
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .dashboard-container .text-muted {
-        text-align: center;
+    .header-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 15px;
         margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        text-align: center;
+    }
+
+    .header-card h1 {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .header-card p {
+        margin: 0;
+        opacity: 0.9;
         font-size: 1.1rem;
-        color: #7f8c8d;
     }
 
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
         margin-bottom: 2rem;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .stat-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 15px;
+        background: white;
+        border-radius: 10px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid #e9ecef;
         text-align: center;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(135deg, #28a745, #20c997);
     }
 
     .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .stat-icon {
+        font-size: 1.75rem;
+        color: #28a745;
+        margin-bottom: 0.5rem;
     }
 
     .stat-number {
-        font-size: 3rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
     }
 
     .stat-label {
-        font-size: 1.1rem;
-        opacity: 0.9;
+        color: #6c757d;
         font-weight: 500;
+        font-size: 0.85rem;
+        line-height: 1.2;
     }
 
-    .recommendations-grid {
+    .dashboard-grid {
         display: grid;
         grid-template-columns: 2fr 1fr;
         gap: 2rem;
         margin-bottom: 2rem;
     }
 
-    .recommendation-card {
+    .content-card {
         background: white;
-        border-radius: 15px;
+        border-radius: 12px;
         padding: 1.5rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
     }
-    .recommendation-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 1.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f3f4;
+    }
+
+    .recommendation-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e9ecef;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .recommendation-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .recommendation-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 
-    .recommendation-header h4 {
-        margin: 0;
+    .recommendation-title {
+        flex: 1;
+    }
+
+    .recommendation-title h4 {
+        margin: 0 0 0.25rem 0;
         color: #2c3e50;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
     }
 
     .disease-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
     }
 
     .disease-badge.healthy {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: white;
+        background: #d4edda;
+        color: #155724;
     }
 
     .disease-badge.diseased {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
+        background: #f8d7da;
+        color: #721c24;
     }
 
-    .recommendation-card p {
-        margin-bottom: 0.5rem;
-        color: #555;
-        line-height: 1.6;
-    }
-    .action-buttons {
+    .recommendation-meta {
         display: flex;
         gap: 1rem;
-        margin-top: 1rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    .meta-item i {
+        color: #28a745;
+        width: 14px;
+    }
+
+    .recommendation-summary {
+        color: #495057;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
     }
 
     .btn {
-        padding: 0.75rem 1.5rem;
+        padding: 0.5rem 1rem;
         border: none;
-        border-radius: 25px;
+        border-radius: 8px;
         font-weight: 500;
         text-decoration: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: 0.85rem;
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #3498db, #2980b9);
+        background: #007bff;
         color: white;
     }
 
     .btn-primary:hover {
-        background: linear-gradient(135deg, #2980b9, #1f618d);
-        transform: translateY(-2px);
+        background: #0056b3;
+        transform: translateY(-1px);
+        text-decoration: none;
     }
 
     .btn-outline {
         background: transparent;
-        color: #3498db;
-        border: 2px solid #3498db;
+        color: #6c757d;
+        border: 1px solid #6c757d;
     }
 
     .btn-outline:hover {
-        background: #3498db;
+        background: #6c757d;
         color: white;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
+        text-decoration: none;
     }
 
     .btn-success {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        background: #28a745;
         color: white;
     }
+
     .btn-success:hover {
-        background: linear-gradient(135deg, #27ae60, #1e8449);
-        transform: translateY(-2px);
+        background: #1e7e34;
+        transform: translateY(-1px);
+        text-decoration: none;
     }
 
     .quick-actions {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
-        height: fit-content;
-    }
-
-    .quick-actions h3 {
-        margin-bottom: 1.5rem;
-        color: #2c3e50;
-        font-size: 1.3rem;
-        font-weight: 600;
-        border-bottom: 2px solid #ecf0f1;
-        padding-bottom: 0.5rem;
-    }
-
-    .quick-actions h4 {
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #34495e;
-        font-size: 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     .quick-actions .btn {
         width: 100%;
-        margin-bottom: 0.75rem;
         justify-content: center;
+        padding: 0.75rem 1rem;
     }
 
-    .quick-actions .small {
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #28a745;
+        opacity: 0.7;
+    }
+
+    .empty-state h4 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        margin-bottom: 1.5rem;
+    }
+
+    .help-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .help-section h4 {
+        color: #495057;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .help-section p {
+        color: #6c757d;
         font-size: 0.9rem;
         line-height: 1.5;
-        color: #7f8c8d;
+        margin: 0;
     }
 
-    .quick-actions hr {
-        margin: 1.5rem 0;
-        border: none;
-        height: 1px;
-        background: #ecf0f1;
+    .timestamp {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
     }
 
     @media (max-width: 768px) {
-        .recommendations-grid {
+        .container {
+            padding: 0.5rem;
+            margin: 1rem auto;
+        }
+
+        .header-card {
+            padding: 1.5rem;
+        }
+
+        .header-card h1 {
+            font-size: 1.8rem;
+        }
+
+        .dashboard-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .stats-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
         }
         
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+        }
+
         .action-buttons {
             flex-direction: column;
         }
-        
-        .dashboard-container h1 {
-            font-size: 2rem;
+
+        .recommendation-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .recommendation-meta {
+            flex-direction: column;
+            gap: 0.5rem;
         }
     }
 
+    @media (max-width: 576px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .stat-card {
+            padding: 0.875rem;
+        }
+        
+        .stat-icon {
+            font-size: 1.25rem;
+        }
+        
+        .stat-number {
+            font-size: 1.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+        }
+
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+        }
+    }
 </style>
 
-<div class="dashboard-container">
-    <h1>🌾 Recommendations Dashboard</h1>
-    <p class="text-muted">Manage your crop recommendations and track their effectiveness</p>
-    
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <h1><i class="fas fa-tachometer-alt"></i> Recommendations Dashboard</h1>
+        <p>Monitor your crop health and manage AI-generated recommendations</p>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="stats-grid">
         <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
             <div class="stat-number">{{ total_recommendations }}</div>
             <div class="stat-label">Total Recommendations</div>
         </div>
         <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
             <div class="stat-number">{{ healthy_count }}</div>
             <div class="stat-label">Healthy Crops</div>
         </div>
         <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-stethoscope"></i>
+            </div>
             <div class="stat-number">{{ diseased_count }}</div>
             <div class="stat-label">Treated Diseases</div>
         </div>
         <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
             <div class="stat-number">{{ needs_feedback }}</div>
-            <div class="stat-label">Needs Feedback</div>
+            <div class="stat-label">Awaiting Feedback</div>
         </div>
     </div>
-    
-    <div class="recommendations-grid">
+
+    <div class="dashboard-grid">
         <!-- Recent Recommendations -->
-        <div>
-            <h3>Recent Recommendations</h3>
+        <div class="content-card">
+            <h3 class="section-title">
+                <i class="fas fa-clock"></i>
+                Recent Recommendations
+            </h3>
+            
             {% for rec in recent_recommendations %}
-            <div class="recommendation-card">
+            <div class="recommendation-item">
                 <div class="recommendation-header">
-                    <div>
-                        <h4>{{ rec.diagnosis.disease_name }}</h4>
+                    <div class="recommendation-title">
+                        <h4>{{ rec.diagnosis.disease_name|title }}</h4>
                         <span class="disease-badge {% if rec.is_healthy %}healthy{% else %}diseased{% endif %}">
-                            {% if rec.is_healthy %}🌱 Healthy{% else %}🩺 {{ rec.diagnosis.disease_name }}{% endif %}
+                            {% if rec.is_healthy %}
+                                <i class="fas fa-check-circle"></i> Healthy
+                            {% else %}
+                                <i class="fas fa-exclamation-triangle"></i> Disease Detected
+                            {% endif %}
                         </span>
                     </div>
-                    <small class="text-muted">{{ rec.created_at|date:"M d, Y" }}</small>
+                    <div class="timestamp">
+                        <i class="fas fa-calendar"></i> {{ rec.created_at|date:"M d, Y" }}
+                    </div>
                 </div>
                 
-                <p><strong>Location:</strong> {{ rec.city }}</p>
-                <p><strong>Treatment:</strong> {{ rec.treatment_summary|truncatewords:10 }}</p>
+                <div class="recommendation-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <strong>{{ rec.city }}</strong>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-thermometer-half"></i>
+                        <span>{{ rec.temperature }}°C</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tint"></i>
+                        <span>{{ rec.humidity }}%</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>{{ rec.diagnosis.confidence }}% confidence</span>
+                    </div>
+                </div>
+                
+                <div class="recommendation-summary">
+                    <strong>Treatment:</strong> {{ rec.treatment_summary|truncatewords:15 }}
+                </div>
                 
                 <div class="action-buttons">
-                    <a href="{% url 'recommendations:detail' rec.pk %}" class="btn btn-primary">View Details</a>
+                    <a href="{% url 'recommendations:detail' rec.pk %}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
                     {% if not rec.feedback.exists %}
-                    <a href="{% url 'recommendations:feedback' rec.pk %}" class="btn btn-outline">Provide Feedback</a>
+                    <a href="{% url 'recommendations:feedback' rec.pk %}" class="btn btn-outline">
+                        <i class="fas fa-comment"></i> Add Feedback
+                    </a>
                     {% endif %}
                 </div>
             </div>
             {% empty %}
-            <div class="recommendation-card">
-                <p>No recommendations yet. Start by diagnosing your crops!</p>
-                <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">Diagnose Crops</a>
+            <div class="empty-state">
+                <i class="fas fa-seedling"></i>
+                <h4>No Recommendations Yet</h4>
+                <p>Start by diagnosing your crops to get AI-powered recommendations!</p>
+                <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">
+                    <i class="fas fa-camera"></i> Start Diagnosis
+                </a>
             </div>
             {% endfor %}
-            
-            
         </div>
         
         <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h3>Quick Actions</h3>
-            <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">
-                <i class="fas fa-camera"></i> New Diagnosis
-            </a>
-            <a href="{% url 'recommendations:list' %}" class="btn btn-primary">
-                <i class="fas fa-list"></i> All Recommendations
-            </a>
-            <a href="{% url 'diagnosis:diagnosis_history' %}" class="btn btn-outline">
-                <i class="fas fa-history"></i> Diagnosis History
-            </a>
+        <div class="content-card">
+            <h3 class="section-title">
+                <i class="fas fa-rocket"></i>
+                Quick Actions
+            </h3>
             
-            <hr>
-            <h4>Need Help?</h4>
-            <p class="small text-muted">
-                Get AI-powered recommendations for your crops based on local weather and soil conditions.
-            </p>
+            <div class="quick-actions">
+                <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">
+                    <i class="fas fa-camera"></i> New Diagnosis
+                </a>
+                <a href="{% url 'recommendations:list' %}" class="btn btn-primary">
+                    <i class="fas fa-list"></i> Recommendations History
+                </a>
+                
+            </div>
+            
+            <div class="help-section">
+                <h4><i class="fas fa-question-circle"></i> Need Help?</h4>
+                <p>
+                    Get AI-powered recommendations for your crops based on local weather conditions, 
+                    disease diagnosis, and agricultural best practices.
+                </p>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}ss s
+{% endblock %}

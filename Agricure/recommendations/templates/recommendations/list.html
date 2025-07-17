@@ -1,102 +1,163 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
+{% block title %}Recommendations History - Agricure{% endblock %}
+
 {% block content %}
 <style>
-    .list-container {
-        max-width: 1200px;
+    .container {
+        max-width: 1000px;
         margin: 2rem auto;
         padding: 1rem;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
     }
 
-    .list-container h1 {
-        text-align: center;
-        color: #2c3e50;
-        margin-bottom: 0.5rem;
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .list-container .text-muted {
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.1rem;
-        color: #7f8c8d;
-    }
-
-    .filter-form {
-        background: white;
+    .header-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
         padding: 2rem;
         border-radius: 15px;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
     }
 
-    .filter-form .form-control,
-    .filter-form .form-select {
-        border-radius: 25px;
-        border: 2px solid #e9ecef;
-        padding: 0.75rem 1.5rem;
+    .header-card h1 {
+        font-size: 2rem;
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .header-card p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .filter-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
+    }
+
+    .filter-header {
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #f1f3f4;
+        padding-bottom: 1rem;
+    }
+
+    .filter-header h5 {
+        margin: 0 0 0.25rem 0;
+        color: #2c3e50;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-header small {
+        margin: 0;
+        color: #6c757d;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: block;
+    }
+
+    .filter-card .form-control,
+    .filter-card .form-select {
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        padding: 0.75rem 1rem;
         font-size: 1rem;
         transition: all 0.3s ease;
+        background: white;
+        margin-bottom: 0;
     }
 
-    .filter-form .form-control:focus,
-    .filter-form .form-select:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    .filter-card .form-control:focus,
+    .filter-card .form-select:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        outline: none;
     }
 
-    .filter-form .btn-primary {
-        background: linear-gradient(135deg, #3498db, #2980b9);
+    .filter-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
         border: none;
-        border-radius: 25px;
-        padding: 0.75rem 2rem;
-        font-weight: 600;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
         transition: all 0.3s ease;
+        color: white;
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    .filter-form .btn-primary:hover {
-        background: linear-gradient(135deg, #2980b9, #1f618d);
-        transform: translateY(-2px);
+    .filter-btn:hover {
+        background: linear-gradient(135deg, #1e7e34, #17a2b8);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    }
+
+    .clear-btn {
+        border: 1px solid #6c757d;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        background: white;
+        color: #6c757d;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .clear-btn:hover {
+        background: #6c757d;
+        color: white;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    /* Form row spacing */
+    .filter-card .row > div {
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-card .row > div:last-child {
+        margin-bottom: 0;
     }
 
     .recommendation-item {
         background: white;
-        border-radius: 15px;
-        padding: 2rem;
+        border-radius: 12px;
+        padding: 1.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .recommendation-item::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
 
     .recommendation-item:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
 
     .recommendation-content {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
+        align-items: flex-start;
+        gap: 1.5rem;
     }
 
     .recommendation-info {
@@ -104,16 +165,40 @@
     }
 
     .recommendation-info h4 {
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.75rem 0;
         color: #2c3e50;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .disease-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: 0.5rem;
+    }
+
+    .disease-badge.healthy {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .disease-badge.diseased {
+        background: #f8d7da;
+        color: #721c24;
     }
 
     .recommendation-meta {
         display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        gap: 1.5rem;
+        margin-bottom: 0.75rem;
         flex-wrap: wrap;
     }
 
@@ -121,165 +206,222 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: #7f8c8d;
+        color: #6c757d;
         font-size: 0.9rem;
     }
 
     .meta-item i {
-        color: #3498db;
+        color: #28a745;
+        width: 16px;
     }
 
-    .recommendation-summary {
-        color: #555;
-        line-height: 1.6;
-        margin-bottom: 1rem;
-    }
-
-    .disease-status {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 1rem;
-    }
-
-    .disease-status.healthy {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
-        color: white;
-    }
-
-    .disease-status.diseased {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
+    .meta-item strong {
+        color: #495057;
     }
 
     .recommendation-actions {
         display: flex;
-        gap: 1rem;
+        gap: 0.75rem;
         flex-shrink: 0;
+        align-items: flex-start;
     }
 
     .btn {
-        padding: 0.75rem 1.5rem;
+        padding: 0.5rem 1rem;
         border: none;
-        border-radius: 25px;
+        border-radius: 8px;
         font-weight: 500;
         text-decoration: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        font-size: 0.9rem;
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #3498db, #2980b9);
+        background: #007bff;
         color: white;
     }
 
     .btn-primary:hover {
-        background: linear-gradient(135deg, #2980b9, #1f618d);
-        transform: translateY(-2px);
+        background: #0056b3;
+        transform: translateY(-1px);
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #1e7e34;
+        transform: translateY(-1px);
     }
 
     .btn-outline-secondary {
         background: transparent;
         color: #6c757d;
-        border: 2px solid #6c757d;
+        border: 1px solid #6c757d;
     }
 
     .btn-outline-secondary:hover {
         background: #6c757d;
         color: white;
-        transform: translateY(-2px);
-    }
-
-    .pagination {
-        justify-content: center;
-        margin-top: 3rem;
-    }
-
-    .pagination .page-link {
-        border-radius: 25px;
-        margin: 0 0.25rem;
-        padding: 0.75rem 1.25rem;
-        border: 2px solid #e9ecef;
-        color: #3498db;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .pagination .page-link:hover {
-        background: #3498db;
-        color: white;
-        border-color: #3498db;
-        transform: translateY(-2px);
-    }
-
-    .pagination .page-item.active .page-link {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        border-color: #3498db;
     }
 
     .empty-state {
         text-align: center;
         padding: 3rem;
-        color: #7f8c8d;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
     }
 
     .empty-state i {
-        font-size: 4rem;
+        font-size: 3rem;
         margin-bottom: 1rem;
-        color: #bdc3c7;
+        color: #6c757d;
+    }
+
+    .empty-state h3 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 0.25rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e9ecef;
+        color: #28a745;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .pagination .page-link:hover {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+        transform: translateY(-1px);
+    }
+
+    .pagination .page-item.active .page-link {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
     }
 
     @media (max-width: 768px) {
+        .container {
+            padding: 0.5rem;
+            margin: 1rem auto;
+        }
+
+        .header-card {
+            padding: 1.5rem;
+        }
+
+        .header-card h1 {
+            font-size: 1.5rem;
+        }
+
+        .filter-card {
+            padding: 1.5rem;
+        }
+
+        .filter-header h5 {
+            font-size: 1.1rem;
+        }
+
         .recommendation-content {
             flex-direction: column;
             gap: 1rem;
         }
-        
+
         .recommendation-actions {
             width: 100%;
-            justify-content: center;
+            justify-content: flex-start;
         }
-        
-        .filter-form .row {
+
+        .recommendation-meta {
             flex-direction: column;
+            gap: 0.5rem;
         }
-        
-        .filter-form .col-md-3,
-        .filter-form .col-md-6 {
-            width: 100%;
-            margin-bottom: 1rem;
+
+        .filter-card .row > div {
+            margin-bottom: 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .filter-btn,
+        .clear-btn {
+            padding: 0.75rem 0.5rem;
         }
     }
 </style>
 
-<div class="list-container">
-    <h1>All Recommendations</h1>
-    <p class="text-muted">Browse and filter through all your past recommendations.</p>
+<div class="container">
+    <!-- Header -->
+    <div class="header-card">
+        <h1><i class="fas fa-history"></i> Recommendations History</h1>
+        <p>Browse and manage all your AI-generated plant care recommendations</p>
+    </div>
 
     <!-- Filter Form -->
-    <div class="filter-form">
+    <div class="filter-card">
+        <div class="filter-header">
+            <h5><i class="fas fa-filter"></i> Filter Recommendations</h5>
+            <small class="text-muted">Find specific recommendations by disease or location</small>
+        </div>
+        
         <form method="get" action="{% url 'recommendations:list' %}">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <input type="text" name="search" class="form-control" placeholder="Search by disease, location..." value="{{ search_query }}">
+                <div class="col-12">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" 
+                           id="search"
+                           name="search" 
+                           class="form-control" 
+                           placeholder="Disease name, location, or keywords..." 
+                           value="{{ search_query }}">
                 </div>
-                <div class="col-md-3">
-                    <select name="disease" class="form-select">
+                
+                <div class="col-12">
+                    <label for="disease" class="form-label">Disease Type</label>
+                    <select id="disease" name="disease" class="form-select">
                         <option value="">All Diseases</option>
                         {% for disease in all_diseases %}
-                            <option value="{{ disease }}" {% if disease == disease_filter %}selected{% endif %}>{{ disease }}</option>
+                            <option value="{{ disease }}" {% if disease == disease_filter %}selected{% endif %}>
+                                {{ disease|title|truncatechars:50 }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-3">
-                     <button type="submit" class="btn btn-primary w-100">Filter</button>
+                
+                <div class="col-md-6">
+                    <button type="submit" class="btn filter-btn w-100">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                </div>
+                
+                <div class="col-md-6">
+                    <a href="{% url 'recommendations:list' %}" class="btn clear-btn w-100">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </a>
                 </div>
             </div>
         </form>
@@ -289,19 +431,58 @@
     <div>
         {% for rec in page_obj %}
         <div class="recommendation-item">
-            <div>
-                <h5>{{ rec.diagnosis.disease_name }}</h5>
-                <p class="mb-1"><strong>Location:</strong> {{ rec.city }}</p>
-                <small class="text-muted">{{ rec.created_at|date:"M d, Y, h:i A" }}</small>
-            </div>
-            <div>
-                <a href="{% url 'recommendations:detail' rec.pk %}" class="btn btn-info btn-sm">View Details</a>
+            <div class="recommendation-content">
+                <div class="recommendation-info">
+                    <h4>
+                        <i class="fas fa-bug text-danger"></i>
+                        {{ rec.diagnosis.disease_name }}
+                        {% if 'healthy' in rec.diagnosis.disease_name|lower %}
+                            <span class="disease-badge healthy">Healthy</span>
+                        {% else %}
+                            <span class="disease-badge diseased">Disease</span>
+                        {% endif %}
+                    </h4>
+                    
+                    <div class="recommendation-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Location:</strong> {{ rec.city }}
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-thermometer-half"></i>
+                            <strong>{{ rec.temperature }}°C</strong>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tint"></i>
+                            <strong>{{ rec.humidity }}%</strong>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-percentage"></i>
+                            <strong>{{ rec.diagnosis.confidence }}% confidence</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ rec.created_at|date:"M d, Y \a\t g:i A" }}</span>
+                    </div>
+                </div>
+                
+                <div class="recommendation-actions">
+                    <a href="{% url 'recommendations:detail' rec.pk %}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
             </div>
         </div>
         {% empty %}
-        <div class="text-center p-5">
-            <p>No recommendations found that match your criteria.</p>
-            <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">Get a New Recommendation</a>
+        <div class="empty-state">
+            <i class="fas fa-seedling"></i>
+            <h3>No Recommendations Found</h3>
+            <p>You haven't created any recommendations yet, or none match your search criteria.</p>
+            <a href="{% url 'diagnosis:diagnose' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Get Your First Recommendation
+            </a>
         </div>
         {% endfor %}
     </div>
@@ -311,8 +492,16 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if disease_filter %}&disease={{ disease_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i> First
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if disease_filter %}&disease={{ disease_filter }}{% endif %}">
+                        <i class="fas fa-angle-left"></i> Previous
+                    </a>
+                </li>
             {% endif %}
 
             <li class="page-item active" aria-current="page">
@@ -320,8 +509,16 @@
             </li>
 
             {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if disease_filter %}&disease={{ disease_filter }}{% endif %}">
+                        Next <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if disease_filter %}&disease={{ disease_filter }}{% endif %}">
+                        Last <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
             {% endif %}
         </ul>
     </nav>
