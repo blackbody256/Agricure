@@ -4,10 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
+from functools import wraps
+import csv
 import json
 import logging
-import csv
 
 from .Open_weather import WeatherClient
 from .Soil import ISDAsoilClient
@@ -17,6 +18,25 @@ from .forms import RecommendationRequestForm, RecommendationFeedbackForm
 from diagnosis.models import Diagnosis
 
 logger = logging.getLogger(__name__)
+
+def admin_required(view_func):
+    """
+    Decorator that checks if user is admin/staff and redirects to app login if not authenticated
+    """
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, 'Please log in to access the admin area.')
+            return redirect('users:login')
+        
+        if not (request.user.is_staff or request.user.is_superuser or 
+                (hasattr(request.user, 'role') and request.user.role == 'ADMIN')):
+            messages.error(request, 'You do not have permission to access this area.')
+            return redirect('users:dashboard')
+        
+        return view_func(request, *args, **kwargs)
+    
+    return _wrapped_view
 
 @login_required
 def recommendation_dashboard(request):
@@ -359,42 +379,73 @@ def provide_feedback(request, pk):
         'recommendation': recommendation
     })
 
+@admin_required
 def admin_feedback_list(request):
-    """
-    View for admin to see all feedback submissions
-    """
-    if not request.user.is_staff:
-        return redirect('home')  # or appropriate redirect
+    """Admin view to list all user feedback"""
+    # Get all feedback with related data
+    feedback_list = Feedback.objects.select_related(
+        'recommendation__diagnosis', 
+        'user'
+    ).order_by('-created_at')
     
-    feedbacks = Feedback.objects.all().order_by('-created_at')
-    return render(request, 'recommendations/admin_feedback_list.html', {
-        'feedbacks': feedbacks
-    })
+    # Filter by search query
+    search_query = request.GET.get('search', '')
+    if search_query:
+        feedback_list = feedback_list.filter(
+            Q(recommendation__diagnosis__disease_name__icontains=search_query) |
+            Q(user__username__icontains=search_query) |
+            Q(comments__icontains=search_query)
+        )
+    
+    # Filter by rating
+    rating_filter = request.GET.get('rating', '')
+    if rating_filter:
+        feedback_list = feedback_list.filter(rating=rating_filter)
+    
+    # Filter by usefulness
+    usefulness_filter = request.GET.get('usefulness', '')
+    if usefulness_filter:
+        feedback_list = feedback_list.filter(usefulness=usefulness_filter)
+    
+    # Calculate statistics
+    stats = {
+        'total_feedback': feedback_list.count(),
+        'average_rating': feedback_list.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0,
+        'rating_distribution': feedback_list.values('rating').annotate(count=Count('rating')).order_by('rating'),
+        'usefulness_distribution': feedback_list.values('usefulness').annotate(count=Count('usefulness')),
+    }
+    
+    # Pagination
+    paginator = Paginator(feedback_list, 10)
+    page_number = request.GET.get('page')
+    feedback_page = paginator.get_page(page_number)
+    
+    context = {
+        'feedback_page': feedback_page,
+        'stats': stats,
+        'search_query': search_query,
+        'rating_filter': rating_filter,
+        'usefulness_filter': usefulness_filter,
+    }
+    
+    return render(request, 'recommendations/admin_feedback_list.html', context)
 
+@admin_required
 def admin_feedback_detail(request, feedback_id):
-    """
-    View for admin to see detailed feedback submission
-    """
-    if not request.user.is_staff:
-        return redirect('home')  # or appropriate redirect
-    
+    """Admin view to see detailed feedback"""
     feedback = get_object_or_404(Feedback, id=feedback_id)
     
     context = {
         'feedback': feedback,
-        'recommendation': feedback.recommendation,
-        'diagnosis': feedback.recommendation.diagnosis,
     }
     
     return render(request, 'recommendations/admin_feedback_detail.html', context)
 
+@admin_required
 def admin_feedback_export(request):
     """
     Export feedback data to CSV
     """
-    if not request.user.is_staff:
-        return redirect('home')  # or appropriate redirect
-    
     # Create the HttpResponse object with CSV header
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="feedback_export.csv"'
