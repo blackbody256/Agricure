@@ -87,8 +87,16 @@ WSGI_APPLICATION = 'Agricure.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': os.environ.get('DB_USER'), # Access via os.environ.get()
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'options': '-c pool_mode=session'
+        },
     }
 }
 
