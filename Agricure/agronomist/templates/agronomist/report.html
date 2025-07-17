@@ -1,4 +1,6 @@
 {% extends 'layouts/base.html' %}
+
+
 {% block content %}
 
 
@@ -82,10 +84,19 @@
 </style>
 
 <div class="report-container">
-  <h2 class="report-title">📋 Agronomist Report</h2>
+  
+  <h2 class="report-title">
+  {% if request.user.role == 'AGRONOMIST' %}
+    📋 Agronomist Report
+  {% else %}
+    🧑‍🌾 Farmer Report
+  {% endif %}
+</h2>
+
 
   <div class="report-stat">
-    <span>Total Diagnoses:</span> {{ diagnoses.count }}
+    <span>Total Diagnoses:</span> {{ diagnoses|length }}
+
   </div>
   <div class="report-stat">
     <span>Average Confidence:</span> {{ avg_confidence }}%
@@ -100,23 +111,28 @@
     {% endfor %}
   </ul>
 
-  <h4 class="mt-5 mb-2">Common Treatment Advice</h4>
-<ul class="disease-list">
-  {% for treatment, count in top_treatments %}
-    <li>{{ treatment }} – {{ count }} times</li>
-  {% empty %}
-    <li>No treatment recommendations found.</li>
-  {% endfor %}
-</ul>
 
-<h4 class="mt-4 mb-2">Common Prevention Advice</h4>
-<ul class="disease-list">
-  {% for prevention, count in top_preventions %}
-    <li>{{ prevention }} – {{ count }} times</li>
-  {% empty %}
-    <li>No prevention recommendations found.</li>
-  {% endfor %}
-</ul>
+
+<h4 class="mt-5 mb-2">Detailed Recommendations</h4>
+
+{% for rec in recommendations %}
+  <div class="card mb-3">
+    <div class="card-header">
+      Recommendation for {{ rec.diagnosis.disease_name }}
+    </div>
+    <div class="card-body">
+      <p><strong>City:</strong> {{ rec.city }}</p>
+      <p><strong>Temperature:</strong> {{ rec.temperature }}°C</p>
+      <p><strong>Humidity:</strong> {{ rec.humidity }}%</p>
+      <p><strong>Treatment Summary:</strong> {{ rec.treatment_summary }}</p>
+      <p><strong>Prevention Summary:</strong> {{ rec.prevention_summary }}</p>
+      <p><strong>Created at:</strong> {{ rec.created_at }}</p>
+    </div>
+  </div>
+{% empty %}
+  <p>No individual recommendations available.</p>
+{% endfor %}
+
 
 
   <div class="email-form">

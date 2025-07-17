@@ -33,26 +33,57 @@ def agronomist_report(request):
         messages.error(request, "Access denied.")
         return redirect('agronomist:dashboard')
 
-    diagnoses = Diagnosis.objects.filter(user=request.user).order_by('-timestamp')
+    # For AGRONOMIST, use assigned_agronomist; for FARMER, use user
+    if request.user.role == 'AGRONOMIST':
+        diagnoses = Diagnosis.objects.filter(user=request.user)
+
+    else:
+        diagnoses = Diagnosis.objects.filter(user=request.user)
+
+    diagnoses = diagnoses.order_by('-timestamp')
+
     disease_summary = diagnoses.values('disease_name') \
         .annotate(total=Count('disease_name')) \
         .order_by('-total')
 
     avg_confidence = diagnoses.aggregate(avg=Avg('confidence'))
 
+    # Fetch recommendations
+    recommendations = Recommendation.objects.filter(diagnosis__in=diagnoses)
+
+    treatment_keywords = []
+    prevention_keywords = []
+
+    for rec in recommendations:
+        try:
+            rec_data = json.loads(rec.recommendation_json)
+            treatment_keywords += rec_data.get('treatment', [])
+            prevention_keywords += rec_data.get('prevention', [])
+        except Exception as e:
+            print(f"Recommendation parsing failed: {e}")
+            continue
+
+    from collections import Counter
+    top_treatments = Counter(treatment_keywords).most_common(5)
+    top_preventions = Counter(prevention_keywords).most_common(5)
+
+    # Handle email form submission
     if request.method == 'POST':
         recipient_email = request.POST.get('recipient_email')
         context = {
             'diagnoses': diagnoses,
             'disease_summary': disease_summary,
             'avg_confidence': round(avg_confidence['avg'] or 0, 1),
+            'top_treatments': top_treatments,
+            'top_preventions': top_preventions,
+            'recommendations': recommendations,
             'agronomist': request.user
         }
         email_html = render_to_string('agronomist/email_report.html', context)
         email = EmailMessage(
             subject='Agronomist Report Summary',
             body=email_html,
-            from_email='agricure@yourapp.com',
+            from_email='ayanhilwa@gmail.com',
             to=[recipient_email]
         )
         email.content_subtype = 'html'
@@ -64,16 +95,18 @@ def agronomist_report(request):
         'diagnoses': diagnoses,
         'disease_summary': disease_summary,
         'avg_confidence': round(avg_confidence['avg'] or 0, 1),
+        'top_treatments': top_treatments,
+        'top_preventions': top_preventions,
+        'recommendations': recommendations, 
     }
     return render(request, 'agronomist/report.html', context)
-
-
 
 
 @login_required
 def report_view(request):
     user = request.user
-    diagnoses = Diagnosis.objects.filter(assigned_agronomist=user)
+    diagnoses = Diagnosis.objects.filter(user=user)
+
 
     # Existing stats
     total_diagnoses = diagnoses.count()
@@ -107,6 +140,8 @@ def report_view(request):
         'recommendations': recommendations,
         'top_treatments': top_treatments,
         'top_preventions': top_preventions,
+        'recommendations': recommendations,
+        'agronomist': request.user
     }
 
     return render(request, 'agronomist/report.html', context)
