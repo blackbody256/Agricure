@@ -30,56 +30,58 @@ MODEL_PATH = os.path.join(BASE_DIR, 'diagnosis', 'model', 'newresult.h5')
 model = tf.keras.models.load_model(MODEL_PATH)
 
 DISEASE_CLASSES = [
-    'Tomato_Tomato_YellowLeaf_Curl_Virus',
-    'Tomato_Bacterial_spot',
     'Apple___Apple_scab',
-    'Apple___healthy',
     'Apple___Black_rot',
-    'Tomato_Late_blight',
-    'Corn_(maize)_Northern_Leaf_Blight',
-    'Corn_(maize)Common_rust',
-    'Corn_(maize)_healthy',
-    'Tomato_Septoria_leaf_spot',
     'Apple___Cedar_apple_rust',
-    'Tomato_Spider_mites_Two_spotted_spider_mite',
-    'Corn_(maize)_Cercospora_leaf_spot Gray_leaf_spot',
-    'Tomato_healthy',
-    'Pepper_bell__healthy',
-    'Tomato__Target_Spot',
+    'Apple___healthy',
+    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
+    'Corn_(maize)___Common_rust_',
+    'Corn_(maize)___Northern_Leaf_Blight',
+    'Corn_(maize)___healthy',
+    'Pepper__bell___Bacterial_spot',
+    'Pepper__bell___healthy',
     'Potato___Early_blight',
     'Potato___Late_blight',
+    'Potato___healthy',
+    'Tomato_Bacterial_spot',
     'Tomato_Early_blight',
-    'Pepper_bell__Bacterial_spot',
+    'Tomato_Late_blight',
     'Tomato_Leaf_Mold',
+    'Tomato_Septoria_leaf_spot',
+    'Tomato_Spider_mites_Two_spotted_spider_mite',
+    'Tomato__Target_Spot',
+    'Tomato__Tomato_YellowLeaf__Curl_Virus',
     'Tomato__Tomato_mosaic_virus',
-    'Potato___healthy'
+    'Tomato_healthy'
 ]
 
+
 DISEASE_LABELS = {
-    'Tomato_Tomato_YellowLeaf_Curl_Virus': 'Tomato Yellow Leaf Curl Virus',
-    'Tomato_Bacterial_spot': 'Tomato Bacterial Spot',
     'Apple___Apple_scab': 'Apple Scab',
-    'Apple___healthy': 'Apple (Healthy)',
     'Apple___Black_rot': 'Apple Black Rot',
-    'Tomato_Late_blight': 'Tomato Late Blight',
-    'Corn_(maize)_Northern_Leaf_Blight': 'Corn Northern Leaf Blight',
-    'Corn_(maize)Common_rust': 'Corn Common Rust',
-    'Corn_(maize)_healthy': 'Corn (Healthy)',
-    'Tomato_Septoria_leaf_spot': 'Tomato Septoria Leaf Spot',
     'Apple___Cedar_apple_rust': 'Apple Cedar Apple Rust',
-    'Tomato_Spider_mites_Two_spotted_spider_mite': 'Tomato Spider Mites (Two-Spotted)',
-    'Corn_(maize)_Cercospora_leaf_spot Gray_leaf_spot': 'Corn Gray Leaf Spot',
-    'Tomato_healthy': 'Tomato (Healthy)',
-    'Pepper_bell__healthy': 'Pepper Bell (Healthy)',
-    'Tomato__Target_Spot': 'Tomato Target Spot',
+    'Apple___healthy': 'Apple (Healthy)',
+    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot': 'Corn Gray Leaf Spot',
+    'Corn_(maize)___Common_rust_': 'Corn Common Rust',
+    'Corn_(maize)___Northern_Leaf_Blight': 'Corn Northern Leaf Blight',
+    'Corn_(maize)___healthy': 'Corn (Healthy)',
+    'Pepper__bell___Bacterial_spot': 'Pepper Bell Bacterial Spot',
+    'Pepper__bell___healthy': 'Pepper Bell (Healthy)',
     'Potato___Early_blight': 'Potato Early Blight',
     'Potato___Late_blight': 'Potato Late Blight',
+    'Potato___healthy': 'Potato (Healthy)',
+    'Tomato_Bacterial_spot': 'Tomato Bacterial Spot',
     'Tomato_Early_blight': 'Tomato Early Blight',
-    'Pepper_bell__Bacterial_spot': 'Pepper Bell Bacterial Spot',
+    'Tomato_Late_blight': 'Tomato Late Blight',
     'Tomato_Leaf_Mold': 'Tomato Leaf Mold',
+    'Tomato_Septoria_leaf_spot': 'Tomato Septoria Leaf Spot',
+    'Tomato_Spider_mites_Two_spotted_spider_mite': 'Tomato Spider Mites (Two-Spotted)',
+    'Tomato__Target_Spot': 'Tomato Target Spot',
+    'Tomato__Tomato_YellowLeaf__Curl_Virus': 'Tomato Yellow Leaf Curl Virus',
     'Tomato__Tomato_mosaic_virus': 'Tomato Mosaic Virus',
-    'Potato___healthy': 'Potato (Healthy)'
+    'Tomato_healthy': 'Tomato (Healthy)'
 }
+
 
 def get_model():
     """Return the loaded model"""
