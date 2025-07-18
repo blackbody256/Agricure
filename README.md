@@ -442,3 +442,17 @@ For research collaborations and academic partnerships, please reach out through 
 **🌱 Agricure - Cultivating the Future of Agriculture with AI** 
 
 *Empowering farmers worldwide with intelligent crop health solutions*
+
+## 📸 Platform Screenshots
+
+### AI Diagnosis Interface
+![Disease Detection](screenshots/diagnosis-interface.png)
+*Real-time plant disease detection with confidence scoring*
+
+### Dashboard Analytics
+![Analytics Dashboard](screenshots/analytics-dashboard.png)
+*Comprehensive crop health analytics and trend visualization*
+
+### Recommendation System
+![AI Recommendations](screenshots/recommendations.png)
+*Personalized treatment recommendations based on environmental data*
