@@ -8,6 +8,15 @@
 
 Agricure is a cutting-edge agricultural technology platform that revolutionizes crop health management through advanced AI-powered plant disease diagnosis. The system combines deep learning computer vision with intelligent recommendation algorithms to provide farmers, agronomists, and agricultural administrators with comprehensive crop monitoring and disease management solutions.
 
+## 🤝 Contributors
+| Name | Registration Number | Student Number |
+|------|-------------------|----------------|
+| KARAGWA ANN TREASURE | 23/U/09034/PS | 2300709034 |
+| AYAN MUSTAFA ABDIRAHMAN | 23/X/22948/EVE | 2300722948 |
+| WANYANA SELINA MASEMBE | 23/U/1529 | 2300701529 |
+| AMABE JUNIOR HUMPHREY | 23/U/05942/PS | 2300705942 |
+| AKANGA ANDREW | 23/U/05555/PS | 2300705555 |
+
 ## 🚀 System Overview
 
 Agricure leverages a sophisticated **EfficientNet-based** deep learning model trained on over **30,000+ crop images** to achieve **97% accuracy** in plant disease detection. The platform integrates multiple data sources including real-time weather conditions, soil analysis, and environmental factors to generate personalized, actionable agricultural recommendations powered by Google's **Gemini AI**.
@@ -346,14 +355,6 @@ Agricure/
 3. **Oversee dataset management** for continuous model improvement
 4. **Access system-wide analytics** for strategic decision making
 
-## 🤝 Contributors
-| Name | Registration Number | Student Number |
-|------|-------------------|----------------|
-| KARAGWA ANN TREASURE | 23/U/09034/PS | 2300709034 |
-| AYAN MUSTAFA ABDIRAHMAN | 23/X/22948/EVE | 2300722948 |
-| WANYANA SELINA MASEMBE | 23/U/1529 | 2300701529 |
-| AMABE JUNIOR HUMPHREY | 23/U/05942/PS | 2300705942 |
-| AKANGA ANDREW | 23/U/05555/PS | 2300705555 |
 
 
 ### Core Development Team
