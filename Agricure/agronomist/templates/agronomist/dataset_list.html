@@ -124,12 +124,13 @@
         <input type="text" name="title" class="form-control mb-4" placeholder="Enter dataset title" required>
       </div>
 
-      <label for="id_file" class="upload-area">
-        <div class="upload-icon mb-2">📂</div>
-        <strong>Drop your ZIP file here or click to browse</strong>
-        <div class="text-muted mt-2">Supported format: .zip (Max: 20MB)</div>
-        <input type="file" name="file" class="d-none" id="id_file" required>
-      </label>
+      <label for="id_file" class="upload-area" id="upload-area">
+  <div class="upload-icon mb-2">📂</div>
+  <strong id="upload-text">Drop your ZIP file here or click to browse</strong>
+  <div class="text-muted mt-2" id="file-info">Supported format: .zip (Max: 20MB)</div>
+  <input type="file" name="file" class="d-none" id="id_file" required>
+</label>
+
 
       <button type="submit" class="btn btn-success btn-block mt-4">
         📤 Upload Dataset
@@ -203,5 +204,21 @@
   {% endif %}
 </div>
 
+<script>
+  const fileInput = document.getElementById('id_file');
+  const uploadText = document.getElementById('upload-text');
+  const fileInfo = document.getElementById('file-info');
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length > 0) {
+      const fileName = fileInput.files[0].name;
+      uploadText.textContent = "📁 " + fileName;
+      fileInfo.textContent = "Ready to upload.";
+    } else {
+      uploadText.textContent = "Drop your ZIP file here or click to browse";
+      fileInfo.textContent = "Supported format: .zip (Max: 20MB)";
+    }
+  });
+</script>
 
 {% endblock %}
