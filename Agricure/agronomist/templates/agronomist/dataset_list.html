@@ -139,6 +139,15 @@
   </div>
 </div>
 
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+
 <div class="page-wrapper mt-5">
   <h2 class="mb-4">Unlabeled Datasets</h2>
   <div class="card-body">

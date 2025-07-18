@@ -116,12 +116,23 @@ def dataset_list(request):
     # Handle form submission
     if request.method == 'POST':
         form = AgronomistUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            upload = form.save(commit=False)
-            upload.user = request.user
-            upload.save()
-            messages.success(request, 'File uploaded successfully.')
-            return redirect('agronomist:dataset_list')  # Prevent re-submission on refresh
+    if form.is_valid():
+        upload = form.save(commit=False)
+        upload.user = request.user
+        upload.save()
+        messages.success(request, 'File uploaded successfully.')
+        return redirect('agronomist:dataset_list')
+    else:
+        # Show error and re-render page
+        messages.error(request, "Please provide all required fields, including a valid file.")
+        datasets = DatasetUpload.objects.all().order_by('-uploaded_at')
+        uploads = AgronomistUpload.objects.filter(user=request.user).order_by('-uploaded_at')
+        return render(request, 'agronomist/dataset_list.html', {
+            'datasets': datasets,
+            'uploads': uploads,
+            'form': form
+        })
+
 
 
 
