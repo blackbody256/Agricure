@@ -134,7 +134,7 @@
   <!-- Diagnosis Card -->
   <div class="card">
     <div class="card-header">
-      <span>🩺</span> Diagnosis Results
+      <span></span> Diagnosis Results
     </div>
     <div class="card-body">
       <!-- Image -->
@@ -146,18 +146,31 @@
       <div class="details-container">
         <ul class="list-group">
           <li class="list-group-item">
-            <strong>⚕️ Disease:</strong>
+            <strong> Disease:</strong>
             <span class="badge bg-danger">{{ diagnosis.disease_name }}</span>
           </li>
           <li class="list-group-item">
-            <strong>📊 Confidence:</strong>
+            <strong> Confidence:</strong>
             <span class="text-success fw-bold">{{ diagnosis.confidence }}%</span>
           </li>
           <li class="list-group-item">
-            <strong>🕒 Timestamp:</strong>
+            <strong> Timestamp:</strong>
             {{ diagnosis.timestamp }}
           </li>
+          <li class="list-group-item">
+  <strong> Top 3 Predictions:</strong>
+  <ul style="list-style: none; padding-left: 0; margin: 0;">
+    {% for item in top3 %}
+      <li style="margin-bottom: 0.5rem;">
+        {{ item.label_display }} — <span class="fw-bold text-success">{{ item.confidence }}%</span>
+      </li>
+    {% endfor %}
+  </ul>
+</li>
+
         </ul>
+
+        
 
         <a href="{% url 'recommendations:request' diagnosis.id %}" class="view-recommendation-btn">Get a Recommendation</a>
     </div>

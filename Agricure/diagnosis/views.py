@@ -162,22 +162,29 @@ def diagnose(request):
             
             # Get prediction
             prediction = model.predict(img_array)[0]
-            logger.info(f"Raw predictions shape: {prediction.shape}")
-            logger.info(f"Top 3 predictions: {np.argsort(prediction)[-3:][::-1]} with values: {prediction[np.argsort(prediction)[-3:][::-1]]}")
-            
-            predicted_index = np.argmax(prediction)
+
+            # Get top 3 predictions
+            top3_indices = np.argsort(prediction)[-3:][::-1]
+            top3_predictions = [
+                {
+                    'label': DISEASE_CLASSES[idx],
+                    'label_display': DISEASE_LABELS.get(DISEASE_CLASSES[idx], DISEASE_CLASSES[idx]),
+                    'confidence': round(float(prediction[idx]) * 100, 2)
+                }
+                for idx in top3_indices
+            ]
+
+            # Primary prediction
+            predicted_index = top3_indices[0]
             disease_name = DISEASE_CLASSES[predicted_index]
-            confidence = float(np.max(prediction))
-            
-            # Additional validation
-            if confidence < 0.05:  # Very low confidence
-                logger.warning(f"Very low confidence: {confidence:.3f} for class {disease_name}")
-            
+            confidence = top3_predictions[0]['confidence']  # use already computed
+
             diagnosis.disease_name = disease_name
             diagnosis.severity = "Unknown"
             diagnosis.affected_part = "Unknown"
-            diagnosis.confidence = round(confidence * 100, 1)
+            diagnosis.confidence = confidence
             diagnosis.save()
+
             
             # Generate AI recommendation
             try:
@@ -189,8 +196,10 @@ def diagnose(request):
 
             return render(request, 'results.html', {
                 'diagnosis': diagnosis,
-                'disease_label': DISEASE_LABELS.get(diagnosis.disease_name, diagnosis.disease_name)
+                'disease_label': DISEASE_LABELS.get(diagnosis.disease_name, diagnosis.disease_name),
+                'top3': top3_predictions
             })
+
             
         except FileNotFoundError as e:
             logger.error(f"Model file not found: {str(e)}")
